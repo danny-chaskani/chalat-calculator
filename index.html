@@ -1,0 +1,1335 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LEAVE.OS // מחשבון אופטימיזציית חל"ת</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Deep-space base */
+    --bg-0:#05070c;
+    --bg-1:#0a0e1a;
+    --bg-2:#0f1424;
+    --panel:rgba(15,20,36,0.55);
+    --panel-solid:#0d1220;
+    --panel-hi:rgba(24,32,54,0.75);
+    --border:rgba(120,180,255,0.12);
+    --border-hi:rgba(120,180,255,0.28);
+    --grid:rgba(120,180,255,0.055);
+    --scan:rgba(120,220,255,0.03);
+
+    /* Ink */
+    --text:#e6ecff;
+    --text-dim:#8892b8;
+    --text-faint:#4a5680;
+
+    /* Neon spectrum */
+    --cyan:#00e5ff;
+    --cyan-glow:rgba(0,229,255,0.55);
+    --lime:#a3ff12;
+    --lime-glow:rgba(163,255,18,0.55);
+    --magenta:#ff2ec4;
+    --magenta-glow:rgba(255,46,196,0.55);
+    --violet:#8b5cf6;
+    --violet-glow:rgba(139,92,246,0.55);
+    --amber:#ffb020;
+    --amber-glow:rgba(255,176,32,0.55);
+    --red:#ff3860;
+    --red-glow:rgba(255,56,96,0.55);
+
+    /* Semantic mapping */
+    --annual:var(--lime);
+    --annual-glow:var(--lime-glow);
+    --cholat:var(--amber);
+    --cholat-glow:var(--amber-glow);
+    --free:#5a6b8f;
+    --free-glow:rgba(90,107,143,0.4);
+    --long:var(--red);
+    --long-glow:var(--red-glow);
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    font-family:'Heebo', system-ui, sans-serif;
+    color:var(--text);
+    min-height:100vh;
+    padding:28px 18px 90px;
+    position:relative;
+    overflow-x:hidden;
+    background:
+      radial-gradient(ellipse 800px 500px at 15% -5%, rgba(0,229,255,0.18), transparent 55%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(255,46,196,0.14), transparent 55%),
+      radial-gradient(ellipse 600px 400px at 85% 100%, rgba(139,92,246,0.16), transparent 55%),
+      radial-gradient(ellipse 500px 400px at 0% 100%, rgba(163,255,18,0.08), transparent 55%),
+      var(--bg-0);
+  }
+
+  /* animated grid */
+  body::before{
+    content:"";
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at 50% 40%, black 30%, transparent 90%);
+    animation: gridDrift 40s linear infinite;
+  }
+  @keyframes gridDrift{
+    from{background-position:0 0, 0 0;}
+    to{background-position:60px 60px, 60px 60px;}
+  }
+
+  /* scanline overlay */
+  body::after{
+    content:"";
+    position:fixed;inset:0;pointer-events:none;z-index:0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 2px,
+      var(--scan) 3px,
+      transparent 4px
+    );
+    mix-blend-mode:overlay;
+    opacity:0.6;
+  }
+
+  /* corner accents */
+  .corner{position:fixed;width:80px;height:80px;pointer-events:none;z-index:1;opacity:.5;}
+  .corner.tl{top:14px;left:14px;border-top:2px solid var(--cyan);border-left:2px solid var(--cyan);box-shadow:-2px -2px 20px -8px var(--cyan-glow);}
+  .corner.tr{top:14px;right:14px;border-top:2px solid var(--magenta);border-right:2px solid var(--magenta);box-shadow:2px -2px 20px -8px var(--magenta-glow);}
+  .corner.bl{bottom:14px;left:14px;border-bottom:2px solid var(--violet);border-left:2px solid var(--violet);}
+  .corner.br{bottom:14px;right:14px;border-bottom:2px solid var(--lime);border-right:2px solid var(--lime);}
+
+  .wrap{position:relative;z-index:2;max-width:1100px;margin:0 auto;}
+
+  /* ---------- header ---------- */
+  header{
+    margin-bottom:36px;
+    display:grid;
+    grid-template-columns: 1fr auto;
+    gap:20px;
+    align-items:end;
+  }
+  @media(max-width:760px){ header{grid-template-columns:1fr;} }
+
+  .sys-tag{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--cyan);
+    padding:6px 14px;
+    border:1px solid var(--border-hi);
+    background:rgba(0,229,255,0.06);
+    border-radius:4px;
+    margin-bottom:18px;
+    position:relative;
+    backdrop-filter: blur(10px);
+  }
+  .sys-tag::before{
+    content:"";width:6px;height:6px;background:var(--cyan);
+    box-shadow:0 0 10px var(--cyan-glow);
+    animation:blink 1.6s ease-in-out infinite;
+  }
+  @keyframes blink{0%,100%{opacity:1;box-shadow:0 0 10px var(--cyan-glow);}50%{opacity:.35;box-shadow:0 0 4px var(--cyan-glow);}}
+
+  h1{
+    font-family:'Heebo', sans-serif;
+    font-weight:900;
+    font-size:clamp(36px, 5.8vw, 58px);
+    line-height:1.02;
+    margin:0 0 14px;
+    letter-spacing:-0.025em;
+    background: linear-gradient(180deg, #ffffff 0%, #a8b3d6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color:transparent;
+    position:relative;
+  }
+  h1 .accent{
+    background: linear-gradient(90deg, var(--cyan) 0%, var(--magenta) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    position:relative;
+  }
+  h1::after{
+    content:"_";
+    display:inline-block;
+    color:var(--cyan);
+    -webkit-text-fill-color:var(--cyan);
+    animation:caret 1s steps(2) infinite;
+    margin-inline-start:6px;
+  }
+  @keyframes caret{50%{opacity:0;}}
+
+  header p{
+    color:var(--text-dim);font-size:15.5px;max-width:680px;line-height:1.7;margin:0;
+  }
+
+  .hud-cluster{
+    display:flex;flex-direction:column;gap:8px;align-items:flex-end;
+  }
+  .hud{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;
+    background:rgba(15,20,36,0.7);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:6px 12px;
+    color:var(--text-dim);
+    backdrop-filter: blur(10px);
+  }
+  .hud.live{
+    color:var(--lime);
+    border-color: rgba(163,255,18,0.35);
+    background:rgba(163,255,18,0.05);
+  }
+  .hud.live .dot{
+    width:6px;height:6px;background:var(--lime);border-radius:50%;
+    box-shadow:0 0 8px var(--lime-glow);
+    animation:blink 1.6s infinite;
+  }
+
+  /* ---------- generic panel ---------- */
+  .panel{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:26px 28px;
+    margin-bottom:22px;
+    position:relative;
+    backdrop-filter: blur(20px) saturate(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(140%);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.02) inset,
+      0 30px 60px -30px rgba(0,0,0,0.6),
+      0 0 50px -20px rgba(0,229,255,0.08);
+  }
+  /* panel corner ticks */
+  .panel::before, .panel::after{
+    content:"";position:absolute;width:14px;height:14px;
+    pointer-events:none;
+  }
+  .panel::before{
+    top:-1px;right:-1px;
+    border-top:1px solid var(--cyan);border-right:1px solid var(--cyan);
+    border-top-right-radius:14px;
+  }
+  .panel::after{
+    bottom:-1px;left:-1px;
+    border-bottom:1px solid var(--magenta);border-left:1px solid var(--magenta);
+    border-bottom-left-radius:14px;
+  }
+
+  .panel-title{
+    display:flex;align-items:center;gap:14px;
+    font-family:'JetBrains Mono',monospace;
+    font-weight:500;font-size:12px;
+    text-transform:uppercase;letter-spacing:.22em;
+    margin:0 0 24px;color:var(--text-dim);
+  }
+  .panel-title .idx{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--cyan);
+    padding:3px 8px;
+    background:rgba(0,229,255,0.08);
+    border:1px solid rgba(0,229,255,0.3);
+    border-radius:4px;
+    font-size:11px;
+  }
+  .panel-title .divider{
+    flex:1;height:1px;
+    background:linear-gradient(90deg, var(--border-hi) 0%, transparent 100%);
+  }
+  .panel-title .stat-inline{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--text-faint);font-size:11px;
+    letter-spacing:.16em;
+  }
+
+  /* ---------- form ---------- */
+  .grid-form{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 20px;}
+  .grid-form .full{grid-column:1/-1;}
+  @media(max-width:760px){.grid-form{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:480px){.grid-form{grid-template-columns:1fr;}}
+
+  label{
+    display:block;font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;color:var(--text-dim);
+    margin-bottom:9px;font-weight:500;
+    text-transform:uppercase;letter-spacing:.14em;
+  }
+  label::before{
+    content:"› ";color:var(--cyan);
+  }
+  input{
+    width:100%;
+    background:rgba(5,7,12,0.65);
+    border:1px solid var(--border-hi);
+    border-radius:8px;
+    color:var(--text);
+    font-family:'JetBrains Mono',monospace;
+    font-size:15px;font-weight:500;
+    padding:13px 15px;
+    transition: border-color .18s, box-shadow .18s, background .18s;
+    caret-color: var(--cyan);
+  }
+  input:hover{
+    border-color:rgba(120,180,255,0.4);
+    background:rgba(5,7,12,0.85);
+  }
+  input:focus{
+    outline:none;
+    border-color:var(--cyan);
+    background:rgba(0,229,255,0.04);
+    box-shadow:
+      0 0 0 3px rgba(0,229,255,0.12),
+      0 0 24px -6px var(--cyan-glow);
+  }
+  input[type=date]{color-scheme:dark;}
+
+  .fieldset-label{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;color:var(--text-faint);
+    text-transform:uppercase;letter-spacing:.18em;
+    grid-column:1/-1;margin-top:8px;padding-top:18px;
+    position:relative;
+    display:flex;align-items:center;gap:12px;
+  }
+  .fieldset-label::before{
+    content:"";flex-shrink:0;
+    width:6px;height:6px;background:var(--magenta);
+    box-shadow:0 0 8px var(--magenta-glow);
+    transform:rotate(45deg);
+  }
+  .fieldset-label::after{
+    content:"";flex:1;height:1px;
+    background:linear-gradient(90deg, var(--border-hi) 0%, transparent 100%);
+  }
+
+  .btn{
+    appearance:none;cursor:pointer;
+    background:
+      linear-gradient(90deg, rgba(0,229,255,0.15) 0%, rgba(255,46,196,0.15) 100%),
+      rgba(5,7,12,0.9);
+    color:var(--text);
+    border:1px solid var(--cyan);
+    font-family:'JetBrains Mono',monospace;
+    font-weight:600;font-size:13px;
+    letter-spacing:.18em;text-transform:uppercase;
+    padding:15px 32px;border-radius:8px;
+    display:inline-flex;align-items:center;gap:14px;
+    margin-top:26px;
+    position:relative;overflow:hidden;
+    transition: transform .15s, box-shadow .25s, border-color .2s;
+    box-shadow:
+      0 0 0 1px rgba(0,229,255,0.15) inset,
+      0 0 30px -8px var(--cyan-glow);
+  }
+  .btn::before{
+    content:"";position:absolute;inset:0;
+    background: linear-gradient(90deg, transparent 0%, rgba(0,229,255,0.15) 50%, transparent 100%);
+    transform:translateX(-100%);
+    transition: transform .5s;
+  }
+  .btn:hover{
+    transform: translateY(-1px);
+    border-color:var(--magenta);
+    box-shadow:
+      0 0 0 1px rgba(255,46,196,0.25) inset,
+      0 0 40px -6px var(--magenta-glow);
+  }
+  .btn:hover::before{ transform: translateX(100%); }
+  .btn:active{ transform: translateY(1px); }
+  .btn .chev{
+    font-family:'JetBrains Mono',monospace;
+    color:var(--cyan);
+    transition: transform .2s, color .2s;
+  }
+  .btn:hover .chev{ color:var(--magenta); transform: translateX(-4px); }
+
+  .err{
+    color:#ffb0c0;background:rgba(255,56,96,0.08);
+    border:1px solid rgba(255,56,96,0.4);
+    padding:12px 16px;border-radius:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;
+    margin-top:16px;display:none;
+    box-shadow: 0 0 20px -6px var(--red-glow);
+  }
+  .err::before{content:"⚠ ERR: ";color:var(--red);font-weight:600;}
+
+  /* ---------- spec panel ---------- */
+  .spec-panel{
+    background: var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    margin-bottom:22px;
+    overflow:hidden;
+    backdrop-filter: blur(20px) saturate(140%);
+    box-shadow:
+      0 30px 60px -30px rgba(0,0,0,0.6),
+      0 0 50px -20px rgba(139,92,246,0.15);
+    position:relative;
+  }
+  .spec-panel::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:1px;
+    background: linear-gradient(90deg, transparent 0%, var(--violet) 50%, transparent 100%);
+    opacity:.6;
+  }
+  .spec-panel summary{
+    cursor:pointer;list-style:none;
+    padding:22px 28px;
+    display:flex;align-items:center;gap:14px;
+    font-family:'JetBrains Mono',monospace;font-weight:500;
+    font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--text);
+  }
+  .spec-panel summary::-webkit-details-marker{display:none;}
+  .spec-panel .icn{
+    width:32px;height:32px;border-radius:6px;
+    background:rgba(139,92,246,0.15);
+    color:var(--violet);
+    display:inline-flex;align-items:center;justify-content:center;
+    border:1px solid rgba(139,92,246,0.35);
+    font-size:14px;
+    box-shadow: 0 0 20px -4px var(--violet-glow);
+  }
+  .spec-chev{
+    margin-inline-start:auto;
+    font-family:'JetBrains Mono',monospace;
+    color:var(--cyan);font-size:11px;
+    letter-spacing:.1em;
+    padding:4px 10px;border:1px solid var(--border-hi);
+    border-radius:4px;
+    transition: all .25s;
+  }
+  .spec-panel[open] .spec-chev{
+    color:var(--magenta);border-color:rgba(255,46,196,0.4);
+    background:rgba(255,46,196,0.06);
+  }
+  .spec-panel[open] .spec-chev::after{content:" ▲";}
+  .spec-panel:not([open]) .spec-chev::after{content:" ▼";}
+
+  .spec-body{
+    padding:26px 28px;
+    display:flex;flex-direction:column;gap:28px;
+    border-top:1px solid var(--border);
+    background: linear-gradient(180deg, rgba(139,92,246,0.03) 0%, transparent 100%);
+  }
+  .spec-eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--cyan);margin-bottom:14px;
+    display:inline-flex;align-items:center;gap:8px;
+  }
+  .spec-eyebrow::before{
+    content:"";width:16px;height:1px;background:var(--cyan);
+    box-shadow:0 0 6px var(--cyan-glow);
+  }
+  .spec-quote{
+    margin:0;padding:18px 22px;
+    background:rgba(0,229,255,0.05);
+    border:1px solid rgba(0,229,255,0.2);
+    border-inline-start:3px solid var(--cyan);
+    border-radius:8px;
+    font-size:14.5px;color:var(--text);line-height:1.7;
+    box-shadow: 0 0 24px -8px var(--cyan-glow);
+  }
+  .spec-limits{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  @media(max-width:600px){.spec-limits{grid-template-columns:1fr;}}
+  .limit-chip{
+    background:rgba(15,20,36,0.6);
+    border:1px solid var(--border-hi);
+    border-radius:10px;
+    padding:20px 16px;
+    display:flex;flex-direction:column;align-items:center;gap:6px;
+    position:relative;overflow:hidden;
+    transition: transform .18s, border-color .18s, box-shadow .18s;
+  }
+  .limit-chip::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:2px;
+    background:var(--c, var(--cyan));
+    box-shadow:0 0 12px var(--cg, var(--cyan-glow));
+  }
+  .limit-chip:hover{
+    transform: translateY(-2px);
+    border-color:var(--c, var(--cyan));
+    box-shadow: 0 0 30px -8px var(--cg, var(--cyan-glow));
+  }
+  .limit-chip:nth-child(1){ --c:var(--cyan); --cg:var(--cyan-glow); }
+  .limit-chip:nth-child(2){ --c:var(--amber); --cg:var(--amber-glow); }
+  .limit-chip:nth-child(3){ --c:var(--lime); --cg:var(--lime-glow); }
+  .limit-chip .num{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;font-size:36px;color:var(--c, var(--text));
+    line-height:1;
+    text-shadow: 0 0 20px var(--cg, transparent);
+  }
+  .limit-chip .lbl{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;color:var(--text-dim);text-align:center;
+    letter-spacing:.06em;text-transform:uppercase;
+  }
+
+  .chain{display:flex;flex-direction:column;gap:0;position:relative;}
+  .chain::before{
+    content:"";position:absolute;
+    right:29px;top:20px;bottom:20px;width:1px;
+    background:linear-gradient(180deg, var(--cyan) 0%, var(--magenta) 100%);
+    opacity:.35;
+  }
+  .chain-step{
+    display:flex;align-items:center;gap:16px;
+    background:rgba(15,20,36,0.5);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:14px 18px;
+    position:relative;
+    margin-bottom:10px;
+    transition: transform .15s, border-color .15s, background .15s;
+  }
+  .chain-step:hover{
+    transform: translateX(-3px);
+    border-color:var(--border-hi);
+    background:rgba(15,20,36,0.75);
+  }
+  .chain-step.final{
+    border-color:rgba(255,56,96,0.3);
+    background:rgba(255,56,96,0.05);
+  }
+  .chain-badge{
+    font-family:'JetBrains Mono',monospace;font-weight:700;
+    width:36px;height:36px;border-radius:8px;
+    background:rgba(0,229,255,0.1);color:var(--cyan);
+    border:1px solid rgba(0,229,255,0.4);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    font-size:14px;
+    box-shadow: 0 0 16px -4px var(--cyan-glow);
+    position:relative;z-index:1;
+  }
+  .chain-step.final .chain-badge{
+    background:rgba(255,56,96,0.1);color:var(--red);
+    border-color:rgba(255,56,96,0.4);
+    box-shadow: 0 0 16px -4px var(--red-glow);
+  }
+  .chain-txt{display:flex;flex-direction:column;gap:3px;font-size:14px;}
+  .chain-txt b{color:var(--text);font-weight:600;}
+  .chain-cost{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--text-faint);letter-spacing:.05em;
+  }
+  .spec-invariants{
+    margin:0;
+    background:rgba(0,0,0,0.5);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:20px 22px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;line-height:2;color:var(--lime);
+    white-space:pre-wrap;
+    text-shadow: 0 0 8px rgba(163,255,18,0.3);
+    position:relative;
+  }
+  .spec-invariants::before{
+    content:"$ cat invariants.log";
+    position:absolute;top:-11px;left:20px;
+    background:var(--bg-1);
+    padding:2px 10px;
+    font-size:10.5px;color:var(--text-faint);
+    border:1px solid var(--border);
+    border-radius:4px;
+    letter-spacing:.1em;
+  }
+
+  /* ---------- results ---------- */
+  #results{display:none;}
+  .fade-in{animation: bootUp .55s cubic-bezier(.2,.9,.3,1) both;}
+  @keyframes bootUp{
+    from{opacity:0;transform:translateY(16px);filter: blur(6px);}
+    to{opacity:1;transform:translateY(0);filter: blur(0);}
+  }
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:22px;}
+  @media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:420px){.stats{grid-template-columns:1fr;}}
+
+  .stat{
+    background:rgba(15,20,36,0.6);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:22px 20px 20px;
+    position:relative;overflow:hidden;
+    backdrop-filter: blur(14px);
+    transition: transform .18s, border-color .18s, box-shadow .18s;
+  }
+  .stat::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:2px;
+    background:var(--c, var(--cyan));
+    box-shadow:0 0 14px var(--cg, var(--cyan-glow));
+  }
+  .stat::after{
+    content:"";position:absolute;top:14px;right:14px;
+    width:5px;height:5px;background:var(--c, var(--cyan));border-radius:50%;
+    box-shadow:0 0 8px var(--cg, var(--cyan-glow));
+  }
+  .stat:hover{
+    transform: translateY(-2px);
+    border-color:var(--c, var(--cyan));
+    box-shadow: 0 0 40px -12px var(--cg, var(--cyan-glow));
+  }
+  .stat .lbl{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;color:var(--text-dim);
+    text-transform:uppercase;letter-spacing:.14em;
+    margin-bottom:14px;
+  }
+  .stat .val{
+    font-family:'JetBrains Mono',monospace;
+    font-weight:700;font-size:46px;line-height:1;
+    color:var(--c, var(--text));
+    margin-bottom:10px;letter-spacing:-0.02em;
+    text-shadow: 0 0 20px var(--cg, transparent);
+  }
+  .stat .sub{
+    font-size:12.5px;color:var(--text-dim);line-height:1.5;
+    font-family:'JetBrains Mono',monospace;
+    letter-spacing:.02em;
+  }
+
+  /* gauges */
+  .gauges{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:22px;}
+  @media(max-width:760px){.gauges{grid-template-columns:1fr;}}
+  .gauge-card{
+    background:rgba(15,20,36,0.6);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:20px 22px 18px;
+    backdrop-filter: blur(14px);
+  }
+  .gauge-head{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-bottom:14px;
+  }
+  .gauge-head .t{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px;color:var(--text-dim);
+    text-transform:uppercase;letter-spacing:.16em;
+  }
+  .gauge-head .v{
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+    color:var(--cyan);font-weight:600;
+    padding:4px 10px;
+    background:rgba(0,229,255,0.08);
+    border:1px solid rgba(0,229,255,0.3);
+    border-radius:4px;
+    letter-spacing:.06em;
+  }
+  .segbar{
+    display:flex;gap:3px;height:26px;
+    padding:3px;background:rgba(0,0,0,0.4);
+    border:1px solid var(--border);border-radius:6px;
+  }
+  .segbar .seg{
+    flex:1;background:rgba(255,255,255,0.03);
+    border-radius:2px;
+    transition: background .3s, box-shadow .3s;
+  }
+  .segbar .seg.on{
+    background:var(--amber);
+    box-shadow:0 0 8px var(--amber-glow), 0 0 2px var(--amber-glow) inset;
+  }
+  .segbar .seg.prior{
+    background:rgba(255,176,32,0.25);
+    box-shadow:0 0 4px rgba(255,176,32,0.2) inset;
+  }
+  .pips{display:flex;gap:14px;align-items:center;justify-content:center;height:100%;padding:8px 0;}
+  .pip{
+    width:52px;height:52px;border-radius:50%;
+    border:1.5px solid var(--border-hi);
+    background:rgba(0,0,0,0.4);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono',monospace;font-weight:600;
+    color:var(--text-dim);font-size:16px;
+    position:relative;
+    transition: all .25s;
+  }
+  .pip.on{
+    background:rgba(255,46,196,0.15);
+    border-color:var(--magenta);
+    color:var(--magenta);
+    box-shadow: 0 0 18px -3px var(--magenta-glow), 0 0 4px var(--magenta-glow) inset;
+    text-shadow:0 0 10px var(--magenta-glow);
+  }
+  .pip.prior{
+    background:rgba(255,46,196,0.05);
+    border-color:rgba(255,46,196,0.35);
+    color:rgba(255,46,196,0.55);
+  }
+
+  /* legend */
+  .legend{
+    display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px;
+    padding:14px 20px;background:rgba(15,20,36,0.5);
+    border:1px solid var(--border);border-radius:10px;
+    backdrop-filter: blur(14px);
+  }
+  .legend span{
+    display:inline-flex;align-items:center;gap:8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:11.5px;color:var(--text-dim);
+    letter-spacing:.06em;
+    padding:4px 10px;border-radius:4px;
+    background:rgba(0,0,0,0.3);
+    border:1px solid var(--border);
+  }
+  .legend i{
+    width:10px;height:10px;border-radius:2px;
+    display:inline-block;
+  }
+
+  /* explain */
+  .explain{
+    background:
+      linear-gradient(135deg, rgba(0,229,255,0.06) 0%, rgba(255,46,196,0.06) 100%),
+      rgba(15,20,36,0.7);
+    border:1px solid rgba(0,229,255,0.25);
+    border-radius:12px;
+    padding:24px 26px;margin-bottom:22px;
+    backdrop-filter: blur(14px);
+    position:relative;
+    box-shadow: 0 0 40px -20px var(--cyan-glow);
+  }
+  .explain::before{
+    content:"◆ ANALYSIS";
+    position:absolute;top:-11px;right:22px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;letter-spacing:.2em;
+    color:var(--cyan);
+    background:var(--bg-1);
+    padding:2px 12px;
+    border:1px solid rgba(0,229,255,0.3);
+    border-radius:4px;
+  }
+  .explain h3{
+    margin:0 0 16px;font-size:16px;
+    font-family:'JetBrains Mono',monospace;font-weight:500;
+    color:var(--text);text-transform:uppercase;letter-spacing:.16em;
+  }
+  .explain ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:12px;}
+  .explain li{
+    font-size:14px;color:var(--text);line-height:1.7;
+    padding-inline-start:22px;position:relative;
+  }
+  .explain li::before{
+    content:"▸";position:absolute;right:0;top:0;
+    color:var(--cyan);
+    text-shadow:0 0 6px var(--cyan-glow);
+  }
+  .explain li b{
+    color:var(--cyan);font-weight:600;
+    background:rgba(0,229,255,0.08);
+    padding:1px 6px;border-radius:3px;
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+  }
+  .explain .ok{
+    color:var(--lime);font-family:'JetBrains Mono',monospace;
+    font-weight:600;font-size:13px;
+    background:rgba(163,255,18,0.08);
+    padding:1px 8px;border-radius:3px;
+    text-shadow:0 0 6px var(--lime-glow);
+  }
+
+  /* calendar */
+  .month{margin-bottom:26px;}
+  .month-title{
+    display:flex;align-items:center;gap:14px;
+    margin:0 0 14px;
+  }
+  .month-title .badge{
+    font-family:'JetBrains Mono',monospace;font-weight:500;
+    font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+    color:var(--cyan);
+    padding:5px 14px;
+    background:rgba(0,229,255,0.06);
+    border:1px solid rgba(0,229,255,0.3);
+    border-radius:4px;
+  }
+  .month-title .line{
+    flex:1;height:1px;
+    background: linear-gradient(90deg, var(--border-hi) 0%, transparent 100%);
+  }
+  .month-title .count{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;color:var(--text-faint);letter-spacing:.12em;
+  }
+
+  .cal{
+    display:grid;grid-template-columns:repeat(7,1fr);gap:6px;
+    padding:14px;background:rgba(15,20,36,0.5);
+    border:1px solid var(--border);border-radius:12px;
+    backdrop-filter: blur(14px);
+  }
+  .cal .dh{
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;color:var(--text-faint);text-align:center;
+    padding:6px 0;letter-spacing:.1em;
+  }
+  .cal .cell{
+    aspect-ratio:1/0.92;
+    border-radius:8px;
+    background:rgba(0,0,0,0.25);
+    border:1px solid var(--border);
+    padding:6px 8px;position:relative;overflow:hidden;
+    display:flex;flex-direction:column;justify-content:space-between;
+    transition: transform .12s, border-color .15s, box-shadow .18s;
+  }
+  .cal .cell.empty{background:transparent;border:none;}
+  .cal .cell.outside{opacity:.28;}
+  .cal .cell .d{
+    font-family:'JetBrains Mono',monospace;
+    font-size:13px;font-weight:600;color:var(--text-dim);
+  }
+  .cal .cell .s{
+    font-family:'JetBrains Mono',monospace;
+    font-size:9px;font-weight:600;
+    letter-spacing:.05em;text-transform:uppercase;
+    align-self:flex-start;
+    padding:2px 6px;border-radius:3px;
+  }
+  .cal .cell::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:2px;
+    opacity:.6;
+  }
+  .cal .cell.annual{
+    background:linear-gradient(180deg, rgba(163,255,18,0.12) 0%, rgba(163,255,18,0.02) 100%);
+    border-color: rgba(163,255,18,0.3);
+  }
+  .cal .cell.annual::before{ background:var(--annual);box-shadow:0 0 8px var(--annual-glow);}
+  .cal .cell.annual .s{ background:rgba(163,255,18,0.15); color:var(--lime); border:1px solid rgba(163,255,18,0.35);}
+  .cal .cell.annual .d{ color:var(--lime); text-shadow:0 0 8px var(--annual-glow);}
+
+  .cal .cell.cholat{
+    background:linear-gradient(180deg, rgba(255,176,32,0.12) 0%, rgba(255,176,32,0.02) 100%);
+    border-color: rgba(255,176,32,0.3);
+  }
+  .cal .cell.cholat::before{ background:var(--cholat);box-shadow:0 0 8px var(--cholat-glow);}
+  .cal .cell.cholat .s{ background:rgba(255,176,32,0.15); color:var(--amber); border:1px solid rgba(255,176,32,0.35);}
+  .cal .cell.cholat .d{ color:var(--amber);}
+
+  .cal .cell.free{
+    background:rgba(90,107,143,0.06);
+    border-color: rgba(120,180,255,0.15);
+  }
+  .cal .cell.free .s{ background:rgba(120,180,255,0.06); color:var(--text-dim); border:1px solid var(--border);}
+
+  .cal .cell.long{
+    background:linear-gradient(180deg, rgba(255,56,96,0.14) 0%, rgba(255,56,96,0.02) 100%);
+    border-color: rgba(255,56,96,0.35);
+  }
+  .cal .cell.long::before{ background:var(--long);box-shadow:0 0 10px var(--long-glow);}
+  .cal .cell.long .s{ background:rgba(255,56,96,0.15); color:var(--red); border:1px solid rgba(255,56,96,0.4);}
+  .cal .cell.long .d{ color:var(--red); text-shadow:0 0 8px var(--long-glow);}
+
+  .cal .cell.annual:hover,
+  .cal .cell.cholat:hover,
+  .cal .cell.long:hover,
+  .cal .cell.free:hover{
+    transform: translateY(-2px);
+    z-index:2;
+  }
+  .cal .cell.annual:hover{ box-shadow:0 0 24px -6px var(--annual-glow); border-color:var(--annual);}
+  .cal .cell.cholat:hover{ box-shadow:0 0 24px -6px var(--cholat-glow); border-color:var(--cholat);}
+  .cal .cell.long:hover{ box-shadow:0 0 24px -6px var(--long-glow); border-color:var(--long);}
+
+  footer{
+    margin-top:44px;
+    color:var(--text-faint);
+    font-family:'JetBrains Mono',monospace;
+    font-size:11.5px;text-align:center;
+    padding:18px;
+    border-top:1px dashed var(--border);
+    letter-spacing:.06em;
+    line-height:1.8;
+  }
+  footer::before{
+    content:"// ";color:var(--cyan);
+  }
+</style>
+</head>
+<body>
+
+<div class="corner tl"></div>
+<div class="corner tr"></div>
+<div class="corner bl"></div>
+<div class="corner br"></div>
+
+<div class="wrap">
+
+  <header>
+    <div>
+      <div class="sys-tag">LEAVE.OS · v3.0.1 · KERNEL READY</div>
+      <h1>אופטימיזציית <span class="accent">חל"ת</span></h1>
+      <p>מנוע תכנון יום-אחר-יום לטווח שירות מוגדר. הפרוטוקול ממקסם ניצול יתרת ימי החופשה השנתית (שתילה אלגוריתמית שמצילה סופ"שים במחיר פעימה מינימלי), עובר לחל"ת קצרה עד תקרת <b style="color:var(--cyan)">30</b>, וממשיך לחל"ת ארוכה רק כמוצא אחרון.</p>
+    </div>
+    <div class="hud-cluster">
+      <span class="hud live"><span class="dot"></span> ENGINE · ONLINE</span>
+      <span class="hud">LOCALE · HE-IL / RTL</span>
+      <span class="hud">POLICY · IDF.LEAVE.V2</span>
+    </div>
+  </header>
+
+  <details class="spec-panel">
+    <summary>
+      <span class="icn">⚡</span>
+      <span>Policy Spec · פרוטוקול מיקסום שכר</span>
+      <span class="spec-chev">EXPAND</span>
+    </summary>
+    <div class="spec-body">
+
+      <div>
+        <div class="spec-eyebrow">CORE PRINCIPLE · עקרון הליבה</div>
+        <blockquote class="spec-quote">חובה למצות את מלוא יתרת החופשה השנתית לפני / תוך כדי המעבר לחל"ת. ימי חופשה שנתית = תשלום מלא; חל"ת = פגיעה ישירה בשכר החודשי.</blockquote>
+      </div>
+
+      <div>
+        <div class="spec-eyebrow">HARD CONSTRAINTS · אילוצים קשיחים</div>
+        <div class="spec-limits">
+          <div class="limit-chip"><span class="num">30</span><span class="lbl">CHOLAT_SHORT_MAX / year</span></div>
+          <div class="limit-chip"><span class="num">3</span><span class="lbl">BURSTS_MAX / year</span></div>
+          <div class="limit-chip"><span class="num">100%</span><span class="lbl">ANNUAL_TARGET_UTIL</span></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="spec-eyebrow">PRIORITY CHAIN · שרשרת השתילה</div>
+        <div class="chain">
+          <div class="chain-step">
+            <div class="chain-badge">A</div>
+            <div class="chain-txt"><b>קצה הטווח (התחלה / סוף)</b><span class="chain-cost">bursts+=0 · saves 1 weekend</span></div>
+          </div>
+          <div class="chain-step">
+            <div class="chain-badge">B</div>
+            <div class="chain-txt"><b>שבוע שלם באמצע הטווח</b><span class="chain-cost">bursts+=1 · saves 2 weekends</span></div>
+          </div>
+          <div class="chain-step">
+            <div class="chain-badge">C</div>
+            <div class="chain-txt"><b>יום בודד צמוד לסופ"ש</b><span class="chain-cost">bursts+=1 · saves 1 weekend</span></div>
+          </div>
+          <div class="chain-step">
+            <div class="chain-badge">D</div>
+            <div class="chain-txt"><b>שארית היתרה</b><span class="chain-cost">מושתלת בתחילת הטווח — full annual drain</span></div>
+          </div>
+          <div class="chain-step final">
+            <div class="chain-badge">E</div>
+            <div class="chain-txt"><b>חל"ת קצרה (≤30) → חל"ת ארוכה</b><span class="chain-cost">FALLBACK — רק כששני המשאבים אזלו</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="spec-eyebrow">INVARIANTS · אינווריאנטות מוגנות</div>
+<pre class="spec-invariants">✓ annual_utilization       == 100%   (when range allows)
+✓ cholat_short_days        ≤  30
+✓ bursts_count             ≤  3
+✓ cholat_long_required     ⇔  annual==0 ∧ short_quota==0</pre>
+      </div>
+
+    </div>
+  </details>
+
+  <form class="panel" id="form">
+    <div class="panel-title"><span class="idx">01</span> <span>INPUT · טווח החופשה המבוקש</span> <span class="divider"></span> <span class="stat-inline">REQ · 5 FIELDS</span></div>
+    <div class="grid-form">
+      <div>
+        <label for="start">תאריך התחלה</label>
+        <input type="date" id="start" required>
+      </div>
+      <div>
+        <label for="end">תאריך סיום</label>
+        <input type="date" id="end" required>
+      </div>
+
+      <div class="fieldset-label full">QUOTA STATE · מצב מכסות נוכחי</div>
+      <div>
+        <label for="annual">יתרת ימי חופשה שנתית</label>
+        <input type="number" id="annual" min="0" max="60" value="5" required>
+      </div>
+      <div>
+        <label for="cholatUsed">חל"ת קצרה שנוצלה השנה</label>
+        <input type="number" id="cholatUsed" min="0" max="30" value="0" required>
+      </div>
+      <div>
+        <label for="burstsUsed">פעימות שנוצלו השנה</label>
+        <input type="number" id="burstsUsed" min="0" max="3" value="0" required>
+      </div>
+    </div>
+    <button class="btn" type="submit"><span class="chev">›_</span> EXECUTE · בנה תוכנית אופטימלית</button>
+    <div class="err" id="err"></div>
+  </form>
+
+  <div id="results">
+
+    <div class="panel-title" style="margin-bottom:14px;"><span class="idx">02</span> <span>OUTPUT · KEY METRICS</span> <span class="divider"></span></div>
+    <div class="stats" id="stats"></div>
+
+    <div class="panel-title" style="margin-bottom:14px;"><span class="idx">03</span> <span>QUOTA GAUGES</span> <span class="divider"></span></div>
+    <div class="gauges" id="gauges"></div>
+
+    <div class="legend">
+      <span><i style="background:var(--cholat);box-shadow:0 0 8px var(--cholat-glow)"></i> חל"ת קצרה</span>
+      <span><i style="background:var(--annual);box-shadow:0 0 8px var(--annual-glow)"></i> חופשה שנתית</span>
+      <span><i style="background:var(--free)"></i> סופ"ש חופשי</span>
+      <span><i style="background:var(--long);box-shadow:0 0 8px var(--long-glow)"></i> חל"ת ארוכה</span>
+    </div>
+
+    <div class="explain" id="explain"></div>
+
+    <div class="panel-title" style="margin-bottom:14px;"><span class="idx">04</span> <span>TIMELINE · תוכנית יומית</span> <span class="divider"></span></div>
+    <div id="calendar"></div>
+  </div>
+
+  <footer>הכלי מבוסס על ההנחות שהוזנו בקוד: מכסת 30 ימי חל"ת קצרה / עד 3 פעימות בשנה, וחציצה נדרשת בין פעימות לשמירת סופ"ש חופשי. מומלץ לאמת מול הפיקוד / מש"קית משא"ן לפני אישור בפועל.</footer>
+</div>
+
+<script>
+const HEB_DOW_SHORT = ['א','ב','ג','ד','ה','ו','ש'];
+const HEB_DOW_FULL  = ['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+const HEB_MONTHS = ['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+
+function fmtHeb(date){
+  return `יום ${HEB_DOW_FULL[date.getDay()]}, ${date.getDate()} ב${HEB_MONTHS[date.getMonth()]}`;
+}
+function fmtShort(date){
+  return `${date.getDate()}/${date.getMonth()+1}`;
+}
+function isoDate(d){
+  const y=d.getFullYear(), m=String(d.getMonth()+1).padStart(2,'0'), day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+
+function buildPlan(startStr, endStr, annualBalance, cholatUsed, burstsUsed){
+  const start = new Date(startStr+'T00:00:00');
+  const end   = new Date(endStr+'T00:00:00');
+
+  const days = [];
+  for (let d = new Date(start); d <= end; d.setDate(d.getDate()+1)){
+    const dow = d.getDay();
+    days.push({ date:new Date(d), dow, type:(dow===5||dow===6)?'weekend':'work', status:null });
+  }
+
+  const blocks = [];
+  { let i=0; while(i<days.length){ let j=i; while(j<days.length && days[j].type===days[i].type) j++; blocks.push({type:days[i].type,start:i,end:j-1}); i=j; } }
+
+  blocks.forEach((b,bi)=>{
+    if(b.type==='weekend'){
+      const boundary = (bi===0 || bi===blocks.length-1);
+      for(let k=b.start;k<=b.end;k++) days[k].isBoundaryWeekend = boundary;
+    }
+  });
+
+  days.forEach(d=>{
+    if(d.type==='work') d.status='cholat';
+    else d.status = d.isBoundaryWeekend ? 'free' : 'cholat';
+  });
+
+  const Q = Math.max(0, 30 - cholatUsed);
+  const Bmax = Math.max(0, 3 - burstsUsed);
+  let A = Math.max(0, annualBalance);
+  const usableQuota = Bmax>=1 ? Q : 0;
+
+  const breaksLog=[], shrinkLog=[], demoteLog=[];
+  let burstsUsedSoFar = 1;
+
+  const workBlocks = blocks.filter(b=>b.type==='work');
+  const internalWeekendBlocks = blocks.filter((b,bi)=> b.type==='weekend' && bi!==0 && bi!==blocks.length-1);
+  const weekendSaved = new Map();
+  internalWeekendBlocks.forEach(wb=>weekendSaved.set(wb,false));
+
+  function markSaved(wb){
+    if(!wb) return;
+    weekendSaved.set(wb,true);
+    for(let k=wb.start;k<=wb.end;k++) days[k].status='free';
+  }
+  function weBeforeBlock(blockIdxInBlocks){
+    const wb = blocks[blockIdxInBlocks-1];
+    return (wb && wb.type==='weekend' && weekendSaved.has(wb)) ? wb : null;
+  }
+  function weAfterBlock(blockIdxInBlocks){
+    const wb = blocks[blockIdxInBlocks+1];
+    return (wb && wb.type==='weekend' && weekendSaved.has(wb)) ? wb : null;
+  }
+
+  if (workBlocks.length){
+    const b1 = workBlocks[0];
+    const len1 = b1.end-b1.start+1;
+    if (A >= len1){
+      const bi = blocks.indexOf(b1);
+      for(let k=b1.start;k<=b1.end;k++) days[k].status='annual';
+      A -= len1;
+      shrinkLog.push(fmtHeb(days[b1.start].date));
+      markSaved(weAfterBlock(bi));
+    }
+  }
+  if (workBlocks.length > 1){
+    const bl = workBlocks[workBlocks.length-1];
+    const lenL = bl.end-bl.start+1;
+    if (A >= lenL && days[bl.start].status==='cholat'){
+      const bi = blocks.indexOf(bl);
+      for(let k=bl.start;k<=bl.end;k++) days[k].status='annual';
+      A -= lenL;
+      shrinkLog.push(fmtHeb(days[bl.start].date));
+      markSaved(weBeforeBlock(bi));
+    }
+  }
+
+  for (let i=1;i<workBlocks.length-1;i++){
+    const blk = workBlocks[i];
+    const len = blk.end-blk.start+1;
+    if (days[blk.start].status!=='cholat') continue;
+    if (A<len || burstsUsedSoFar>=Bmax) continue;
+    const bi = blocks.indexOf(blk);
+    const wB = weBeforeBlock(bi), wA = weAfterBlock(bi);
+    const newSaves = (wB && !weekendSaved.get(wB) ? 1:0) + (wA && !weekendSaved.get(wA) ? 1:0);
+    if (newSaves>=1){
+      for(let k=blk.start;k<=blk.end;k++) days[k].status='annual';
+      A -= len; burstsUsedSoFar += 1;
+      shrinkLog.push(fmtHeb(days[blk.start].date));
+      markSaved(wB); markSaved(wA);
+    }
+  }
+
+  for (const wb of internalWeekendBlocks){
+    if (weekendSaved.get(wb)) continue;
+    if (A<=0 || burstsUsedSoFar>=Bmax) break;
+    const bi = blocks.indexOf(wb);
+    const nextBlock = blocks[bi+1];
+    if(!nextBlock || nextBlock.type!=='work') continue;
+    const sundayIdx = nextBlock.start;
+    if (days[sundayIdx].status !== 'cholat') continue;
+    days[sundayIdx].status = 'annual';
+    A -= 1; burstsUsedSoFar += 1;
+    breaksLog.push(fmtHeb(days[sundayIdx].date));
+    markSaved(wb);
+  }
+
+  for (let idx=0; idx<days.length && A>0; idx++){
+    const d = days[idx];
+    if (d.type==='work' && d.status==='cholat'){
+      d.status='annual'; A -= 1;
+    }
+  }
+
+  {
+    let qRemaining = usableQuota;
+    let longRunStarted = false;
+    for (let idx=0; idx<days.length; idx++){
+      const d = days[idx];
+      if (d.status !== 'cholat') continue;
+      if (qRemaining > 0){
+        qRemaining -= 1;
+      } else {
+        d.status = 'long';
+        if (d.type==='work' && !longRunStarted){ demoteLog.push(fmtHeb(d.date)); longRunStarted = true; }
+      }
+    }
+  }
+
+  blocks.forEach((b,bi)=>{
+    if (b.type==='weekend' && bi!==0 && bi!==blocks.length-1){
+      const prevBlock = blocks[bi-1], nextBlock = blocks[bi+1];
+      const prevStatus = prevBlock ? days[prevBlock.end].status : null;
+      const nextStatus = nextBlock ? days[nextBlock.start].status : null;
+      const away = s => s==='cholat' || s==='long';
+      let ns;
+      if (away(prevStatus) && away(nextStatus)) ns = (prevStatus==='long'||nextStatus==='long') ? 'long' : 'cholat';
+      else ns = 'free';
+      for(let k=b.start;k<=b.end;k++) days[k].status = ns;
+    }
+  });
+
+  const cholatDays = days.filter(d=>d.status==='cholat').length;
+  const annualDays = days.filter(d=>d.status==='annual').length;
+  const longDays   = days.filter(d=>d.status==='long').length;
+
+  let bursts=0;
+  { let idx=0; while(idx<days.length){
+      if (days[idx].status==='cholat' || days[idx].status==='long'){
+        let j=idx, hasCholat=false;
+        while(j<days.length && (days[j].status==='cholat'||days[j].status==='long')){
+          if(days[j].status==='cholat') hasCholat=true; j++;
+        }
+        if(hasCholat) bursts++;
+        idx=j;
+      } else idx++;
+  } }
+
+  return {
+    days,
+    summary:{
+      cholatDays, annualDays, longDays, bursts,
+      breaksLog, shrinkLog, demoteLog,
+      Q, Bmax, annualInitial: Math.max(0,annualBalance), annualLeft: A,
+      cholatUsedYTD: cholatUsed, burstsUsedYTD: burstsUsed
+    }
+  };
+}
+
+function renderStats(sum){
+  const el = document.getElementById('stats');
+  const cards = [
+    {lbl:'CHOLAT_SHORT · חל"ת קצרה', val:sum.cholatDays, sub:`מתוך ${sum.Q} שנותרו במכסה`, c:'var(--amber)', cg:'var(--amber-glow)'},
+    {lbl:'ANNUAL · חופשה שנתית', val:sum.annualDays, sub:`יתרה: ${sum.annualLeft}/${sum.annualInitial}`, c:'var(--lime)', cg:'var(--lime-glow)'},
+    {lbl:'BURSTS · פעימות', val:sum.bursts, sub:`מתוך ${sum.Bmax} שנותרו (3 max/yr)`, c:'var(--magenta)', cg:'var(--magenta-glow)'},
+    {lbl:'CHOLAT_LONG · חל"ת ארוכה', val:sum.longDays, sub: sum.longDays>0 ? '⚠ חריגה מהמכסה הקצרה' : '✓ לא נדרשת', c: sum.longDays>0 ? 'var(--red)' : 'var(--cyan)', cg: sum.longDays>0 ? 'var(--red-glow)' : 'var(--cyan-glow)'},
+  ];
+  el.innerHTML = cards.map(c=>`
+    <div class="stat" style="--c:${c.c};--cg:${c.cg}">
+      <div class="lbl">${c.lbl}</div>
+      <div class="val">${c.val}</div>
+      <div class="sub">${c.sub}</div>
+    </div>`).join('');
+}
+
+function renderGauges(sum){
+  const el = document.getElementById('gauges');
+  const priorCholat = sum.cholatUsedYTD;
+  const usedNow = sum.cholatDays;
+  let segs='';
+  for(let i=0;i<30;i++){
+    let cls='seg';
+    if (i < priorCholat) cls+=' prior';
+    else if (i < priorCholat+usedNow) cls+=' on';
+    segs += `<div class="${cls}"></div>`;
+  }
+  let pips='';
+  const priorBursts = sum.burstsUsedYTD;
+  for(let i=0;i<3;i++){
+    let cls='pip';
+    let label = String(i+1).padStart(2,'0');
+    if (i<priorBursts) cls+=' prior';
+    else if (i<priorBursts+sum.bursts) cls+=' on';
+    pips += `<div class="${cls}">${label}</div>`;
+  }
+  el.innerHTML = `
+    <div class="gauge-card">
+      <div class="gauge-head"><span class="t">SHORT_CHOLAT_METER (Y)</span><span class="v">${priorCholat+usedNow} / 30</span></div>
+      <div class="segbar">${segs}</div>
+    </div>
+    <div class="gauge-card">
+      <div class="gauge-head"><span class="t">BURSTS</span><span class="v">${priorBursts+sum.bursts} / 3</span></div>
+      <div class="pips">${pips}</div>
+    </div>
+  `;
+}
+
+function renderExplain(sum){
+  const el = document.getElementById('explain');
+  let items = [];
+  if (sum.shrinkLog.length){
+    items.push(`נוצלו ימי <b>חופשה שנתית</b> ברצף מלא בתאריכים: ${sum.shrinkLog.join(', ')} — שתילה שכזו לא עולה פעימה נוספת (בקצוות הטווח) או חוסכת שני סופ"שים בבת אחת (באמצע הטווח), ולכן היא הכי משתלמת מבחינת ניצול הפעימות.`);
+  }
+  if (sum.breaksLog.length){
+    items.push(`בנוסף, נשתלו ימי חופשה שנתית בודדים בתאריכים: ${sum.breaksLog.join(', ')} — כל אחד מהם "שובר" רצף חל"ת ומציל סופ"ש סמוך אחד, במחיר פעימה.`);
+  }
+  if (!sum.breaksLog.length && !sum.shrinkLog.length && sum.annualDays===0){
+    items.push(`לא היה צורך בימי חופשה שנתית — כל הטווח כוסה בפעימת חל"ת קצרה אחת רציפה, בלי לחרוג מהמכסה.`);
+  }
+  if (sum.demoteLog.length){
+    items.push(`<span class="ok">annual==0 ∧ short_quota==0</span> — גם יתרת החופשה השנתית וגם מכסת 30 ימי החל"ת הקצרה נוצלו במלואן. החל מתאריך ${sum.demoteLog[0]} ואילך נדרשת חל"ת ארוכה עד תום הטווח המבוקש.`);
+  } else if (sum.cholatDays>0){
+    items.push(`<span class="ok">STATUS · OK</span> כל שאר הטווח כוסה בחל"ת קצרה מבלי לחרוג מ-30 הימים, ולכן לא נדרשת חל"ת ארוכה.`);
+  }
+  el.innerHTML = `<h3>› Why this plan is optimal</h3><ul>${items.map(i=>`<li>${i}</li>`).join('')}</ul>`;
+}
+
+const STATUS_LABEL = {cholat:'חל"ת', annual:'חופשה', free:'FREE', long:'חל"ת ארוכה'};
+
+function renderCalendar(days){
+  const el = document.getElementById('calendar');
+  const byMonth = {};
+  days.forEach(d=>{
+    const key = `${d.date.getFullYear()}-${d.date.getMonth()}`;
+    (byMonth[key] = byMonth[key] || []).push(d);
+  });
+
+  let html = '';
+  Object.keys(byMonth).sort((a,b)=>{
+    const [ya,ma]=a.split('-').map(Number), [yb,mb]=b.split('-').map(Number);
+    return ya-yb || ma-mb;
+  }).forEach(key=>{
+    const [y,m] = key.split('-').map(Number);
+    const daysInRange = byMonth[key];
+    const statusByDate = {};
+    daysInRange.forEach(d=> statusByDate[isoDate(d.date)] = d.status);
+
+    const firstOfMonth = new Date(y,m,1);
+    const daysInMonth = new Date(y,m+1,0).getDate();
+    const leading = firstOfMonth.getDay();
+
+    html += `<div class="month"><div class="month-title"><span class="badge">${HEB_MONTHS[m]} ${y}</span><span class="line"></span><span class="count">${daysInRange.length} DAYS</span></div><div class="cal">`;
+    HEB_DOW_SHORT.forEach(d=> html += `<div class="dh">${d}</div>`);
+    for(let i=0;i<leading;i++) html += `<div class="cell empty"></div>`;
+    for(let dnum=1;dnum<=daysInMonth;dnum++){
+      const dt = new Date(y,m,dnum);
+      const key2 = isoDate(dt);
+      const status = statusByDate[key2];
+      if (status){
+        html += `<div class="cell ${status}">
+          <div class="s">${STATUS_LABEL[status]}</div>
+          <div class="d">${dnum}</div>
+        </div>`;
+      } else {
+        html += `<div class="cell outside"><div class="d">${dnum}</div></div>`;
+      }
+    }
+    html += `</div></div>`;
+  });
+  el.innerHTML = html;
+}
+
+document.getElementById('form').addEventListener('submit', function(e){
+  e.preventDefault();
+  const errEl = document.getElementById('err');
+  errEl.style.display='none';
+
+  const start = document.getElementById('start').value;
+  const end = document.getElementById('end').value;
+  const annual = parseInt(document.getElementById('annual').value,10);
+  const cholatUsed = parseInt(document.getElementById('cholatUsed').value,10);
+  const burstsUsed = parseInt(document.getElementById('burstsUsed').value,10);
+
+  if (!start || !end){ errEl.textContent='יש למלא תאריך התחלה וסיום.'; errEl.style.display='block'; return; }
+  if (new Date(end) < new Date(start)){ errEl.textContent='תאריך הסיום חייב להיות אחרי תאריך ההתחלה.'; errEl.style.display='block'; return; }
+  const spanDays = (new Date(end)-new Date(start))/86400000 + 1;
+  if (spanDays > 120){ errEl.textContent='טווח ארוך מדי (מעל 120 יום) — פצל לבקשות קצרות יותר.'; errEl.style.display='block'; return; }
+
+  const {days, summary} = buildPlan(start, end, annual, cholatUsed, burstsUsed);
+
+  renderStats(summary);
+  renderGauges(summary);
+  renderExplain(summary);
+  renderCalendar(days);
+
+  const results = document.getElementById('results');
+  results.style.display = 'block';
+  results.classList.remove('fade-in'); void results.offsetWidth; results.classList.add('fade-in');
+  results.scrollIntoView({behavior:'smooth', block:'start'});
+});
+
+(function(){
+  const today = new Date();
+  const in14 = new Date(today.getTime()+14*86400000);
+  document.getElementById('start').value = isoDate(today);
+  document.getElementById('end').value = isoDate(in14);
+})();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79"}' crossorigin="anonymous"></script>
+</body>
+</html>
