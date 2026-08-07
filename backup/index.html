@@ -62,8 +62,6 @@
     padding:28px 18px 90px;
     position:relative;
     overflow-x:hidden;
-    overflow-y:auto;
-    -webkit-text-size-adjust:100%;
     background:
       radial-gradient(ellipse 800px 500px at 15% -5%, rgba(0,229,255,0.18), transparent 55%),
       radial-gradient(ellipse 700px 500px at 100% 10%, rgba(255,46,196,0.14), transparent 55%),
@@ -112,15 +110,6 @@
 
   .wrap{position:relative;z-index:2;max-width:1100px;margin:0 auto;}
 
-  @media(max-width:600px){
-    body{padding:16px 12px 70px;}
-    .corner{width:42px;height:42px;}
-    .corner.tl,.corner.tr{top:8px;}
-    .corner.bl,.corner.br{bottom:8px;}
-    .corner.tl,.corner.bl{left:8px;}
-    .corner.tr,.corner.br{right:8px;}
-  }
-
   /* ---------- header ---------- */
   header{
     margin-bottom:36px;
@@ -129,10 +118,7 @@
     gap:20px;
     align-items:end;
   }
-  @media(max-width:760px){
-    header{grid-template-columns:1fr; gap:16px;}
-    .hud-cluster{align-items:flex-start;}
-  }
+  @media(max-width:760px){ header{grid-template-columns:1fr;} }
 
   .sys-tag{
     display:inline-flex;align-items:center;gap:10px;
@@ -225,9 +211,6 @@
       0 30px 60px -30px rgba(0,0,0,0.6),
       0 0 50px -20px rgba(0,229,255,0.08);
   }
-  @media(max-width:600px){
-    .panel{padding:18px 16px; border-radius:12px;}
-  }
   /* panel corner ticks */
   .panel::before, .panel::after{
     content:"";position:absolute;width:14px;height:14px;
@@ -274,12 +257,7 @@
   .grid-form{display:grid;grid-template-columns:repeat(4,1fr);gap:18px 20px;}
   .grid-form .full{grid-column:1/-1;}
   @media(max-width:760px){.grid-form{grid-template-columns:repeat(2,1fr);}}
-  @media(max-width:480px){.grid-form{grid-template-columns:1fr;gap:14px;}}
-
-  @media(max-width:600px){
-    .panel-title{flex-wrap:wrap;gap:8px;font-size:10.5px;margin-bottom:16px;}
-    .panel-title .stat-inline{display:none;}
-  }
+  @media(max-width:480px){.grid-form{grid-template-columns:1fr;}}
 
   label{
     display:block;font-family:'JetBrains Mono',monospace;
@@ -297,7 +275,7 @@
     border-radius:8px;
     color:var(--text);
     font-family:'JetBrains Mono',monospace;
-    font-size:16px;font-weight:500;
+    font-size:15px;font-weight:500;
     padding:13px 15px;
     transition: border-color .18s, box-shadow .18s, background .18s;
     caret-color: var(--cyan);
@@ -375,9 +353,6 @@
     transition: transform .2s, color .2s;
   }
   .btn:hover .chev{ color:var(--magenta); transform: translateX(-4px); }
-  @media(max-width:600px){
-    .btn{width:100%;justify-content:center;padding:16px 20px;font-size:13.5px;}
-  }
 
   .err{
     color:#ffb0c0;background:rgba(255,56,96,0.08);
@@ -415,12 +390,6 @@
     font-family:'JetBrains Mono',monospace;font-weight:500;
     font-size:12px;letter-spacing:.2em;text-transform:uppercase;
     color:var(--text);
-  }
-  @media(max-width:600px){
-    .spec-panel summary{padding:16px 16px;gap:10px;font-size:10.5px;letter-spacing:.1em;}
-    .spec-panel .icn{width:26px;height:26px;font-size:12px;flex-shrink:0;}
-    .spec-chev{padding:3px 7px;font-size:9.5px;}
-    .spec-body{padding:18px 16px;gap:20px;}
   }
   .spec-panel summary::-webkit-details-marker{display:none;}
   .spec-panel .icn{
@@ -633,11 +602,6 @@
     font-family:'JetBrains Mono',monospace;
     letter-spacing:.02em;
   }
-  @media(max-width:600px){
-    .stat{padding:16px 14px 14px;}
-    .stat .val{font-size:34px;}
-    .stat .sub{font-size:11px;}
-  }
 
   /* gauges */
   .gauges{display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:22px;}
@@ -742,9 +706,6 @@
     position:relative;
     box-shadow: 0 0 40px -20px var(--cyan-glow);
   }
-  @media(max-width:600px){
-    .explain{padding:18px 16px;}
-  }
   .explain::before{
     content:"◆ ANALYSIS";
     position:absolute;top:-11px;right:22px;
@@ -841,16 +802,6 @@
     letter-spacing:.05em;text-transform:uppercase;
     align-self:flex-start;
     padding:2px 6px;border-radius:3px;
-  }
-  @media(max-width:600px){
-    .cal{gap:4px;padding:10px;}
-    .cal .dh{font-size:9px;padding:4px 0;}
-    .cal .cell{padding:4px 4px;border-radius:6px;}
-    .cal .cell .d{font-size:11px;}
-    .cal .cell .s{font-size:7px;padding:1px 3px;letter-spacing:0;}
-  }
-  @media(max-width:380px){
-    .cal .cell .s{writing-mode:vertical-rl;text-orientation:mixed;padding:2px 1px;}
   }
   .cal .cell::before{
     content:"";position:absolute;top:0;left:0;right:0;height:2px;
