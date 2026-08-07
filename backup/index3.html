@@ -785,6 +785,53 @@
     text-shadow:0 0 6px var(--lime-glow);
   }
 
+  /* summary log panel */
+  .summary-panel{
+    background:
+      linear-gradient(135deg, rgba(163,255,18,0.05) 0%, rgba(255,176,32,0.05) 100%),
+      rgba(15,20,36,0.7);
+    border:1px solid rgba(163,255,18,0.22);
+    border-radius:12px;
+    padding:24px 26px;margin-bottom:22px;
+    backdrop-filter: blur(14px);
+    position:relative;
+    box-shadow: 0 0 40px -20px var(--lime-glow);
+  }
+  @media(max-width:600px){ .summary-panel{padding:18px 16px;} }
+  .summary-panel::before{
+    content:"◆ SCHEDULE LOG";
+    position:absolute;top:-11px;right:22px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10.5px;letter-spacing:.2em;
+    color:var(--lime);
+    background:var(--bg-1);
+    padding:2px 12px;
+    border:1px solid rgba(163,255,18,0.3);
+    border-radius:4px;
+  }
+  .summary-block{margin-bottom:18px;}
+  .summary-block:last-child{margin-bottom:0;}
+  .summary-block-title{
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--c,var(--text));margin-bottom:10px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .summary-block-title .dot{width:7px;height:7px;border-radius:50%;background:var(--c,var(--text));box-shadow:0 0 6px var(--c,var(--text));display:inline-block;}
+  .rng-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;}
+  .rng-list li{
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    font-size:13.5px;color:var(--text);
+    background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);
+    border-radius:7px;padding:9px 14px;
+  }
+  .rng-list .rng-days{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);white-space:nowrap;}
+  .overage-note{
+    margin-top:16px;padding:14px 16px;border-radius:8px;
+    background:rgba(255,56,96,0.1);border:1px solid rgba(255,56,96,0.4);
+    color:var(--red);font-size:13.5px;font-weight:600;line-height:1.6;
+  }
+  .summary-empty{color:var(--text-dim);font-size:13.5px;}
+
   /* calendar */
   .month{margin-bottom:26px;}
   .month-title{
@@ -909,27 +956,6 @@
   }
   footer::before{
     content:"// ";color:var(--cyan);
-  }
-
-  .credit{
-    margin-top:18px;
-    text-align:center;
-    font-family:'JetBrains Mono',monospace;
-    font-size:11px;
-    letter-spacing:.14em;
-    color:var(--text-faint);
-  }
-  .credit .heart{
-    color:var(--magenta);
-    text-shadow:0 0 8px var(--magenta-glow);
-    display:inline-block;
-    animation:blink 2.4s ease-in-out infinite;
-  }
-  .credit b{
-    color:var(--cyan);
-    font-weight:600;
-    text-shadow:0 0 8px var(--cyan-glow);
-    letter-spacing:.06em;
   }
 </style>
 </head>
@@ -1063,11 +1089,12 @@
 
     <div class="panel-title" style="margin-bottom:14px;"><span class="idx">04</span> <span>TIMELINE · תוכנית יומית</span> <span class="divider"></span></div>
     <div id="calendar"></div>
+
+    <div class="panel-title" style="margin-bottom:14px;"><span class="idx">05</span> <span>SUMMARY · סיכום תאריכים</span> <span class="divider"></span></div>
+    <div class="summary-panel" id="summary"></div>
   </div>
 
   <footer>הכלי מבוסס על ההנחות שהוזנו בקוד: מכסת 30 ימי חל"ת קצרה / עד 3 פעימות בשנה, וחציצה נדרשת בין פעימות לשמירת סופ"ש חופשי. מומלץ לאמת מול הפיקוד / מש"קית משא"ן לפני אישור בפועל.</footer>
-
-  <div class="credit" dir="ltr">created with <span class="heart">♥</span> by <b>Lior Ben Gera</b></div>
 </div>
 
 <script>
@@ -1138,57 +1165,62 @@ function buildPlan(startStr, endStr, annualBalance, cholatUsed, burstsUsed){
     return (wb && wb.type==='weekend' && weekendSaved.has(wb)) ? wb : null;
   }
 
+  // Unified dynamic-greedy candidate pool. Every possible annual-leave
+  // placement (front edge, back edge, each middle block, each single-day
+  // weekend break) competes on ACTUAL new weekends saved per round -- so a
+  // middle block (up to 2 weekends per burst) is preferred over an edge
+  // conversion (1 weekend, 0 burst) whenever there's burst budget to spare,
+  // instead of edges greedily eating the whole annual balance first and
+  // leaving idle burst capacity on the table.
+  const candidates = [];
   if (workBlocks.length){
-    const b1 = workBlocks[0];
-    const len1 = b1.end-b1.start+1;
-    if (A >= len1){
-      const bi = blocks.indexOf(b1);
-      for(let k=b1.start;k<=b1.end;k++) days[k].status='annual';
-      A -= len1;
-      shrinkLog.push(fmtHeb(days[b1.start].date));
-      markSaved(weAfterBlock(bi));
-    }
+    const b1 = workBlocks[0], bi = blocks.indexOf(b1);
+    candidates.push({kind:'block', block:b1, cost:b1.end-b1.start+1, burstCost:0, weekends:[blocks[bi+1]&&blocks[bi+1].type==='weekend'?blocks[bi+1]:null]});
   }
   if (workBlocks.length > 1){
-    const bl = workBlocks[workBlocks.length-1];
-    const lenL = bl.end-bl.start+1;
-    if (A >= lenL && days[bl.start].status==='cholat'){
-      const bi = blocks.indexOf(bl);
-      for(let k=bl.start;k<=bl.end;k++) days[k].status='annual';
-      A -= lenL;
-      shrinkLog.push(fmtHeb(days[bl.start].date));
-      markSaved(weBeforeBlock(bi));
-    }
+    const bl = workBlocks[workBlocks.length-1], bi = blocks.indexOf(bl);
+    candidates.push({kind:'block', block:bl, cost:bl.end-bl.start+1, burstCost:0, weekends:[blocks[bi-1]&&blocks[bi-1].type==='weekend'?blocks[bi-1]:null]});
   }
-
   for (let i=1;i<workBlocks.length-1;i++){
-    const blk = workBlocks[i];
-    const len = blk.end-blk.start+1;
-    if (days[blk.start].status!=='cholat') continue;
-    if (A<len || burstsUsedSoFar>=Bmax) continue;
-    const bi = blocks.indexOf(blk);
-    const wB = weBeforeBlock(bi), wA = weAfterBlock(bi);
-    const newSaves = (wB && !weekendSaved.get(wB) ? 1:0) + (wA && !weekendSaved.get(wA) ? 1:0);
-    if (newSaves>=1){
-      for(let k=blk.start;k<=blk.end;k++) days[k].status='annual';
-      A -= len; burstsUsedSoFar += 1;
-      shrinkLog.push(fmtHeb(days[blk.start].date));
-      markSaved(wB); markSaved(wA);
-    }
+    const blk = workBlocks[i], bi = blocks.indexOf(blk);
+    candidates.push({kind:'block', block:blk, cost:blk.end-blk.start+1, burstCost:1,
+      weekends:[blocks[bi-1]&&blocks[bi-1].type==='weekend'?blocks[bi-1]:null, blocks[bi+1]&&blocks[bi+1].type==='weekend'?blocks[bi+1]:null]});
   }
-
   for (const wb of internalWeekendBlocks){
-    if (weekendSaved.get(wb)) continue;
-    if (A<=0 || burstsUsedSoFar>=Bmax) break;
     const bi = blocks.indexOf(wb);
     const nextBlock = blocks[bi+1];
-    if(!nextBlock || nextBlock.type!=='work') continue;
-    const sundayIdx = nextBlock.start;
-    if (days[sundayIdx].status !== 'cholat') continue;
-    days[sundayIdx].status = 'annual';
-    A -= 1; burstsUsedSoFar += 1;
-    breaksLog.push(fmtHeb(days[sundayIdx].date));
-    markSaved(wb);
+    if (nextBlock && nextBlock.type==='work'){
+      candidates.push({kind:'single', sundayIdx:nextBlock.start, cost:1, burstCost:1, weekends:[wb]});
+    }
+  }
+
+  const used = new Set();
+  while(true){
+    let best=null, bestScore=-1;
+    for (const c of candidates){
+      if (used.has(c)) continue;
+      if (c.cost > A) continue;
+      if (c.burstCost>0 && burstsUsedSoFar>=Bmax) continue;
+      if (c.kind==='block' && days[c.block.start].status!=='cholat') continue;
+      if (c.kind==='single' && days[c.sundayIdx].status!=='cholat') continue;
+      const newSaves = c.weekends.filter(wb=>wb && !weekendSaved.get(wb)).length;
+      if (newSaves<=0) continue;
+      const score = newSaves*1000 - c.burstCost*100 - c.cost; // more weekends first, then cheaper on bursts, then cheaper in days
+      if (score>bestScore){ bestScore=score; best=c; }
+    }
+    if (!best) break;
+    used.add(best);
+    if (best.kind==='block'){
+      for(let k=best.block.start;k<=best.block.end;k++) days[k].status='annual';
+      A -= best.cost;
+      shrinkLog.push(fmtHeb(days[best.block.start].date));
+    } else {
+      days[best.sundayIdx].status = 'annual';
+      A -= 1;
+      breaksLog.push(fmtHeb(days[best.sundayIdx].date));
+    }
+    if (best.burstCost>0) burstsUsedSoFar += 1;
+    best.weekends.forEach(wb=>markSaved(wb));
   }
 
   for (let idx=0; idx<days.length && A>0; idx++){
@@ -1198,6 +1230,28 @@ function buildPlan(startStr, endStr, annualBalance, cholatUsed, burstsUsed){
     }
   }
 
+  // Resolve every internal weekend to FREE vs SWALLOWED now, while annual
+  // placement is final but nothing is 'long' yet. This must happen BEFORE
+  // quota consumption (not after) -- doing it after caused a rounding bug:
+  // a weekend block that straddles the exact 30-day cutoff (e.g. Friday is
+  // still within quota, Saturday isn't) was being force-relabelled as one
+  // uniform block based on its neighbouring workdays, which silently
+  // discarded 1 real day of unused short-cholat quota and pushed it into
+  // long-cholat too early.
+  blocks.forEach((b,bi)=>{
+    if (b.type==='weekend' && bi!==0 && bi!==blocks.length-1){
+      const prevBlock = blocks[bi-1], nextBlock = blocks[bi+1];
+      const prevStatus = prevBlock ? days[prevBlock.end].status : null;
+      const nextStatus = nextBlock ? days[nextBlock.start].status : null;
+      const swallowed = prevStatus==='cholat' && nextStatus==='cholat';
+      for(let k=b.start;k<=b.end;k++) days[k].status = swallowed ? 'cholat' : 'free';
+    }
+  });
+
+  // Chronological short-cholat quota consumption over EVERY remaining
+  // 'cholat' day (workdays and swallowed weekend days alike, in date order),
+  // so the full 30-day quota is always used before any long-cholat begins --
+  // even if the 30th day happens to fall on a Friday or Saturday.
   {
     let qRemaining = usableQuota;
     let longRunStarted = false;
@@ -1212,19 +1266,6 @@ function buildPlan(startStr, endStr, annualBalance, cholatUsed, burstsUsed){
       }
     }
   }
-
-  blocks.forEach((b,bi)=>{
-    if (b.type==='weekend' && bi!==0 && bi!==blocks.length-1){
-      const prevBlock = blocks[bi-1], nextBlock = blocks[bi+1];
-      const prevStatus = prevBlock ? days[prevBlock.end].status : null;
-      const nextStatus = nextBlock ? days[nextBlock.start].status : null;
-      const away = s => s==='cholat' || s==='long';
-      let ns;
-      if (away(prevStatus) && away(nextStatus)) ns = (prevStatus==='long'||nextStatus==='long') ? 'long' : 'cholat';
-      else ns = 'free';
-      for(let k=b.start;k<=b.end;k++) days[k].status = ns;
-    }
-  });
 
   const cholatDays = days.filter(d=>d.status==='cholat').length;
   const annualDays = days.filter(d=>d.status==='annual').length;
@@ -1323,6 +1364,57 @@ function renderExplain(sum){
 
 const STATUS_LABEL = {cholat:'חל"ת', annual:'חופשה', free:'FREE', long:'חל"ת ארוכה'};
 
+function formatRange(startDate, endDate){
+  const sameDay = startDate.getTime()===endDate.getTime();
+  const sameMonth = startDate.getMonth()===endDate.getMonth() && startDate.getFullYear()===endDate.getFullYear();
+  const sameYear = startDate.getFullYear()===endDate.getFullYear();
+  if (sameDay) return `${startDate.getDate()} ב${HEB_MONTHS[startDate.getMonth()]} ${startDate.getFullYear()}`;
+  if (sameMonth) return `${startDate.getDate()}–${endDate.getDate()} ב${HEB_MONTHS[startDate.getMonth()]} ${startDate.getFullYear()}`;
+  if (sameYear) return `${startDate.getDate()} ב${HEB_MONTHS[startDate.getMonth()]} – ${endDate.getDate()} ב${HEB_MONTHS[endDate.getMonth()]} ${startDate.getFullYear()}`;
+  return `${startDate.getDate()} ב${HEB_MONTHS[startDate.getMonth()]} ${startDate.getFullYear()} – ${endDate.getDate()} ב${HEB_MONTHS[endDate.getMonth()]} ${endDate.getFullYear()}`;
+}
+
+function computeRanges(days, status){
+  const ranges = [];
+  let i=0;
+  while(i<days.length){
+    if(days[i].status!==status){ i++; continue; }
+    let j=i;
+    while(j+1<days.length && days[j+1].status===status && (days[j+1].date - days[j].date)===86400000) j++;
+    ranges.push({start:days[i].date, end:days[j].date, len:j-i+1});
+    i=j+1;
+  }
+  return ranges;
+}
+
+function renderSummary(sum, days){
+  const el = document.getElementById('summary');
+  const annualRanges = computeRanges(days,'annual');
+  const cholatRanges = computeRanges(days,'cholat');
+  const longRanges   = computeRanges(days,'long');
+
+  function block(title, ranges, colorVar){
+    const inner = ranges.length
+      ? `<ul class="rng-list">${ranges.map(r=>`<li><span>${formatRange(r.start,r.end)}</span><span class="rng-days">${r.len} ${r.len===1?'יום':'ימים'}</span></li>`).join('')}</ul>`
+      : `<div class="summary-empty">— אין —</div>`;
+    return `<div class="summary-block">
+      <div class="summary-block-title" style="--c:${colorVar}"><span class="dot"></span>${title}</div>
+      ${inner}
+    </div>`;
+  }
+
+  let html = '';
+  html += block('חופשה שנתית', annualRanges, 'var(--lime)');
+  html += block('חל"ת קצרה', cholatRanges, 'var(--amber)');
+  html += block('חל"ת ארוכה', longRanges, 'var(--red)');
+
+  if (sum.longDays > 0){
+    html += `<div class="overage-note">⚠ חרגת ב-${sum.longDays} ${sum.longDays===1?'יום':'ימים'} ממכסת החל"ת הקצרה (30 יום), ולכן עליך לבצע חל"ת ארוכה עבור ${sum.longDays===1?'היום הזה':'הימים הללו'}.</div>`;
+  }
+
+  el.innerHTML = html;
+}
+
 function renderCalendar(days){
   const el = document.getElementById('calendar');
   const byMonth = {};
@@ -1388,6 +1480,7 @@ document.getElementById('form').addEventListener('submit', function(e){
   renderGauges(summary);
   renderExplain(summary);
   renderCalendar(days);
+  renderSummary(summary, days);
 
   const results = document.getElementById('results');
   results.style.display = 'block';
