@@ -1,0 +1,4261 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מרכז ניהול ארגוני</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Rubik:wght@400;500;600;700;800&family=Assistant:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  /* ==========================================================
+     BRIGHT HI-TECH DESIGN SYSTEM v2.0
+     Apple × Stripe × Modern Web3 SaaS
+     Light canvas · Vibrant accents · Glassmorphism · Ambient orbs
+     ========================================================== */
+  :root{
+    /* ——— Canvas & Surfaces ——— */
+    --bg: #F7F8FB;                  /* Cool-toned off-white canvas */
+    --bg-elevated: #FFFFFF;         /* Pure white for elevation */
+    --surface: #FFFFFF;
+    --surface-raised: #FFFFFF;
+    --surface-glass: rgba(255, 255, 255, 0.72);
+    --surface-glass-strong: rgba(255, 255, 255, 0.88);
+    --surface-hover: #F1F3F8;
+    --surface-active: #E9ECF3;
+    --surface-subtle: #FAFBFD;
+
+    /* ——— Borders ——— */
+    --border: rgba(15, 23, 42, 0.06);
+    --border-strong: rgba(15, 23, 42, 0.10);
+    --border-hover: rgba(15, 23, 42, 0.16);
+    --border-glass: rgba(255, 255, 255, 0.6);
+
+    /* ——— Typography Colors ——— */
+    --text: #0F172A;                /* Deep charcoal-slate */
+    --text-secondary: #334155;
+    --text-dim: #64748B;
+    --text-muted: #94A3B8;
+
+    /* ——— Brand: Electric Indigo → Vivid Cyan ——— */
+    --accent: #6366F1;              /* Electric indigo */
+    --accent-hover: #4F46E5;
+    --accent-dark: #4338CA;
+    --accent-soft: rgba(99, 102, 241, 0.08);
+    --accent-soft-strong: rgba(99, 102, 241, 0.14);
+    --accent-glow: rgba(99, 102, 241, 0.35);
+    --accent-text: #4F46E5;
+
+    /* ——— Secondary accents for gradient mesh ——— */
+    --cyan: #06B6D4;
+    --cyan-soft: rgba(6, 182, 212, 0.10);
+    --cyan-text: #0891B2;
+    --mint: #10B981;                /* Neon mint */
+    --mint-soft: rgba(16, 185, 129, 0.10);
+    --mint-text: #059669;
+    --violet: #8B5CF6;
+    --pink: #EC4899;
+
+    /* ——— Status ——— */
+    --amber: #F59E0B;
+    --amber-soft: rgba(245, 158, 11, 0.10);
+    --amber-text: #B45309;
+    --danger: #EF4444;
+    --danger-soft: rgba(239, 68, 68, 0.10);
+    --danger-text: #DC2626;
+    --success: #10B981;
+    --success-soft: rgba(16, 185, 129, 0.10);
+    --success-text: #059669;
+
+    /* ——— Radius scale ——— */
+    --radius-sm: 8px;
+    --radius: 12px;
+    --radius-md: 14px;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
+
+    /* ——— Shadows: soft, layered ——— */
+    --shadow-xs: 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-sm: 0 1px 3px rgba(15,23,42,0.06), 0 1px 2px rgba(15,23,42,0.04);
+    --shadow: 0 4px 12px rgba(15,23,42,0.06), 0 2px 4px rgba(15,23,42,0.04);
+    --shadow-md: 0 12px 32px rgba(15,23,42,0.08), 0 4px 8px rgba(15,23,42,0.04);
+    --shadow-lg: 0 24px 56px rgba(15,23,42,0.12), 0 8px 16px rgba(15,23,42,0.05);
+    --shadow-glow: 0 0 0 4px var(--accent-soft), 0 12px 40px var(--accent-glow);
+    --shadow-inner: inset 0 1px 0 rgba(255,255,255,0.9);
+
+    /* ——— Motion ——— */
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --transition: 200ms var(--ease);
+    --transition-slow: 320ms var(--ease);
+
+    /* ——— Fonts ——— */
+    --font-display: 'Rubik', 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Assistant', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', ui-monospace, monospace;
+  }
+
+  *{ box-sizing: border-box; }
+  *::selection{ background: var(--accent-soft-strong); color: var(--accent-dark); }
+
+  html, body{
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    letter-spacing: -0.006em;
+  }
+
+  /* ——— Ambient gradient mesh: glowing orbs in the background ——— */
+  body::before{
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: -2;
+    background:
+      radial-gradient(circle 700px at 12% -5%, rgba(99, 102, 241, 0.18), transparent 55%),
+      radial-gradient(circle 600px at 92% 8%, rgba(6, 182, 212, 0.14), transparent 55%),
+      radial-gradient(circle 500px at 50% 105%, rgba(139, 92, 246, 0.12), transparent 55%),
+      radial-gradient(circle 400px at 100% 55%, rgba(16, 185, 129, 0.08), transparent 55%);
+    filter: blur(0.5px);
+  }
+  body::after{
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: -1;
+    background-image:
+      linear-gradient(rgba(15,23,42,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15,23,42,0.025) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 20%, transparent 75%);
+    opacity: 0.6;
+  }
+
+  h1, h2, h3, h4, button, .tab-btn{
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+  h1, h2, h3, h4{ font-weight: 700; }
+
+  /* ——— Custom scrollbars ——— */
+  ::-webkit-scrollbar{ width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track{ background: transparent; }
+  ::-webkit-scrollbar-thumb{
+    background: rgba(15,23,42,0.12);
+    border-radius: 10px;
+    border: 2px solid var(--bg);
+  }
+  ::-webkit-scrollbar-thumb:hover{ background: rgba(15,23,42,0.22); }
+
+  /* =========================================================
+     HEADER — Glassmorphism sticky
+     ========================================================= */
+  header{
+    background: var(--surface-glass-strong);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 32px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    flex-wrap: wrap;
+    position: sticky; top: 0; z-index: 50;
+    box-shadow: 0 1px 0 rgba(255,255,255,0.6) inset;
+  }
+  .brand{ display: flex; align-items: center; gap: 14px; }
+  .brand .dot{
+    width: 32px; height: 32px; border-radius: 10px;
+    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #06B6D4 100%);
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.5) inset,
+      0 8px 20px rgba(99, 102, 241, 0.35),
+      0 2px 4px rgba(99, 102, 241, 0.2);
+    position: relative;
+    transition: var(--transition);
+  }
+  .brand .dot::after{
+    content: ''; position: absolute; inset: 4px;
+    border-radius: 6px;
+    background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.95), rgba(255,255,255,0) 55%);
+    opacity: 0.85;
+  }
+  .brand:hover .dot{ transform: rotate(-6deg) scale(1.05); }
+  .brand h1{
+    font-size: 17px; margin: 0; font-weight: 700;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #0F172A 0%, #4F46E5 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  .whoami{ display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-dim); }
+  .whoami select{
+    background: var(--bg-elevated);
+    color: var(--text);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 8px 14px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-xs);
+  }
+  .whoami select:hover{ border-color: var(--accent); box-shadow: var(--shadow-sm); }
+  .whoami select:focus{
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+
+  /* =========================================================
+     TABS
+     ========================================================= */
+  nav.tabs{
+    display: flex; gap: 2px;
+    background: var(--surface-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 0 28px;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    position: sticky; top: 63px; z-index: 40;
+  }
+  nav.tabs::-webkit-scrollbar{ height: 0; }
+  .tab-btn{
+    background: none; border: none;
+    color: var(--text-dim);
+    padding: 15px 18px;
+    font-size: 13.5px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    font-weight: 600;
+    transition: var(--transition);
+    position: relative;
+    letter-spacing: -0.01em;
+  }
+  .tab-btn:hover{ color: var(--text); }
+  .tab-btn.active{
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  .tab-btn.active::before{
+    content: ''; position: absolute;
+    inset: 6px 8px auto 8px;
+    height: calc(100% - 16px);
+    background: var(--accent-soft);
+    border-radius: var(--radius-sm);
+    z-index: -1;
+  }
+
+  main{ padding: 32px; max-width: 1400px; margin: 0 auto; }
+
+  .panel{ display: none; animation: fade .35s var(--ease); }
+  .panel.active{ display: block; }
+  @keyframes fade{
+    from{ opacity: 0; transform: translateY(8px); }
+    to{ opacity: 1; transform: none; }
+  }
+
+  .panel-head{
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; flex-wrap: wrap; gap: 12px;
+  }
+  .panel-head h2{
+    margin: 0; font-size: 26px; font-weight: 700;
+    letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #0F172A 0%, #475569 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .panel-head p{
+    margin: 6px 0 0; color: var(--text-dim);
+    font-size: 13.5px; font-weight: 400;
+  }
+
+  /* =========================================================
+     CARDS — Frosted glass with soft borders
+     ========================================================= */
+  .card{
+    background: var(--surface-glass-strong);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-sm), var(--shadow-inner);
+    transition: var(--transition);
+  }
+  .card:hover{
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md), var(--shadow-inner);
+  }
+
+  /* =========================================================
+     BUTTONS — Vibrant CTA with glow
+     ========================================================= */
+  button.primary{
+    background: linear-gradient(135deg, #6366F1 0%, #4F46E5 100%);
+    color: #FFFFFF;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: var(--radius-sm);
+    padding: 10px 18px;
+    font-weight: 600;
+    font-size: 13.5px;
+    cursor: pointer;
+    font-family: var(--font-display);
+    transition: var(--transition);
+    box-shadow:
+      0 4px 14px rgba(99, 102, 241, 0.35),
+      inset 0 1px 0 rgba(255,255,255,0.25);
+    letter-spacing: -0.005em;
+    position: relative;
+    overflow: hidden;
+  }
+  button.primary::before{
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2), transparent 50%);
+    opacity: 0; transition: var(--transition);
+  }
+  button.primary:hover{
+    transform: translateY(-1px);
+    box-shadow:
+      0 8px 24px rgba(99, 102, 241, 0.45),
+      inset 0 1px 0 rgba(255,255,255,0.3);
+  }
+  button.primary:hover::before{ opacity: 1; }
+  button.primary:active{ transform: translateY(0); }
+
+  button.ghost{
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    padding: 9px 15px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: var(--transition);
+    box-shadow: var(--shadow-xs);
+  }
+  button.ghost:hover{
+    background: var(--surface-hover);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+  }
+  button.ghost.active{
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  button.icon-btn{
+    background: none; border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+  }
+  button.icon-btn:hover{
+    background: var(--surface-hover);
+    color: var(--text);
+  }
+  .danger-txt{ color: var(--danger); }
+
+  /* =========================================================
+     FORMS
+     ========================================================= */
+  input[type=text], input[type=email], input[type=tel], input[type=date], textarea, select{
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    border-radius: var(--radius-sm);
+    padding: 10px 13px;
+    font-family: var(--font-body);
+    font-size: 13.5px;
+    width: 100%;
+    transition: var(--transition);
+    box-shadow: var(--shadow-xs);
+  }
+  input:hover, textarea:hover, select:hover{
+    border-color: var(--border-hover);
+  }
+  input:focus, textarea:focus, select:focus{
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+  textarea{ resize: vertical; min-height: 88px; line-height: 1.6; }
+  label{
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    letter-spacing: 0.005em;
+  }
+  .field{ margin-bottom: 14px; }
+  .grid2{ display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* =========================================================
+     TABLES
+     ========================================================= */
+  table{
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  th{
+    text-align: right;
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface-subtle);
+  }
+  td{
+    padding: 13px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+  tr:last-child td{ border-bottom: none; }
+  tr{ transition: background var(--transition); }
+  tr:hover td{ background: var(--surface-hover); color: var(--text); }
+
+  /* =========================================================
+     BADGES
+     ========================================================= */
+  .badge{
+    display: inline-flex; align-items: center;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .badge.dept{
+    background: var(--accent-soft);
+    color: var(--accent-text);
+    border: 1px solid var(--accent-soft-strong);
+  }
+
+  .empty-state{
+    text-align: center;
+    padding: 64px 24px;
+    color: var(--text-dim);
+  }
+  .empty-state .big{ font-size: 42px; margin-bottom: 12px; opacity: 0.5; }
+
+  /* =========================================================
+     MODAL — Glass over blurred backdrop
+     ========================================================= */
+  .modal-backdrop{
+    position: fixed; inset: 0;
+    background: rgba(15, 23, 42, 0.30);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 100;
+    padding: 20px;
+    animation: fade .2s var(--ease);
+  }
+  .modal-backdrop.active{ display: flex; }
+  .modal{
+    background: var(--surface-glass-strong);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-xl);
+    padding: 26px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 88vh;
+    overflow: auto;
+    box-shadow: var(--shadow-lg), var(--shadow-inner);
+    animation: modalIn .35s var(--ease);
+  }
+  @keyframes modalIn{
+    from{ opacity: 0; transform: translateY(16px) scale(0.97); }
+    to{ opacity: 1; transform: none; }
+  }
+  .modal.wide{ max-width: 680px; }
+  .modal h3{
+    margin: 0 0 18px;
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .modal-actions{
+    display: flex; gap: 10px;
+    justify-content: flex-start;
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* =========================================================
+     ORG TREE
+     ========================================================= */
+  .org-wrap{ overflow-x: auto; padding: 14px 0 26px; }
+  .tree{ display: flex; flex-direction: column; align-items: flex-start; }
+  .node-row{ display: flex; align-items: flex-start; gap: 26px; }
+  .node{
+    background: linear-gradient(180deg, #FFFFFF 0%, #FAFBFD 100%);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    padding: 13px 17px;
+    min-width: 190px;
+    margin-bottom: 6px;
+    position: relative;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-xs);
+  }
+  .node:hover{
+    border-color: var(--accent);
+    box-shadow: var(--shadow-glow);
+    transform: translateY(-2px);
+  }
+  .node .name{ font-weight: 700; font-size: 14px; color: var(--text); }
+  .node .role{
+    font-size: 12px;
+    color: var(--accent);
+    margin-top: 3px;
+    font-weight: 600;
+  }
+  .node .dept{
+    font-size: 11.5px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .children{
+    border-inline-start: 1.5px solid var(--border-strong);
+    margin-inline-start: 24px;
+    padding-inline-start: 24px;
+    padding-top: 16px;
+    display: flex; flex-direction: column;
+    gap: 16px;
+  }
+  .add-node-btn{
+    font-size: 12px;
+    color: var(--text-dim);
+    border: 1.5px dashed var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 9px 14px;
+    background: none;
+    cursor: pointer;
+    align-self: flex-start;
+    transition: var(--transition);
+    font-weight: 500;
+  }
+  .add-node-btn:hover{
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    border-style: solid;
+  }
+
+  /* =========================================================
+     MEETINGS
+     ========================================================= */
+  .who-col{ display: grid; grid-template-columns: 290px 1fr; gap: 22px; align-items: flex-start; }
+  @media (max-width: 800px){ .who-col{ grid-template-columns: 1fr; } }
+  .emp-list-mini{ display: flex; flex-direction: column; gap: 3px; }
+  .emp-mini-item{
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 11px 13px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    transition: var(--transition);
+    font-weight: 500;
+  }
+  .emp-mini-item:hover{
+    background: var(--surface-hover);
+    color: var(--text);
+  }
+  .emp-mini-item.active{
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .emp-mini-item .count{
+    background: var(--bg-elevated);
+    color: var(--text-secondary);
+    font-size: 11px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    font-weight: 600;
+  }
+  .meeting-item{
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    background: var(--surface);
+    transition: var(--transition);
+    box-shadow: var(--shadow-xs);
+  }
+  .meeting-item:hover{
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+  }
+  .meeting-item .mh{ display: flex; justify-content: space-between; margin-bottom: 8px; }
+  .meeting-item .mh .title{ font-weight: 700; font-size: 15px; color: var(--text); }
+  .meeting-item .mh .date{
+    color: var(--text-dim); font-size: 12px;
+    font-family: var(--font-mono); font-weight: 500;
+  }
+  .meeting-item .body{
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    white-space: pre-wrap;
+  }
+  .meeting-item .by{
+    font-size: 12px;
+    color: var(--accent);
+    margin-top: 12px;
+    font-weight: 600;
+  }
+
+  /* =========================================================
+     TASKS
+     ========================================================= */
+  .task-filters{ display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .task-filters button{
+    font-size: 12.5px;
+    padding: 7px 14px;
+    border-radius: 999px;
+  }
+  .task-row{
+    display: flex; align-items: center; gap: 14px;
+    padding: 14px 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    background: var(--surface);
+    transition: var(--transition);
+    box-shadow: var(--shadow-xs);
+  }
+  .task-row:hover{
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
+  }
+  .task-row.done{ opacity: .55; }
+  .task-row.done .t-title{ text-decoration: line-through; color: var(--text-dim); }
+  .task-row.status-in_progress{ border-inline-start: 3px solid var(--amber); }
+  .task-check{
+    width: 22px; height: 22px;
+    border-radius: 6px;
+    border: 1.5px solid var(--border-hover);
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: #FFFFFF;
+    background: none;
+    transition: var(--transition);
+  }
+  .task-check:hover{ border-color: var(--accent); }
+  .task-row.done .task-check{
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-dark) 100%);
+    border-color: var(--accent);
+    color: #FFFFFF;
+    box-shadow: 0 2px 8px var(--accent-glow);
+  }
+  .status-select{
+    border-radius: 999px; padding: 6px 12px; font-size: 11.5px; font-weight: 700;
+    border: 1.5px solid var(--border-hover); background: var(--surface); cursor: pointer; flex-shrink: 0;
+  }
+  .status-select.st-none{ color: var(--text-dim); }
+  .status-select.st-in_progress{ color: var(--amber-text); border-color: rgba(245,158,11,0.3); background: var(--amber-soft); }
+  .status-select.st-done{ color: var(--success-text); border-color: rgba(16,185,129,0.3); background: var(--success-soft); }
+  .checkbox-list{ max-height: 180px; overflow: auto; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 10px; background: var(--surface-subtle); }
+  .checkbox-row{ display: flex; align-items: center; gap: 8px; padding: 5px 2px; font-size: 13.5px; color: var(--text); font-weight: 400; }
+  .checkbox-row input{ width: auto; accent-color: var(--accent); }
+  .t-body{ flex: 1; min-width: 0; }
+  .t-title{ font-weight: 600; font-size: 14px; color: var(--text); }
+  .t-meta{
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 4px;
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+  .prio{
+    padding: 2px 9px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .prio.low{ background: var(--surface-active); color: var(--text-dim); }
+  .prio.med{ background: var(--amber-soft); color: var(--amber-text); border: 1px solid rgba(245,158,11,0.2); }
+  .prio.high{ background: var(--danger-soft); color: var(--danger-text); border: 1px solid rgba(239,68,68,0.2); }
+
+  /* =========================================================
+     DASHBOARD
+     ========================================================= */
+  .upload-zone{
+    border: 2px dashed var(--border-hover);
+    border-radius: var(--radius-lg);
+    padding: 52px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+    background:
+      linear-gradient(180deg, var(--surface-subtle) 0%, transparent 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .upload-zone::before{
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 100%, var(--accent-soft) 0%, transparent 70%);
+    opacity: 0; transition: var(--transition);
+  }
+  .upload-zone:hover{
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .upload-zone:hover::before{ opacity: 1; }
+  .upload-zone > *{ position: relative; z-index: 1; }
+  .upload-zone .icon{ font-size: 40px; margin-bottom: 12px; }
+
+  .sheet-tabs{ display: flex; gap: 6px; margin: 20px 0; flex-wrap: wrap; }
+  .sheet-tabs button{
+    font-size: 12.5px;
+    padding: 7px 13px;
+    border-radius: var(--radius-sm);
+  }
+  .sheet-tabs button.active{
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .stat-cards{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 22px;
+  }
+  .stat-card{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+  }
+  .stat-card::before{
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--cyan) 100%);
+    opacity: 0; transition: var(--transition);
+  }
+  .stat-card::after{
+    content: ''; position: absolute; top: -60px; right: -60px; width: 160px; height: 160px;
+    background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+    opacity: 0; transition: var(--transition);
+    pointer-events: none;
+  }
+  .stat-card:hover{
+    border-color: var(--border-strong);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+  .stat-card:hover::before{ opacity: 1; }
+  .stat-card:hover::after{ opacity: 1; }
+  .stat-card .val{
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--text);
+    font-family: var(--font-display);
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    background: linear-gradient(135deg, #0F172A 0%, #4F46E5 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .stat-card .lbl{
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+  }
+  .chart-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 18px;
+    margin-top: 20px;
+  }
+  .chart-box{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+  }
+  .chart-box:hover{
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-md);
+  }
+  .chart-box h4{
+    margin: 0 0 16px;
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .table-scroll{
+    max-height: 380px;
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  select#employeeSelect, .avatar{ display: none; }
+
+  /* =========================================================
+     POSTINGS
+     ========================================================= */
+  .post-filters{
+    display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  }
+  .post-filters select{ width: auto; min-width: 160px; }
+  .postings-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+  .posting-card{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    display: flex; flex-direction: column;
+    gap: 12px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+  .posting-card::before{
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, #6366F1, #06B6D4, #10B981);
+    opacity: 0; transition: var(--transition);
+  }
+  .posting-card::after{
+    content: ''; position: absolute; top: -80px; left: -80px; width: 200px; height: 200px;
+    background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+    opacity: 0; transition: var(--transition);
+    pointer-events: none;
+  }
+  .posting-card:hover{
+    border-color: var(--border-strong);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+  }
+  .posting-card:hover::before{ opacity: 1; }
+  .posting-card:hover::after{ opacity: 1; }
+  .posting-card.closed{ opacity: .6; }
+  .posting-card > *{ position: relative; z-index: 1; }
+  .posting-card .ph{
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
+  }
+  .posting-card .p-title{
+    font-weight: 700;
+    font-size: 16px;
+    font-family: var(--font-display);
+    letter-spacing: -0.015em;
+    color: var(--text);
+    line-height: 1.35;
+  }
+  .posting-card .p-tags{ display: flex; gap: 6px; flex-wrap: wrap; }
+  .tag{
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--surface-hover);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-strong);
+    font-weight: 500;
+  }
+  .tag.grade{
+    background: var(--amber-soft);
+    color: var(--amber-text);
+    border-color: rgba(245,158,11,0.25);
+  }
+  .status-pill{
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 11px;
+    border-radius: 999px;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+  }
+  .status-pill.open{
+    background: var(--mint-soft);
+    color: var(--mint-text);
+    border: 1px solid rgba(16,185,129,0.25);
+  }
+  .status-pill.closed{
+    background: var(--danger-soft);
+    color: var(--danger-text);
+    border: 1px solid rgba(239,68,68,0.25);
+  }
+  .posting-card .p-section{ font-size: 13px; color: var(--text-secondary); }
+  .posting-card .p-section .lbl2{
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .posting-card .p-desc{
+    white-space: pre-wrap;
+    line-height: 1.65;
+    color: var(--text-secondary);
+  }
+  .posting-card .p-foot{
+    display: flex; justify-content: space-between; align-items: center;
+    margin-top: 8px; padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 11.5px;
+    color: var(--text-dim);
+  }
+
+  /* =========================================================
+     POSITIONS
+     ========================================================= */
+  .level-badge{
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.01em;
+  }
+  .level-badge.senior{
+    background: var(--amber-soft);
+    color: var(--amber-text);
+    border: 1px solid rgba(245,158,11,0.25);
+  }
+  .level-badge.distinct{
+    background: var(--accent-soft);
+    color: var(--accent-text);
+    border: 1px solid var(--accent-soft-strong);
+  }
+  .level-badge.junior{
+    background: var(--surface-active);
+    color: var(--text-dim);
+  }
+  .vacant-txt{ color: var(--text-dim); font-style: italic; }
+  .occupied-txt{ color: var(--text); font-weight: 500; }
+  .form-section-title{
+    font-family: var(--font-display);
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 700;
+    margin: 22px 0 12px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .form-section-title:first-of-type{ margin-top: 0; padding-top: 0; border-top: none; }
+  .profile-meta{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 20px;
+    font-size: 13.5px;
+    margin-bottom: 8px;
+  }
+  .profile-meta .lbl3{
+    color: var(--text-dim);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .locked-note{
+    font-size: 12.5px;
+    color: var(--text-dim);
+    display: flex; align-items: center; gap: 6px;
+    padding: 10px 0;
+  }
+  .star-toggle{
+    background: none; border: none;
+    cursor: pointer;
+    font-size: 20px;
+    color: var(--border-hover);
+    line-height: 1;
+    padding: 2px;
+    transition: var(--transition);
+  }
+  .star-toggle:hover{ color: var(--amber-text); transform: scale(1.15); }
+  .star-toggle.on{ color: var(--amber); }
+  .ratio-val{
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 13px;
+  }
+  .counter-badge{
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--surface-hover);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-strong);
+  }
+  .freeze-badge{
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+  .freeze-badge.active{
+    background: var(--mint-soft);
+    color: var(--mint-text);
+    border: 1px solid rgba(16,185,129,0.25);
+  }
+  .freeze-badge.frozen{
+    background: var(--surface-active);
+    color: var(--text-dim);
+  }
+
+  /* =========================================================
+     ATTENDANCE
+     ========================================================= */
+  .att-select{
+    width: auto;
+    min-width: 180px;
+    font-size: 13px;
+    padding: 8px 11px;
+  }
+  .att-select.st-unit{ color: var(--mint-text); border-color: rgba(16,185,129,0.35); background: var(--mint-soft); }
+  .att-select.st-annual_leave{ color: var(--accent); border-color: var(--accent-soft-strong); background: var(--accent-soft); }
+  .att-select.st-sick{ color: var(--danger-text); border-color: rgba(239,68,68,0.35); background: var(--danger-soft); }
+  .att-select.st-abroad{ color: var(--amber-text); border-color: rgba(245,158,11,0.35); background: var(--amber-soft); }
+  .att-select.st-outside_unit{ color: var(--text-dim); }
+  .att-select.st-{ color: var(--text-dim); }
+
+  .stat-card.st-unit .val{ background: linear-gradient(135deg, #059669 0%, #10B981 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat-card.st-annual_leave .val{ background: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat-card.st-sick .val{ background: linear-gradient(135deg, #DC2626 0%, #EF4444 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat-card.st-abroad .val{ background: linear-gradient(135deg, #B45309 0%, #F59E0B 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .stat-card.st-outside_unit .val{ background: linear-gradient(135deg, #475569 0%, #94A3B8 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+  .request-item{
+    padding: 18px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 12px;
+    background: var(--surface);
+    transition: var(--transition);
+    box-shadow: var(--shadow-xs);
+  }
+  .request-item:hover{
+    border-color: var(--border-strong);
+    box-shadow: var(--shadow-sm);
+  }
+  .request-item .rh{
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 10px; flex-wrap: wrap;
+  }
+  .request-item .r-title{ font-weight: 700; font-size: 14.5px; color: var(--text); }
+  .request-item .r-meta{
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin-top: 6px;
+    display: flex; gap: 14px; flex-wrap: wrap;
+  }
+  .req-status{
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 11px;
+    border-radius: 999px;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+  }
+  .req-status.pending{
+    background: var(--amber-soft);
+    color: var(--amber-text);
+    border: 1px solid rgba(245,158,11,0.25);
+  }
+  .req-status.approved{
+    background: var(--mint-soft);
+    color: var(--mint-text);
+    border: 1px solid rgba(16,185,129,0.25);
+  }
+  .req-status.rejected{
+    background: var(--danger-soft);
+    color: var(--danger-text);
+    border: 1px solid rgba(239,68,68,0.25);
+  }
+  .request-item .r-note{
+    font-size: 13.5px;
+    margin-top: 12px;
+    white-space: pre-wrap;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+  .request-item .r-actions{ display: flex; gap: 10px; margin-top: 14px; }
+
+  /* =========================================================
+     BULK SELECT & WIDGETS
+     ========================================================= */
+  .bulk-toolbar{
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    background: var(--accent-soft); border: 1px solid var(--accent); border-radius: var(--radius);
+    padding: 10px 16px; margin-bottom: 14px;
+  }
+  .bulk-toolbar .count{ font-weight: 700; font-size: 13.5px; color: var(--accent-text); }
+  .widget-grid{ display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px; }
+  .widget-card{ display: flex; flex-direction: column; gap: 10px; }
+  .widget-card .widget-title{ font-family: var(--font-display); font-weight: 700; font-size: 13.5px; color: var(--text-dim); text-transform: uppercase; letter-spacing: .03em; }
+  .widget-card .widget-big{ font-size: 30px; font-weight: 800; font-family: var(--font-display); color: var(--accent-text); }
+  .widget-card .widget-row{ display: flex; justify-content: space-between; font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .widget-card .widget-row:last-child{ border-bottom: none; }
+  .widget-empty{ font-size: 12.5px; color: var(--text-dim); padding: 6px 0; }
+
+  /* =========================================================
+     TASK COMMENTS
+     ========================================================= */
+  .comments-list{
+    display: flex; flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
+    max-height: 320px;
+    overflow: auto;
+    padding: 4px;
+  }
+  .comment-item{
+    background: var(--surface-subtle);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 15px;
+    transition: var(--transition);
+  }
+  .comment-item:hover{
+    border-color: var(--border-strong);
+    background: var(--surface);
+  }
+  .comment-head{
+    display: flex; justify-content: space-between; gap: 8px;
+    font-size: 12.5px; margin-bottom: 6px;
+  }
+  .comment-head strong{
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .comment-date{
+    color: var(--text-dim);
+    white-space: nowrap;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+  }
+  .comment-text{
+    font-size: 13.5px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    color: var(--text-secondary);
+  }
+  .comment-file{
+    display: inline-flex; align-items: center; gap: 6px;
+    margin-top: 8px;
+    font-size: 12.5px;
+    color: var(--accent);
+    text-decoration: none;
+    padding: 4px 10px;
+    background: var(--accent-soft);
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+    font-weight: 600;
+  }
+  .comment-file:hover{
+    background: var(--accent-soft-strong);
+  }
+  .comment-count-btn{ font-size: 12.5px; }
+  .import-btn{ margin-inline-start: 8px; }
+
+  /* Focus outlines for a11y */
+  button:focus-visible, a:focus-visible{
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  /* Chart.js dark-on-light overrides for legibility */
+  canvas{ max-width: 100%; }
+
+  /* Print-friendly (bonus) */
+  @media print{
+    body::before, body::after{ display: none; }
+    header, nav.tabs{ position: static; }
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand"><span class="dot"></span><h1>מרכז ניהול ארגוני</h1></div>
+  <div class="whoami">
+    <span>מחובר כ:</span>
+    <select id="whoamiSelect"></select>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="dashboard">לוח בקרה</button>
+  <button class="tab-btn" data-tab="orgchart">מבנה ארגוני</button>
+  <button class="tab-btn" data-tab="meetings">סיכומי פגישות</button>
+  <button class="tab-btn" data-tab="tasks">משימות</button>
+  <button class="tab-btn" data-tab="mgrinfo">מידע למנהלים</button>
+  <button class="tab-btn" data-tab="postings">שיבוצים</button>
+  <button class="tab-btn" data-tab="positions">ניהול תקנים</button>
+  <button class="tab-btn" data-tab="convergence">התכנסות</button>
+  <button class="tab-btn" data-tab="attendance">נוכחות</button>
+  <button class="tab-btn" data-tab="employees">עובדים</button>
+</nav>
+
+<main>
+
+  <!-- DASHBOARD -->
+  <section class="panel active" id="panel-dashboard">
+    <div class="panel-head">
+      <div><h2>לוח בקרה</h2><p>מותאם אישית לפי מה שרלוונטי אליך ולעובדים שלך</p></div>
+      <button class="ghost" onclick="openDashboardWidgetPicker()">⚙️ התאם אישית</button>
+    </div>
+    <div class="widget-grid" id="dashWidgetGrid"></div>
+
+    <div class="panel-head" style="margin-top:8px;">
+      <div><h2 style="font-size:18px;">קובץ אקסל</h2><p>העלה קובץ אקסל כדי לרענן את הנתונים והגרפים</p></div>
+      <button class="ghost" onclick="exportDashboardSheet()">📤 ייצוא לאקסל</button>
+      <button class="ghost" id="clearDashBtn">נקה נתונים</button>
+    </div>
+    <div class="card">
+      <div class="upload-zone" id="uploadZone">
+        <div class="icon">📊</div>
+        <div style="font-weight:600;">גרור קובץ אקסל לכאן או לחץ לבחירה</div>
+        <div style="color:var(--text-dim); font-size:12.5px; margin-top:4px;">נתמכים: xlsx, xls, csv</div>
+        <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display:none">
+      </div>
+    </div>
+    <div id="dashContent"></div>
+  </section>
+
+
+  <!-- ORG CHART -->
+  <section class="panel" id="panel-orgchart">
+    <div class="panel-head">
+      <div><h2>מבנה ארגוני</h2><p>לחץ על עובד לעריכה, או הוסף עובד חדש מתחתיו</p></div>
+      <div style="display:flex; gap:8px;">
+        <button class="primary" id="addRootBtn">+ הוסף בעל תפקיד בכיר</button>
+        <button class="ghost" onclick="triggerExcelImport('employees')">📥 ייבוא מאקסל</button>
+        <button class="ghost" onclick="exportEmployees()">📤 ייצוא לאקסל</button>
+      </div>
+    </div>
+    <div class="card org-wrap"><div id="orgTree" class="tree"></div></div>
+  </section>
+
+  <!-- MEETINGS -->
+  <section class="panel" id="panel-meetings">
+    <div class="panel-head">
+      <div><h2>סיכומי פגישות</h2><p>כל מנהל חשוף לסיכומים של כל הכפופים לו במבנה הארגוני</p></div>
+      <button class="primary" id="addMeetingBtn">+ סיכום פגישה חדש</button>
+      <button class="ghost" onclick="exportMeetings()">📤 ייצוא לאקסל</button>
+    </div>
+    <div class="card who-col">
+      <div>
+        <label>הצג סיכומים עבור</label>
+        <div class="emp-list-mini" id="meetingEmpFilter"></div>
+      </div>
+      <div id="meetingsList"></div>
+    </div>
+  </section>
+
+  <!-- TASKS -->
+  <section class="panel" id="panel-tasks">
+    <div class="panel-head">
+      <div><h2>משימות</h2><p>הקצאת משימות בין חברי הצוות ומעקב אחר סטטוס</p></div>
+      <button class="primary" id="addTaskBtn">+ משימה חדשה</button>
+      <button class="ghost" onclick="exportTasks()">📤 ייצוא לאקסל</button>
+    </div>
+    <div class="task-filters">
+      <button class="ghost active" data-filter="all">כל המשימות</button>
+      <button class="ghost" data-filter="mine">שהוקצו לי</button>
+      <button class="ghost" data-filter="byme">שהקציתי</button>
+      <button class="ghost" data-filter="open">פתוחות</button>
+      <button class="ghost" data-filter="done">הושלמו</button>
+    </div>
+    <div id="tasksList"></div>
+  </section>
+
+  <!-- MANAGER INFO -->
+  <section class="panel" id="panel-mgrinfo">
+    <div class="panel-head">
+      <div><h2>מידע למנהלים</h2><p>העלאת מידע לפי נושאים, עם אפשרות לשתף גם לפי דרגה או לעובדים ספציפיים</p></div>
+      <button class="primary" id="addInfoBtn">+ העלאת מידע</button>
+      <button class="ghost" onclick="exportMgrInfo()">📤 ייצוא לאקסל</button>
+    </div>
+    <div class="card">
+      <div class="post-filters">
+        <select id="filterInfoTopic"><option value="">כל הנושאים</option></select>
+        <button class="ghost" id="resetInfoFilters">איפוס סינון</button>
+      </div>
+    </div>
+    <div id="infoList" class="postings-grid"></div>
+  </section>
+
+  <!-- POSTINGS -->
+  <section class="panel" id="panel-postings">
+    <div class="panel-head">
+      <div><h2>שיבוצים</h2><p>משרות פתוחות להתמודדות בארגון</p></div>
+      <button class="primary" id="addPostingBtn">+ פרסום משרה חדשה</button>
+      <button class="ghost" onclick="exportPostings()">📤 ייצוא לאקסל</button>
+    </div>
+    <div class="card">
+      <div class="post-filters">
+        <select id="filterIndustry"><option value="">כל הענפים</option></select>
+        <select id="filterMador"><option value="">כל המדורים</option></select>
+        <select id="filterTeam"><option value="">כל הצוותים</option></select>
+        <select id="filterGrade"><option value="">כל הדרגות</option></select>
+        <select id="filterStatus">
+          <option value="open">משרות פתוחות בלבד</option>
+          <option value="">כולל משרות סגורות</option>
+        </select>
+        <button class="ghost" id="resetPostFilters">איפוס סינון</button>
+      </div>
+    </div>
+    <div id="postingsList" class="postings-grid"></div>
+  </section>
+
+  <!-- POSITIONS -->
+  <section class="panel" id="panel-positions">
+    <div class="panel-head">
+      <div><h2>ניהול תקנים</h2><p>מאגר תקנים, איוש נוכחי ועתידי והערות תקינה</p></div>
+      <div style="display:flex; gap:8px;">
+        <button class="primary" id="addPositionBtn">+ תקן חדש</button>
+        <button class="ghost" onclick="triggerExcelImport('positions')">📥 ייבוא מאקסל</button>
+        <button class="ghost" onclick="exportPositions()">📤 ייצוא לאקסל</button>
+        <button class="ghost" id="posPermissionsBtn" style="display:none;" onclick="openPositionsPermissionsModal()">🔑 ניהול הרשאות</button>
+      </div>
+    </div>
+    <div class="locked-note" style="margin-bottom:14px;">🔒 כל מנהל בכיר במחלקה (לפי שדה "יחידת רישומת") חשוף לתקני מחלקתו בלבד. כל עובד חשוף גם לתקן שלו האישי, גם אם אינו מנהל מחלקה. העובד הבכיר ביותר בארגון חשוף לכל התקנים ויכול להעניק הרשאות צפייה נוספות.</div>
+    <div class="card">
+      <div class="post-filters">
+        <select id="filterPosUnit"><option value="">כל יחידות הרישומת</option></select>
+        <select id="filterPosGrade"><option value="">כל הדרגות</option></select>
+        <select id="filterPosLevel">
+          <option value="">כל הרמות</option>
+          <option value="בכיר">בכיר</option>
+          <option value="מובהק">מובהק</option>
+          <option value="זוטר">זוטר</option>
+        </select>
+        <select id="filterPosStatus">
+          <option value="">כל התקנים</option>
+          <option value="occupied">מאוישים</option>
+          <option value="vacant">פנויים</option>
+        </select>
+        <select id="filterPosCounter">
+          <option value="">מונה 0/1</option>
+          <option value="מונה 0">מונה 0</option>
+          <option value="מונה 1">מונה 1</option>
+        </select>
+        <select id="filterPosFreeze">
+          <option value="">מופשר/מוקפא</option>
+          <option value="מופשר">מופשר</option>
+          <option value="מוקפא">מוקפא</option>
+        </select>
+        <button class="ghost" id="resetPosFilters">איפוס סינון</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="table-scroll">
+        <table id="posTable">
+          <thead><tr><th>מס' תקן</th><th>מלל משרה</th><th>מקצוע</th><th>דרגה</th><th>רמה</th><th>יחידת רישומת</th><th>מונה</th><th>סטטוס</th><th>מאויש נוכחי</th><th>מינוי עתידי</th><th>הערת התכנסות</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONVERGENCE -->
+  <section class="panel" id="panel-convergence">
+    <div class="panel-head">
+      <div><h2>התכנסות</h2><p>מעקב תאריכי כניסה/יציאה ויחס שנתי, עם סימון רידוד</p></div>
+      <div style="display:flex; gap:8px;">
+        <button class="primary" id="addConvBtn">+ רשומה חדשה</button>
+        <button class="ghost" onclick="openConvergenceAddFromEmployeesModal()">👥 הוסף עובדים מהרשימה</button>
+        <button class="ghost" onclick="triggerExcelImport('convergence')">📥 ייבוא מאקסל</button>
+        <button class="ghost" onclick="exportConvergence()">📤 ייצוא לאקסל</button>
+        <button class="ghost" id="convPermissionsBtn" style="display:none;" onclick="openConvergencePermissionsModal()">🔑 ניהול הרשאות</button>
+      </div>
+    </div>
+    <div class="locked-note" style="margin-bottom:14px;">🔒 כל מנהל בכיר במחלקה (לפי שדה "ענף") חשוף לרשומות ההתכנסות של מחלקתו בלבד. העובד הבכיר ביותר בארגון חשוף לכל המחלקות ויכול להעניק הרשאות צפייה נוספות.</div>
+    <div class="card">
+      <div class="post-filters">
+        <select id="filterConvIndustry"><option value="">כל הענפים</option></select>
+        <select id="filterConvMador"><option value="">כל המדורים</option></select>
+        <select id="filterConvLevel">
+          <option value="">כל הרמות</option>
+          <option value="זוטר">זוטר</option>
+          <option value="מובהק">מובהק</option>
+        </select>
+        <select id="filterConvStarred">
+          <option value="">הכל</option>
+          <option value="starred">מרודדים בלבד ★</option>
+        </select>
+        <button class="ghost" id="resetConvFilters">איפוס סינון</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="table-scroll">
+        <table id="convTable">
+          <thead><tr><th>שם פרטי</th><th>שם משפחה</th><th>תפקיד</th><th>זוטר/מובהק</th><th>ענף</th><th>מדור</th><th>תאריך שחרור</th><th>כניסה</th><th>יציאה</th><th>יחס שנתי</th><th>רידוד</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ATTENDANCE -->
+  <section class="panel" id="panel-attendance">
+    <div class="panel-head">
+      <div><h2>נוכחות עובדים</h2><p>מעקב נוכחות לפי תאריך, עם חשיפה לפי דרגת ניהול</p></div>
+      <button class="ghost" onclick="exportAttendance()">📤 ייצוא לאקסל</button>
+    </div>
+    <div class="card">
+      <div class="post-filters">
+        <div class="field" style="margin:0; width:auto;"><label>תאריך</label><input type="date" id="attDate" style="width:auto;"></div>
+        <select id="attDeptFilter"><option value="">כל המחלקות</option></select>
+        <button class="ghost" id="attTodayBtn">היום</button>
+      </div>
+    </div>
+    <div class="stat-cards" id="attStatCards"></div>
+    <div class="card">
+      <div class="table-scroll">
+        <table id="attTable">
+          <thead><tr><th>שם</th><th>תפקיד</th><th>מחלקה</th><th>סטטוס נוכחות</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel-head" style="margin-top:28px;">
+      <div><h2 style="font-size:18px;">הנוכחות שלי</h2><p>ההיסטוריה שלך + הגשת בקשה לשינוי נוכחות בתאריך מסוים</p></div>
+      <button class="primary" id="addAttRequestBtn">+ הגש בקשת שינוי</button>
+    </div>
+    <div class="card">
+      <div class="table-scroll">
+        <table id="myAttTable">
+          <thead><tr><th>תאריך</th><th>סטטוס רשום</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="panel-head" style="margin-top:28px;">
+      <div><h2 style="font-size:18px;">בקשות שינוי נוכחות</h2><p>בקשות מהעובדים הכפופים לך, הממתינות לאישור</p></div>
+    </div>
+    <div id="attRequestsList"></div>
+  </section>
+
+
+  <!-- EMPLOYEES -->
+  <section class="panel" id="panel-employees">
+    <div class="panel-head">
+      <div><h2>עובדים</h2><p>מאגר העובדים המרכזי — משמש את כל שאר המסכים</p></div>
+      <div style="display:flex; gap:8px;">
+        <button class="primary" id="addEmpBtn">+ עובד חדש</button>
+        <button class="ghost" onclick="triggerExcelImport('employees')">📥 ייבוא מאקסל</button>
+        <button class="ghost" onclick="exportEmployees()">📤 ייצוא לאקסל</button>
+      </div>
+    </div>
+    <div id="empBulkToolbar" class="bulk-toolbar" style="display:none;">
+      <span class="count" id="empBulkCount"></span>
+      <button class="ghost" onclick="bulkAddSelectedToConvergence()">📋 הוסף להתכנסות</button>
+      <button class="ghost" onclick="bulkExportSelectedEmployees()">📤 ייצוא נבחרים</button>
+      <button class="ghost danger-txt" onclick="bulkDeleteSelectedEmployees()">🗑️ מחק נבחרים</button>
+      <button class="ghost" onclick="clearEmployeeSelection()">בטל בחירה</button>
+    </div>
+    <div class="card">
+      <div class="table-scroll">
+        <table id="empTable">
+          <thead><tr><th><input type="checkbox" id="empSelectAll" onchange="toggleSelectAllEmployees(this.checked)"></th><th>שם</th><th>תפקיד</th><th>מחלקה</th><th>מנהל ישיר</th><th>תקן נוכחי</th><th>אימייל</th><th>טלפון</th><th>תאריך התחלה</th><th></th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" id="modalBody"></div>
+</div>
+
+<script>
+/* ---------------- storage helpers ---------------- */
+async function storeSet(key, value){
+  try{ await window.storage.set(key, JSON.stringify(value), false); }catch(e){ console.error('storage set failed', key, e); }
+}
+async function storeGet(key, fallback){
+  try{
+    const r = await window.storage.get(key, false);
+    return r ? JSON.parse(r.value) : fallback;
+  }catch(e){ return fallback; }
+}
+
+/* ---------------- state ---------------- */
+let state = {
+  employees: [],
+  meetings: [],
+  tasks: [],
+  postings: [],
+  positions: [],
+  convergence: [],
+  attendance: [],
+  attendanceRequests: [],
+  infoItems: [],
+  dashboard: null,
+  dashboardPrefs: {},
+  convergencePermissions: {},
+  positionsPermissions: {},
+  currentUserId: null
+};
+
+function uid(prefix){ return prefix + Math.random().toString(36).slice(2,9); }
+
+function readFileInputAsAttachment(inputId){
+  return new Promise((resolve, reject)=>{
+    const inp = document.getElementById(inputId);
+    if (!inp || !inp.files || !inp.files.length){ resolve(null); return; }
+    const file = inp.files[0];
+    if (file.size > 4*1024*1024){
+      alert('הקובץ גדול מדי — הגודל המקסימלי הוא כ-4MB');
+      reject(new Error('file-too-large'));
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = ()=> resolve({name:file.name, dataUrl:reader.result, size:file.size});
+    reader.onerror = ()=> reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+function seedData(){
+  const ceo = {id: uid('e'), name:'רונית לביא', role:'מנכ"לית', department:'הנהלה', managerId:null, email:'ronit@company.co.il', phone:'050-1234567', startDate:'2019-01-01'};
+  const svcMgr = {id: uid('e'), name:'איתי כהן', role:'סמנכ"ל שירות לקוחות', department:'שירות לקוחות', managerId:ceo.id, email:'itay@company.co.il', phone:'050-2223344', startDate:'2020-03-01'};
+  const opsMgr = {id: uid('e'), name:'מאיה שגיא', role:'סמנכ"לית תפעול', department:'תפעול', managerId:ceo.id, email:'maya@company.co.il', phone:'050-3334455', startDate:'2020-06-15'};
+  const teamLead = {id: uid('e'), name:'דניאל אברהם', role:'ראש צוות שירות', department:'שירות לקוחות', managerId:svcMgr.id, email:'daniel@company.co.il', phone:'050-4445566', startDate:'2021-09-01'};
+  const rep1 = {id: uid('e'), name:'נועה פרץ', role:'נציגת שירות', department:'שירות לקוחות', managerId:teamLead.id, email:'noa@company.co.il', phone:'050-5556677', startDate:'2022-02-01'};
+  const rep2 = {id: uid('e'), name:'עומר בר', role:'נציג שירות', department:'שירות לקוחות', managerId:teamLead.id, email:'omer@company.co.il', phone:'050-6667788', startDate:'2022-05-10'};
+  state.employees = [ceo, svcMgr, opsMgr, teamLead, rep1, rep2];
+  state.currentUserId = ceo.id;
+}
+
+/* ---------------- init ---------------- */
+async function init(){
+  const emp = await storeGet('employees', null);
+  if (emp && emp.length){
+    state.employees = emp;
+  } else {
+    seedData();
+  }
+  state.meetings = await storeGet('meetings', []);
+  state.tasks = await storeGet('tasks', []);
+  state.postings = await storeGet('postings', []);
+  state.positions = await storeGet('positions', []);
+  state.convergence = await storeGet('convergence', []);
+  state.attendance = await storeGet('attendance', []);
+  state.attendanceRequests = await storeGet('attendanceRequests', []);
+  state.infoItems = await storeGet('infoItems', []);
+  state.dashboard = await storeGet('dashboard', null);
+  state.dashboardPrefs = await storeGet('dashboardPrefs', {});
+  state.convergencePermissions = await storeGet('convergencePermissions', {});
+  state.positionsPermissions = await storeGet('positionsPermissions', {});
+  state.currentUserId = await storeGet('currentUserId', state.employees[0] ? state.employees[0].id : null);
+
+  // migrate legacy task shape: single assignedTo/aboutEmployeeId + boolean done -> arrays + status
+  let tasksMigrated = false;
+  state.tasks.forEach(t=>{
+    if (!Array.isArray(t.assignedTo)){
+      t.assignedTo = t.assignedTo ? [t.assignedTo] : [];
+      tasksMigrated = true;
+    }
+    if (!Array.isArray(t.aboutEmployeeIds)){
+      t.aboutEmployeeIds = t.aboutEmployeeId ? [t.aboutEmployeeId] : (t.aboutEmployeeIds ? t.aboutEmployeeIds : []);
+      delete t.aboutEmployeeId;
+      tasksMigrated = true;
+    }
+    if (!t.status){
+      t.status = t.done ? 'done' : 'none';
+      tasksMigrated = true;
+    }
+  });
+  if (tasksMigrated) await storeSet('tasks', state.tasks);
+
+  await storeSet('employees', state.employees);
+  await storeSet('currentUserId', state.currentUserId);
+
+  bindTabs();
+  bindModal();
+  renderWhoAmI();
+  renderEmployees();
+  renderOrgChart();
+  bindMeetings();
+  bindTasks();
+  bindMgrInfo();
+  bindPostings();
+  bindPositions();
+  bindConvergence();
+  bindAttendance();
+  bindDashboard();
+  renderDashboard();
+  renderDashboardWidgets();
+}
+
+/* ---------------- tabs ---------------- */
+function bindTabs(){
+  document.querySelectorAll('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('panel-'+btn.dataset.tab).classList.add('active');
+    });
+  });
+}
+
+/* ---------------- modal ---------------- */
+function openModal(html, wide){
+  const body = document.getElementById('modalBody');
+  body.innerHTML = html;
+  body.classList.toggle('wide', !!wide);
+  document.getElementById('modalBackdrop').classList.add('active');
+}
+let currentProfileEmployeeId = null;
+function closeModal(){
+  currentProfileEmployeeId = null;
+  document.getElementById('modalBackdrop').classList.remove('active');
+}
+function bindModal(){
+  document.getElementById('modalBackdrop').addEventListener('click', (e)=>{
+    if (e.target.id === 'modalBackdrop') closeModal();
+  });
+}
+
+/* ---------------- employee helpers ---------------- */
+function empById(id){ return state.employees.find(e=>e.id===id); }
+function empOptions(selectedId, excludeId){
+  return state.employees
+    .filter(e=> e.id !== excludeId)
+    .map(e=> `<option value="${e.id}" ${e.id===selectedId?'selected':''}>${escapeHtml(e.name)} — ${escapeHtml(e.role)}</option>`).join('');
+}
+function getSubordinateIds(managerId){
+  // recursive: all employees under managerId, at any depth
+  let ids = [];
+  const direct = state.employees.filter(e=>e.managerId===managerId);
+  direct.forEach(d=>{ ids.push(d.id); ids = ids.concat(getSubordinateIds(d.id)); });
+  return ids;
+}
+function isAncestorOf(possibleManagerId, employeeId){
+  // true only if possibleManagerId is STRICTLY senior to employeeId (manages them at any depth)
+  if (!possibleManagerId || !employeeId || possibleManagerId === employeeId) return false;
+  return getSubordinateIds(possibleManagerId).includes(employeeId);
+}
+function isTopManagerUser(employeeId){
+  const e = empById(employeeId);
+  return !!(e && !e.managerId);
+}
+function getDepartmentHeadIds(department){
+  if (!department) return [];
+  return state.employees
+    .filter(e => e.department === department && (!e.managerId || (empById(e.managerId)||{}).department !== department))
+    .map(e => e.id);
+}
+function getPositionByEmployeeId(employeeId){
+  return state.positions.find(p => p.currentAppointment && p.currentAppointment.linkedEmployeeId === employeeId) || null;
+}
+function escapeHtml(str){
+  if (str===undefined || str===null) return '';
+  return String(str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+/* ---------------- who am I ---------------- */
+function renderWhoAmI(){
+  const sel = document.getElementById('whoamiSelect');
+  sel.innerHTML = state.employees.map(e=>`<option value="${e.id}" ${e.id===state.currentUserId?'selected':''}>${escapeHtml(e.name)} — ${escapeHtml(e.role)}</option>`).join('');
+  sel.onchange = async ()=>{
+    state.currentUserId = sel.value;
+    await storeSet('currentUserId', state.currentUserId);
+    renderMeetingFilter();
+    renderMeetingsList();
+    renderTasks();
+    renderAttendance();
+    renderEmployees();
+    renderMgrInfo();
+    renderDashboardWidgets();
+    renderConvFilterOptions();
+    renderConvergence();
+    renderPositionFilterOptions();
+    renderPositions();
+  };
+}
+
+/* ================= EMPLOYEES TAB ================= */
+let selectedEmployeeIds = new Set();
+
+function renderEmployees(){
+  const tbody = document.querySelector('#empTable tbody');
+  if (!state.employees.length){
+    tbody.innerHTML = `<tr><td colspan="11"><div class="empty-state"><div class="big">👥</div>עדיין אין עובדים במערכת</div></td></tr>`;
+    updateEmpBulkToolbar();
+    return;
+  }
+  tbody.innerHTML = state.employees.map(e=>{
+    const mgr = e.managerId ? empById(e.managerId) : null;
+    const pos = getPositionByEmployeeId(e.id);
+    return `<tr>
+      <td><input type="checkbox" class="emp-select-cb" value="${e.id}" ${selectedEmployeeIds.has(e.id)?'checked':''} onchange="toggleEmployeeSelection('${e.id}', this.checked)"></td>
+      <td>${escapeHtml(e.name)}</td>
+      <td>${escapeHtml(e.role)}</td>
+      <td><span class="badge dept">${escapeHtml(e.department||'—')}</span></td>
+      <td>${mgr ? escapeHtml(mgr.name) : '—'}</td>
+      <td>${pos ? `${escapeHtml(pos.serialNumber)} — ${escapeHtml(pos.jobText)}` : '<span class="vacant-txt">ללא תקן</span>'}</td>
+      <td>${escapeHtml(e.email||'—')}</td>
+      <td>${escapeHtml(e.phone||'—')}</td>
+      <td>${escapeHtml(e.startDate||'—')}</td>
+      <td style="white-space:nowrap;"><button class="icon-btn" onclick="openEmployeeProfile('${e.id}')">👁️</button></td>
+      <td style="white-space:nowrap;">
+        <button class="icon-btn" onclick="addEmployeeToConvergence('${e.id}')" title="הוסף להתכנסות">📋</button>
+        <button class="icon-btn" onclick="editEmployee('${e.id}')">✏️</button>
+        <button class="icon-btn danger-txt" onclick="deleteEmployee('${e.id}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+  updateEmpBulkToolbar();
+}
+
+function toggleEmployeeSelection(id, checked){
+  if (checked) selectedEmployeeIds.add(id); else selectedEmployeeIds.delete(id);
+  updateEmpBulkToolbar();
+}
+function toggleSelectAllEmployees(checked){
+  if (checked) state.employees.forEach(e=>selectedEmployeeIds.add(e.id));
+  else selectedEmployeeIds.clear();
+  renderEmployees();
+}
+function clearEmployeeSelection(){
+  selectedEmployeeIds.clear();
+  renderEmployees();
+}
+function updateEmpBulkToolbar(){
+  const toolbar = document.getElementById('empBulkToolbar');
+  const selectAllCb = document.getElementById('empSelectAll');
+  if (!toolbar) return;
+  if (selectedEmployeeIds.size){
+    toolbar.style.display = 'flex';
+    document.getElementById('empBulkCount').textContent = `${selectedEmployeeIds.size} נבחרו`;
+  } else {
+    toolbar.style.display = 'none';
+  }
+  if (selectAllCb) selectAllCb.checked = state.employees.length>0 && selectedEmployeeIds.size===state.employees.length;
+}
+async function bulkDeleteSelectedEmployees(){
+  if (!selectedEmployeeIds.size) return;
+  if (!confirm(`למחוק ${selectedEmployeeIds.size} עובדים נבחרים?`)) return;
+  for (const id of Array.from(selectedEmployeeIds)){
+    await deleteEmployeeSilent(id);
+  }
+  selectedEmployeeIds.clear();
+  await storeSet('employees', state.employees);
+  await storeSet('meetings', state.meetings);
+  await storeSet('tasks', state.tasks);
+  await storeSet('positions', state.positions);
+  renderEmployees(); renderOrgChart(); renderWhoAmI(); renderMeetingFilter(); renderMeetingsList(); renderTasks();
+  renderPositionFilterOptions(); renderPositions();
+}
+function bulkExportSelectedEmployees(){
+  const rows = state.employees.filter(e=>selectedEmployeeIds.has(e.id)).map(e=>{
+    const mgr = e.managerId ? empById(e.managerId) : null;
+    const pos = getPositionByEmployeeId(e.id);
+    return {
+      'שם': e.name, 'תפקיד': e.role, 'מחלקה': e.department, 'מנהל ישיר': mgr?mgr.name:'',
+      'תקן נוכחי': pos ? `${pos.serialNumber} — ${pos.jobText}` : '', 'אימייל': e.email, 'טלפון': e.phone, 'תאריך התחלה': e.startDate
+    };
+  });
+  exportToExcel('עובדים_נבחרים', rows);
+}
+async function bulkAddSelectedToConvergence(){
+  if (!selectedEmployeeIds.size) return;
+  let created = 0;
+  Array.from(selectedEmployeeIds).forEach(id=>{
+    const e = empById(id);
+    if (!e) return;
+    const parts = e.name.trim().split(/\s+/);
+    const lastName = parts.length>1 ? parts.pop() : '';
+    const firstName = parts.join(' ');
+    state.convergence.push({
+      id: uid('conv'), firstName, lastName, role: e.role||'', level:'', industry: e.industry||e.department||'', mador: e.team||'',
+      releaseDate:'', entryDate:'', exitDate:'', starred:false
+    });
+    created++;
+  });
+  await storeSet('convergence', state.convergence);
+  renderConvFilterOptions(); renderConvergence();
+  selectedEmployeeIds.clear();
+  renderEmployees();
+  alert(`נוספו ${created} רשומות התכנסות בהתאם לעובדים שנבחרו. ניתן להשלים פרטים נוספים בטאב "התכנסות".`);
+}
+
+function addEmployeeToConvergence(employeeId){
+  const e = empById(employeeId);
+  if (!e) return;
+  const parts = e.name.trim().split(/\s+/);
+  const lastName = parts.length>1 ? parts.pop() : '';
+  const firstName = parts.join(' ');
+  openModal(convFormHtml({firstName, lastName, role:e.role||'', level:'', industry:e.industry||e.department||'', mador:e.team||'', releaseDate:'', entryDate:'', exitDate:'', starred:false}));
+}
+
+function openConvergenceAddFromEmployeesModal(){
+  if (!state.employees.length){ alert('אין עדיין עובדים במערכת'); return; }
+  openModal(`
+    <h3>הוספת עובדים להתכנסות</h3>
+    <div style="font-size:12.5px; color:var(--text-dim); margin-bottom:12px;">בחר עובדים מרשימת העובדים — עבור כל עובד תיווצר רשומת התכנסות חדשה עם השם, התפקיד, הענף והצוות שלו. ניתן להשלים תאריכים ופרטים נוספים לאחר מכן.</div>
+    <div class="field">${employeeCheckboxList('conv-add-emp', [])}</div>
+    <div class="modal-actions">
+      <button class="primary" onclick="confirmAddEmployeesToConvergence()">הוסף נבחרים</button>
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+    </div>
+  `, true);
+}
+async function confirmAddEmployeesToConvergence(){
+  const ids = readCheckedIds('conv-add-emp');
+  if (!ids.length){ alert('נא לבחור לפחות עובד אחד'); return; }
+  let created = 0;
+  ids.forEach(id=>{
+    const e = empById(id);
+    if (!e) return;
+    const parts = e.name.trim().split(/\s+/);
+    const lastName = parts.length>1 ? parts.pop() : '';
+    const firstName = parts.join(' ');
+    state.convergence.push({
+      id: uid('conv'), firstName, lastName, role: e.role||'', level:'', industry: e.industry||e.department||'', mador: e.team||'',
+      releaseDate:'', entryDate:'', exitDate:'', starred:false
+    });
+    created++;
+  });
+  await storeSet('convergence', state.convergence);
+  closeModal();
+  renderConvFilterOptions();
+  renderConvergence();
+  alert(`נוספו ${created} רשומות התכנסות. ניתן להשלים תאריכים ופרטים נוספים בטבלה.`);
+}
+
+function employeeFormHtml(existing, presetManagerId){
+  const e = existing || {
+    name:'',role:'',department:'',managerId: presetManagerId || '', email:'', phone:'', startDate:'',
+    professionNumber:'', professionText:'', industry:'', team:'', ramad:'', rank:'',
+    isVolunteer:false, isCadet:false, education:'', flexA:false, flexB:false, studies:'',
+    city:'', street:'', notes:''
+  };
+  const currentPos = existing ? getPositionByEmployeeId(existing.id) : null;
+  const posOptions = state.positions.map(p=>`<option value="${p.id}" ${currentPos && currentPos.id===p.id?'selected':''}>${escapeHtml(p.serialNumber)} — ${escapeHtml(p.jobText)}</option>`).join('');
+  const studiesOptions = ['חטיבת היעדרות 3 שעות','חטיבת היעדרות 5 שעות','יום לימודים מלא','תוכ"ש מוגבר','היברידי','לא רלוונטי'];
+  return `
+    <h3>${existing ? 'עריכת עובד' : 'עובד חדש'}</h3>
+
+    <div class="form-section-title">פרטים אישיים</div>
+    <div class="field"><label>שם מלא</label><input type="text" id="f-name" value="${escapeHtml(e.name)}"></div>
+    <div class="grid2">
+      <div class="field"><label>אימייל</label><input type="email" id="f-email" value="${escapeHtml(e.email)}"></div>
+      <div class="field"><label>טלפון</label><input type="tel" id="f-phone" value="${escapeHtml(e.phone)}"></div>
+    </div>
+    <div class="field"><label>תאריך התחלה</label><input type="date" id="f-startDate" value="${escapeHtml(e.startDate)}"></div>
+
+    <div class="form-section-title">שיוך ארגוני</div>
+    <div class="grid2">
+      <div class="field"><label>תפקיד</label><input type="text" id="f-role" value="${escapeHtml(e.role)}"></div>
+      <div class="field"><label>מחלקה</label><input type="text" id="f-department" value="${escapeHtml(e.department)}"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>ענף</label><input type="text" id="f-industry" value="${escapeHtml(e.industry)}"></div>
+      <div class="field"><label>צוות</label><input type="text" id="f-team" value="${escapeHtml(e.team)}"></div>
+    </div>
+    <div class="field"><label>מנהל ישיר (במערכת)</label>
+      <select id="f-managerId">
+        <option value="">— ללא מנהל (בכיר ביותר) —</option>
+        ${empOptions(e.managerId, existing ? existing.id : null)}
+      </select>
+    </div>
+    <div class="field"><label>רמ"ד</label><input type="text" id="f-ramad" value="${escapeHtml(e.ramad)}"></div>
+    <div class="field"><label>דרגה ניהולית (משמשת להרשאות במידע למנהלים)</label>
+      <select id="f-rank">
+        <option value="" ${!e.rank?'selected':''}>— ללא —</option>
+        <option value="רע&quot;ן" ${e.rank==='רע"ן'?'selected':''}>רע"ן</option>
+        <option value="רמ&quot;ד" ${e.rank==='רמ"ד'?'selected':''}>רמ"ד</option>
+        <option value="רש&quot;צ" ${e.rank==='רש"צ'?'selected':''}>רש"צ</option>
+      </select>
+    </div>
+
+    <div class="form-section-title">מקצוע</div>
+    <div class="grid2">
+      <div class="field"><label>מספר מקצוע</label><input type="text" id="f-professionNumber" value="${escapeHtml(e.professionNumber)}"></div>
+      <div class="field"><label>מלל מקצוע</label><input type="text" id="f-professionText" value="${escapeHtml(e.professionText)}"></div>
+    </div>
+
+    <div class="form-section-title">סטטוסים והשכלה</div>
+    <div class="grid2">
+      <div class="field"><label style="display:flex; align-items:center; gap:8px; font-weight:400; color:var(--text);"><input type="checkbox" id="f-isVolunteer" style="width:auto;" ${e.isVolunteer?'checked':''}> מתנדב</label></div>
+      <div class="field"><label style="display:flex; align-items:center; gap:8px; font-weight:400; color:var(--text);"><input type="checkbox" id="f-isCadet" style="width:auto;" ${e.isCadet?'checked':''}> עתודאי</label></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label style="display:flex; align-items:center; gap:8px; font-weight:400; color:var(--text);"><input type="checkbox" id="f-flexA" style="width:auto;" ${e.flexA?'checked':''}> גמוש א'</label></div>
+      <div class="field"><label style="display:flex; align-items:center; gap:8px; font-weight:400; color:var(--text);"><input type="checkbox" id="f-flexB" style="width:auto;" ${e.flexB?'checked':''}> גמוש ב'</label></div>
+    </div>
+    <div class="field"><label>השכלה</label>
+      <select id="f-education">
+        <option value="" ${!e.education?'selected':''}>— לא נבחר —</option>
+        <option value="תיכונית" ${e.education==='תיכונית'?'selected':''}>תיכונית</option>
+        <option value="אקדמאית" ${e.education==='אקדמאית'?'selected':''}>אקדמאית</option>
+      </select>
+    </div>
+    <div class="field"><label>לימודים</label>
+      <select id="f-studies">
+        <option value="" ${!e.studies?'selected':''}>— לא נבחר —</option>
+        ${studiesOptions.map(s=>`<option value="${escapeHtml(s)}" ${e.studies===s?'selected':''}>${escapeHtml(s)}</option>`).join('')}
+      </select>
+    </div>
+
+    <div class="form-section-title">מגורים</div>
+    <div class="grid2">
+      <div class="field"><label>עיר מגורים</label><input type="text" id="f-city" value="${escapeHtml(e.city)}"></div>
+      <div class="field"><label>רחוב</label><input type="text" id="f-street" value="${escapeHtml(e.street)}"></div>
+    </div>
+
+    <div class="form-section-title">תקן והערות</div>
+    <div class="field"><label>תקן נוכחי (אופציונלי)</label>
+      <select id="f-positionId">
+        <option value="">— ללא תקן —</option>
+        ${posOptions}
+      </select>
+      <div class="locked-note">🔗 קישור/שינוי כאן יעדכן אוטומטית את "מינוי נוכחי" בניהול תקנים, ולהפך</div>
+    </div>
+    <div class="field"><label>או הזן מספר תקן חדש ליצירה (אופציונלי)</label>
+      <input type="text" id="f-newPositionSerial" placeholder="לדוגמה: 4521 — אם מספר זה לא קיים, ייווצר תקן חדש וישויך לעובד">
+      <div class="locked-note">🆕 אם ממלאים כאן מספר תקן, הוא יופיע גם בדף "ניהול תקנים" — אם המספר כבר קיים, העובד פשוט ישויך אליו</div>
+    </div>
+    <div class="field"><label>הערות</label><textarea id="f-notes">${escapeHtml(e.notes)}</textarea></div>
+
+    <div class="modal-actions">
+      <button class="primary" onclick="saveEmployee(${existing ? `'${existing.id}'` : 'null'})">שמור</button>
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+    </div>
+  `;
+}
+
+function addEmployee(presetManagerId){ openModal(employeeFormHtml(null, presetManagerId)); }
+function editEmployee(id){ openModal(employeeFormHtml(empById(id))); }
+
+async function saveEmployee(existingId){
+  const name = document.getElementById('f-name').value.trim();
+  if (!name){ alert('נא להזין שם'); return; }
+  const data = {
+    name,
+    role: document.getElementById('f-role').value.trim(),
+    department: document.getElementById('f-department').value.trim(),
+    managerId: document.getElementById('f-managerId').value || null,
+    email: document.getElementById('f-email').value.trim(),
+    phone: document.getElementById('f-phone').value.trim(),
+    startDate: document.getElementById('f-startDate').value,
+    professionNumber: document.getElementById('f-professionNumber').value.trim(),
+    professionText: document.getElementById('f-professionText').value.trim(),
+    industry: document.getElementById('f-industry').value.trim(),
+    team: document.getElementById('f-team').value.trim(),
+    ramad: document.getElementById('f-ramad').value.trim(),
+    rank: document.getElementById('f-rank').value,
+    isVolunteer: document.getElementById('f-isVolunteer').checked,
+    isCadet: document.getElementById('f-isCadet').checked,
+    education: document.getElementById('f-education').value,
+    flexA: document.getElementById('f-flexA').checked,
+    flexB: document.getElementById('f-flexB').checked,
+    studies: document.getElementById('f-studies').value,
+    city: document.getElementById('f-city').value.trim(),
+    street: document.getElementById('f-street').value.trim(),
+    notes: document.getElementById('f-notes').value.trim()
+  };
+  let employeeId = existingId;
+  if (existingId){
+    const idx = state.employees.findIndex(e=>e.id===existingId);
+    state.employees[idx] = {...state.employees[idx], ...data};
+  } else {
+    employeeId = uid('e');
+    state.employees.push({id: employeeId, ...data});
+  }
+
+  // sync position link (single source of truth lives on the position record)
+  let selectedPositionId = document.getElementById('f-positionId').value || null;
+  const newPositionSerial = document.getElementById('f-newPositionSerial').value.trim();
+  let positionsChanged = false;
+  if (newPositionSerial){
+    let existingPos = state.positions.find(p=>p.serialNumber===newPositionSerial);
+    if (existingPos){
+      selectedPositionId = existingPos.id;
+    } else {
+      const newPos = {
+        id: uid('pos'), serialNumber: newPositionSerial, jobText: data.role || '', occupationText:'', profession: data.professionText || '',
+        grade:'', seniorityLevel:'', registrationUnit: data.department || '', counterStatus:'', freezeStatus:'',
+        currentAppointment: {fullName:'', personalNumber:'', releaseDate:'', linkedEmployeeId:null},
+        futureAppointment: {fullName:'', personalNumber:'', staffingDate:''},
+        linkedConvergenceId:null, regulationNotes:'', generalNotes: 'נוצר אוטומטית מדף העובדים'
+      };
+      state.positions.push(newPos);
+      selectedPositionId = newPos.id;
+      positionsChanged = true;
+    }
+  }
+  state.positions.forEach(p=>{
+    if (p.currentAppointment && p.currentAppointment.linkedEmployeeId === employeeId && p.id !== selectedPositionId){
+      p.currentAppointment.linkedEmployeeId = null;
+      positionsChanged = true;
+    }
+  });
+  if (selectedPositionId){
+    const pos = state.positions.find(p=>p.id===selectedPositionId);
+    if (pos){
+      if (!pos.currentAppointment) pos.currentAppointment = {fullName:'', personalNumber:'', releaseDate:'', linkedEmployeeId:null};
+      pos.currentAppointment.linkedEmployeeId = employeeId;
+      pos.currentAppointment.fullName = name;
+      positionsChanged = true;
+    }
+  }
+  if (positionsChanged) await storeSet('positions', state.positions);
+
+  await storeSet('employees', state.employees);
+  closeModal();
+  renderEmployees(); renderOrgChart(); renderWhoAmI(); renderMeetingFilter(); renderMeetingsList(); renderTasks();
+  renderPositionFilterOptions(); renderPositions();
+}
+
+function deleteEmployeeCore(id){
+  const subs = getSubordinateIds(id);
+  if (subs.length){
+    const mgrId = empById(id).managerId;
+    subs.forEach(sid=>{
+      const s = empById(sid);
+      if (s.managerId === id) s.managerId = mgrId;
+    });
+  }
+  state.employees = state.employees.filter(e=>e.id!==id);
+  state.meetings = state.meetings.filter(m=>m.employeeId!==id);
+  state.tasks.forEach(t=>{
+    t.assignedTo = (t.assignedTo||[]).filter(aid=>aid!==id);
+    t.aboutEmployeeIds = (t.aboutEmployeeIds||[]).filter(aid=>aid!==id);
+  });
+  state.tasks = state.tasks.filter(t=>(t.assignedTo||[]).length>0);
+  state.positions.forEach(p=>{
+    if (p.currentAppointment && p.currentAppointment.linkedEmployeeId === id){
+      p.currentAppointment.linkedEmployeeId = null;
+    }
+  });
+  if (state.currentUserId === id) state.currentUserId = state.employees[0] ? state.employees[0].id : null;
+}
+async function deleteEmployeeSilent(id){
+  deleteEmployeeCore(id);
+}
+async function deleteEmployee(id){
+  const subs = getSubordinateIds(id);
+  if (subs.length){
+    if (!confirm('לעובד זה יש כפופים במבנה הארגוני. מחיקתו תעביר את הכפופים לרמה שמעליו. להמשיך?')) return;
+  } else {
+    if (!confirm('למחוק את העובד?')) return;
+  }
+  deleteEmployeeCore(id);
+  await storeSet('employees', state.employees);
+  await storeSet('meetings', state.meetings);
+  await storeSet('tasks', state.tasks);
+  await storeSet('positions', state.positions);
+  await storeSet('currentUserId', state.currentUserId);
+  renderEmployees(); renderOrgChart(); renderWhoAmI(); renderMeetingFilter(); renderMeetingsList(); renderTasks();
+  renderPositionFilterOptions(); renderPositions();
+}
+
+document.getElementById('addEmpBtn').addEventListener('click', ()=>addEmployee(null));
+
+function openEmployeeProfile(id){
+  currentProfileEmployeeId = id;
+  const e = empById(id);
+  if (!e) return;
+  const mgr = e.managerId ? empById(e.managerId) : null;
+  const pos = getPositionByEmployeeId(id);
+
+  const assignedToTasks = state.tasks.filter(t=>(t.assignedTo||[]).includes(id) && taskVisibleToCurrentUser(t))
+    .sort((a,b)=> ((a.status==='done'?1:0) - (b.status==='done'?1:0)) || (a.dueDate||'').localeCompare(b.dueDate||''));
+  const assignedToHtml = assignedToTasks.length
+    ? assignedToTasks.map(t=>taskRowHtml(t)).join('')
+    : `<div class="empty-state" style="padding:16px;">אין משימות לביצוע עבור עובד/ת זה/זו</div>`;
+
+  const canSeeAbout = isAncestorOf(state.currentUserId, id);
+  let aboutHtml;
+  if (canSeeAbout){
+    const aboutTasks = state.tasks.filter(t=>(t.aboutEmployeeIds||[]).includes(id))
+      .sort((a,b)=> ((a.status==='done'?1:0) - (b.status==='done'?1:0)) || (a.dueDate||'').localeCompare(b.dueDate||''));
+    aboutHtml = aboutTasks.length
+      ? aboutTasks.map(t=>taskRowHtml(t)).join('')
+      : `<div class="empty-state" style="padding:16px;">אין משימות פתוחות בנוגע לעובד/ת זה/זו</div>`;
+  } else {
+    aboutHtml = `<div class="locked-note">🔒 מוצג רק לדרגים בכירים מהעובד/ת במבנה הארגוני</div>`;
+  }
+
+  const flags = [];
+  if (e.isVolunteer) flags.push('מתנדב');
+  if (e.isCadet) flags.push('עתודאי');
+  if (e.flexA) flags.push("גמוש א'");
+  if (e.flexB) flags.push("גמוש ב'");
+
+  openModal(`
+    <h3 style="margin-bottom:10px;">${escapeHtml(e.name)}</h3>
+    <div class="profile-meta">
+      <div><div class="lbl3">תפקיד</div>${escapeHtml(e.role||'—')}</div>
+      <div><div class="lbl3">מחלקה</div>${escapeHtml(e.department||'—')}</div>
+      <div><div class="lbl3">ענף</div>${escapeHtml(e.industry||'—')}</div>
+      <div><div class="lbl3">צוות</div>${escapeHtml(e.team||'—')}</div>
+      <div><div class="lbl3">מנהל ישיר</div>${mgr?escapeHtml(mgr.name):'—'}</div>
+      <div><div class="lbl3">רמ"ד</div>${escapeHtml(e.ramad||'—')}</div>
+      <div><div class="lbl3">דרגה ניהולית</div>${escapeHtml(e.rank||'—')}</div>
+      <div><div class="lbl3">תקן נוכחי</div>${pos?`${escapeHtml(pos.serialNumber)} — ${escapeHtml(pos.jobText)}`:'<span class="vacant-txt">ללא תקן</span>'}</div>
+      <div><div class="lbl3">תאריך התחלה</div>${escapeHtml(e.startDate||'—')}</div>
+      <div><div class="lbl3">אימייל</div>${escapeHtml(e.email||'—')}</div>
+      <div><div class="lbl3">טלפון</div>${escapeHtml(e.phone||'—')}</div>
+      <div><div class="lbl3">מספר מקצוע</div>${escapeHtml(e.professionNumber||'—')}</div>
+      <div><div class="lbl3">מלל מקצוע</div>${escapeHtml(e.professionText||'—')}</div>
+      <div><div class="lbl3">השכלה</div>${escapeHtml(e.education||'—')}</div>
+      <div><div class="lbl3">לימודים</div>${escapeHtml(e.studies||'—')}</div>
+      <div><div class="lbl3">עיר מגורים</div>${escapeHtml(e.city||'—')}</div>
+      <div><div class="lbl3">רחוב</div>${escapeHtml(e.street||'—')}</div>
+    </div>
+    ${flags.length ? `<div class="p-tags" style="margin-bottom:10px;">${flags.map(f=>`<span class="tag">${escapeHtml(f)}</span>`).join('')}</div>` : ''}
+    ${e.notes ? `<div class="field"><div class="lbl3">הערות</div><div style="font-size:13.5px; white-space:pre-wrap;">${escapeHtml(e.notes)}</div></div>` : ''}
+
+    <div class="form-section-title">משימות לביצוע (מוקצות לעובד/ת)</div>
+    ${assignedToHtml}
+
+    <div class="form-section-title">משימות בנוגע לעובד/ת</div>
+    ${aboutHtml}
+
+    <div class="modal-actions">
+      <button class="ghost" onclick="closeModal()">סגור</button>
+      <button class="primary" onclick="editEmployee('${e.id}')">ערוך פרטי עובד</button>
+    </div>
+  `, true);
+}
+
+/* ================= ORG CHART TAB ================= */
+function renderOrgChart(){
+  const root = document.getElementById('orgTree');
+  const topLevel = state.employees.filter(e=>!e.managerId);
+  if (!topLevel.length){
+    root.innerHTML = `<div class="empty-state"><div class="big">🏢</div>אין עדיין מבנה ארגוני. הוסף בעל תפקיד בכיר כדי להתחיל.</div>`;
+    return;
+  }
+  root.innerHTML = topLevel.map(e=>buildNode(e)).join('');
+}
+function buildNode(emp){
+  const children = state.employees.filter(e=>e.managerId===emp.id);
+  return `
+    <div class="node-row">
+      <div>
+        <div class="node" onclick="editEmployee('${emp.id}')">
+          <div class="name">${escapeHtml(emp.name)}</div>
+          <div class="role">${escapeHtml(emp.role||'—')}</div>
+          <div class="dept">${escapeHtml(emp.department||'')}</div>
+        </div>
+        <button class="add-node-btn" onclick="event.stopPropagation(); addEmployee('${emp.id}')">+ הוסף כפוף</button>
+      </div>
+      ${children.length ? `<div class="children">${children.map(c=>buildNode(c)).join('')}</div>` : ''}
+    </div>
+  `;
+}
+document.getElementById('addRootBtn').addEventListener('click', ()=>addEmployee(null));
+
+/* ================= MEETINGS TAB ================= */
+let meetingFilterId = 'all'; // 'all' = everyone visible to current user
+
+function bindMeetings(){
+  renderMeetingFilter();
+  renderMeetingsList();
+  document.getElementById('addMeetingBtn').addEventListener('click', openMeetingForm);
+}
+
+function visibleEmployeeIdsForCurrentUser(){
+  if (!state.currentUserId) return [];
+  return [state.currentUserId, ...getSubordinateIds(state.currentUserId)];
+}
+
+function renderMeetingFilter(){
+  const wrap = document.getElementById('meetingEmpFilter');
+  const visibleIds = visibleEmployeeIdsForCurrentUser();
+  const visibleEmps = state.employees.filter(e=>visibleIds.includes(e.id));
+  const countFor = (empId) => state.meetings.filter(m=>m.employeeId===empId).length;
+  const totalCount = state.meetings.filter(m=>visibleIds.includes(m.employeeId)).length;
+  let html = `<div class="emp-mini-item" style="font-weight:700; ${meetingFilterId==='all'?'color:var(--accent)':''}" onclick="setMeetingFilter('all')">
+      <span>הכל (כולל כפופים)</span><span class="count">${totalCount}</span></div>`;
+  html += visibleEmps.map(e=>`
+    <div class="emp-mini-item" style="${meetingFilterId===e.id?'color:var(--accent)':''}" onclick="setMeetingFilter('${e.id}')">
+      <span>${escapeHtml(e.name)}</span><span class="count">${countFor(e.id)}</span>
+    </div>`).join('');
+  wrap.innerHTML = html;
+}
+function setMeetingFilter(id){ meetingFilterId = id; renderMeetingFilter(); renderMeetingsList(); }
+
+function renderMeetingsList(){
+  const list = document.getElementById('meetingsList');
+  const visibleIds = visibleEmployeeIdsForCurrentUser();
+  let items = state.meetings.filter(m=>visibleIds.includes(m.employeeId));
+  if (meetingFilterId !== 'all') items = items.filter(m=>m.employeeId===meetingFilterId);
+  items = items.slice().sort((a,b)=> (b.date||'').localeCompare(a.date||''));
+  if (!items.length){
+    list.innerHTML = `<div class="empty-state"><div class="big">📝</div>אין סיכומי פגישות להצגה</div>`;
+    return;
+  }
+  list.innerHTML = items.map(m=>{
+    const emp = empById(m.employeeId);
+    const by = empById(m.createdBy);
+    return `<div class="meeting-item">
+      <div class="mh"><span class="title">${escapeHtml(m.title)} — ${emp?escapeHtml(emp.name):'—'}</span><span class="date">${escapeHtml(m.date)}</span></div>
+      <div class="body">${escapeHtml(m.summary)}</div>
+      <div class="by">נרשם ע"י ${by?escapeHtml(by.name):'—'}
+        <button class="icon-btn danger-txt" style="float:left;" onclick="deleteMeeting('${m.id}')">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openMeetingForm(){
+  const visibleIds = visibleEmployeeIdsForCurrentUser();
+  const options = state.employees.filter(e=>visibleIds.includes(e.id))
+    .map(e=>`<option value="${e.id}" ${e.id===state.currentUserId?'selected':''}>${escapeHtml(e.name)}</option>`).join('');
+  openModal(`
+    <h3>סיכום פגישה חדש</h3>
+    <div class="field"><label>עבור עובד/ת</label><select id="m-employeeId">${options}</select></div>
+    <div class="field"><label>כותרת</label><input type="text" id="m-title" placeholder="לדוגמה: פגישת סטטוס שבועית"></div>
+    <div class="field"><label>תאריך</label><input type="date" id="m-date" value="${new Date().toISOString().slice(0,10)}"></div>
+    <div class="field"><label>סיכום</label><textarea id="m-summary" placeholder="עיקרי הדברים שסוכמו..."></textarea></div>
+    <div class="modal-actions">
+      <button class="primary" onclick="saveMeeting()">שמור</button>
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+    </div>
+  `);
+}
+async function saveMeeting(){
+  const title = document.getElementById('m-title').value.trim();
+  if (!title){ alert('נא להזין כותרת'); return; }
+  state.meetings.push({
+    id: uid('m'),
+    employeeId: document.getElementById('m-employeeId').value,
+    title,
+    date: document.getElementById('m-date').value,
+    summary: document.getElementById('m-summary').value.trim(),
+    createdBy: state.currentUserId
+  });
+  await storeSet('meetings', state.meetings);
+  closeModal();
+  renderMeetingFilter(); renderMeetingsList();
+}
+async function deleteMeeting(id){
+  if (!confirm('למחוק את סיכום הפגישה?')) return;
+  state.meetings = state.meetings.filter(m=>m.id!==id);
+  await storeSet('meetings', state.meetings);
+  renderMeetingFilter(); renderMeetingsList();
+}
+
+/* ================= TASKS TAB ================= */
+let taskFilter = 'all';
+function bindTasks(){
+  renderTasks();
+  document.getElementById('addTaskBtn').addEventListener('click', openTaskForm);
+  document.querySelectorAll('.task-filters button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.task-filters button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      taskFilter = btn.dataset.filter;
+      renderTasks();
+    });
+  });
+}
+function taskVisibleToCurrentUser(t){
+  if (!t.aboutEmployeeIds || !t.aboutEmployeeIds.length) return true;
+  if ((t.assignedTo||[]).includes(state.currentUserId)) return true;
+  if (t.assignedBy === state.currentUserId) return true;
+  return t.aboutEmployeeIds.some(id => isAncestorOf(state.currentUserId, id));
+}
+const TASK_STATUS_LABELS = {none:'ללא סטטוס', in_progress:'בטיפול', done:'הושלם'};
+function taskRowHtml(t){
+  const prioLabel = {low:'נמוכה', med:'בינונית', high:'גבוהה'};
+  const assignees = (t.assignedTo||[]).map(id=>empById(id)).filter(Boolean);
+  const assigner = empById(t.assignedBy);
+  const aboutList = (t.aboutEmployeeIds||[]).map(id=>empById(id)).filter(Boolean);
+  const status = t.status || 'none';
+  const statusOptions = Object.entries(TASK_STATUS_LABELS).map(([k,l])=>`<option value="${k}" ${status===k?'selected':''}>${l}</option>`).join('');
+  const canReturn = status==='done' && (state.currentUserId===t.assignedBy || isAncestorOf(state.currentUserId, t.assignedBy));
+  return `<div class="task-row ${status==='done'?'done':''} status-${status}">
+    <select class="status-select st-${status}" onchange="setTaskStatus('${t.id}', this.value)">${statusOptions}</select>
+    <div class="t-body">
+      <div class="t-title">${escapeHtml(t.title)}</div>
+      <div class="t-meta">
+        <span>👤 ${assignees.length ? assignees.map(a=>escapeHtml(a.name)).join(', ') : '—'}</span>
+        <span>מאת ${assigner?escapeHtml(assigner.name):'—'}</span>
+        ${t.dueDate?`<span>📅 ${escapeHtml(t.dueDate)}</span>`:''}
+        <span class="prio ${t.priority}">${prioLabel[t.priority]||''}</span>
+        ${aboutList.length?`<span class="tag">🔒 בנוגע ל: ${aboutList.map(a=>escapeHtml(a.name)).join(', ')}</span>`:''}
+      </div>
+    </div>
+    ${canReturn ? `<button class="icon-btn" title="החזר לביצוע נוסף" onclick="returnTaskForRevision('${t.id}')">↩️</button>` : ''}
+    <button class="icon-btn comment-count-btn" onclick="openTaskComments('${t.id}')">💬${t.comments&&t.comments.length?' '+t.comments.length:''}</button>
+    <button class="icon-btn" onclick="editTask('${t.id}')">✏️</button>
+    <button class="icon-btn danger-txt" onclick="deleteTask('${t.id}')">🗑️</button>
+  </div>`;
+}
+function renderTasks(){
+  const list = document.getElementById('tasksList');
+  let items = state.tasks.slice().filter(taskVisibleToCurrentUser);
+  if (taskFilter==='mine') items = items.filter(t=>(t.assignedTo||[]).includes(state.currentUserId));
+  if (taskFilter==='byme') items = items.filter(t=>t.assignedBy===state.currentUserId);
+  if (taskFilter==='open') items = items.filter(t=>(t.status||'none')!=='done');
+  if (taskFilter==='done') items = items.filter(t=>(t.status||'none')==='done');
+  items.sort((a,b)=> (((a.status==='done')?1:0) - ((b.status==='done')?1:0)) || (a.dueDate||'').localeCompare(b.dueDate||''));
+  if (!items.length){
+    list.innerHTML = `<div class="empty-state"><div class="big">✅</div>אין משימות להצגה</div>`;
+    return;
+  }
+  list.innerHTML = items.map(t=>taskRowHtml(t)).join('');
+}
+function employeeCheckboxList(idPrefix, selectedIds){
+  return `<div class="checkbox-list" id="${idPrefix}-list">
+    ${state.employees.map(e=>`<label class="checkbox-row"><input type="checkbox" value="${e.id}" ${selectedIds.includes(e.id)?'checked':''}> ${escapeHtml(e.name)} — ${escapeHtml(e.role||'')}</label>`).join('')}
+  </div>`;
+}
+function readCheckedIds(idPrefix){
+  return Array.from(document.querySelectorAll(`#${idPrefix}-list input[type=checkbox]:checked`)).map(i=>i.value);
+}
+function taskFormHtml(existing){
+  const t = existing || {title:'', description:'', assignedTo:[state.currentUserId], dueDate:'', priority:'med', aboutEmployeeIds:[]};
+  return `
+    <h3>${existing?'עריכת משימה':'משימה חדשה'}</h3>
+    <div class="field"><label>כותרת</label><input type="text" id="t-title" value="${escapeHtml(t.title)}"></div>
+    <div class="field"><label>תיאור</label><textarea id="t-description">${escapeHtml(t.description)}</textarea></div>
+    <div class="field"><label>הקצה ל (ניתן לבחור מספר עובדים)</label>${employeeCheckboxList('t-assignedTo', t.assignedTo||[])}</div>
+    <div class="grid2">
+      <div class="field"><label>עדיפות</label>
+        <select id="t-priority">
+          <option value="low" ${t.priority==='low'?'selected':''}>נמוכה</option>
+          <option value="med" ${t.priority==='med'?'selected':''}>בינונית</option>
+          <option value="high" ${t.priority==='high'?'selected':''}>גבוהה</option>
+        </select>
+      </div>
+      <div class="field"><label>תאריך יעד</label><input type="date" id="t-dueDate" value="${escapeHtml(t.dueDate)}"></div>
+    </div>
+    <div class="field">
+      <label>משויכת גם לאנשים נוספים / בנוגע לעובדים (אופציונלי)</label>
+      ${employeeCheckboxList('t-about', t.aboutEmployeeIds||[])}
+      <div class="locked-note">🔒 עובדים שסומנו כאן — המשימה תופיע בכרטיסייה שלהם, אך תהיה גלויה רק לדרגים בכירים מהם, למקצה וליוצר המשימה</div>
+    </div>
+    <div class="modal-actions">
+      <button class="primary" onclick="saveTask(${existing?`'${existing.id}'`:'null'})">שמור</button>
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+    </div>
+  `;
+}
+function openTaskForm(){ openModal(taskFormHtml(null)); }
+function editTask(id){ openModal(taskFormHtml(state.tasks.find(t=>t.id===id))); }
+async function saveTask(existingId){
+  const title = document.getElementById('t-title').value.trim();
+  if (!title){ alert('נא להזין כותרת'); return; }
+  const assignedTo = readCheckedIds('t-assignedTo');
+  if (!assignedTo.length){ alert('נא לבחור לפחות עובד אחד להקצאה'); return; }
+  const data = {
+    title,
+    description: document.getElementById('t-description').value.trim(),
+    assignedTo,
+    priority: document.getElementById('t-priority').value,
+    dueDate: document.getElementById('t-dueDate').value,
+    aboutEmployeeIds: readCheckedIds('t-about')
+  };
+  if (existingId){
+    const idx = state.tasks.findIndex(t=>t.id===existingId);
+    state.tasks[idx] = {...state.tasks[idx], ...data};
+  } else {
+    state.tasks.push({id: uid('t'), status:'none', assignedBy: state.currentUserId, ...data});
+  }
+  await storeSet('tasks', state.tasks);
+  closeModal();
+  renderTasks();
+}
+async function setTaskStatus(id, status){
+  const t = state.tasks.find(t=>t.id===id);
+  if (!t) return;
+  t.status = status;
+  await storeSet('tasks', state.tasks);
+  renderTasks();
+  if (currentProfileEmployeeId) openEmployeeProfile(currentProfileEmployeeId);
+}
+async function returnTaskForRevision(id){
+  const t = state.tasks.find(t=>t.id===id);
+  if (!t) return;
+  const reason = prompt('סיבת ההחזרה לביצוע נוסף (אופציונלי):', '');
+  if (reason === null) return; // cancelled
+  t.status = 'in_progress';
+  if (!t.comments) t.comments = [];
+  t.comments.push({
+    id: uid('cm'), authorId: state.currentUserId,
+    text: `↩️ המשימה הוחזרה לביצוע נוסף לאחר בדיקה${reason ? ': ' + reason : ''}`,
+    file: null, createdAt: new Date().toISOString()
+  });
+  await storeSet('tasks', state.tasks);
+  renderTasks();
+  if (currentProfileEmployeeId) openEmployeeProfile(currentProfileEmployeeId);
+}
+async function deleteTask(id){
+  if (!confirm('למחוק את המשימה?')) return;
+  state.tasks = state.tasks.filter(t=>t.id!==id);
+  await storeSet('tasks', state.tasks);
+  renderTasks();
+}
+
+function openTaskComments(taskId){
+  const t = state.tasks.find(t=>t.id===taskId);
+  if (!t) return;
+  if (!t.comments) t.comments = [];
+  const commentsHtml = t.comments.length
+    ? t.comments.slice().sort((a,b)=>a.createdAt.localeCompare(b.createdAt)).map(c=>{
+        const author = empById(c.authorId);
+        return `<div class="comment-item">
+          <div class="comment-head"><strong>${author?escapeHtml(author.name):'—'}</strong><span class="comment-date">${new Date(c.createdAt).toLocaleString('he-IL')}</span></div>
+          ${c.text?`<div class="comment-text">${escapeHtml(c.text)}</div>`:''}
+          ${c.file?`<a class="comment-file" href="${c.file.dataUrl}" download="${escapeHtml(c.file.name)}">📎 ${escapeHtml(c.file.name)}</a>`:''}
+        </div>`;
+      }).join('')
+    : `<div class="empty-state" style="padding:16px;">אין עדיין תגובות למשימה זו</div>`;
+
+  openModal(`
+    <h3 style="margin-bottom:2px;">${escapeHtml(t.title)}</h3>
+    <div style="font-size:12.5px; color:var(--text-dim); margin-bottom:14px;">תגובות ועדכונים על המשימה</div>
+    <div class="comments-list">${commentsHtml}</div>
+    <div class="form-section-title">הוסף תגובה</div>
+    <div class="field"><textarea id="cm-text" placeholder="כתוב עדכון, סטטוס או תגובה..."></textarea></div>
+    <div class="field"><label>קובץ מצורף (אופציונלי, עד כ-4MB)</label><input type="file" id="cm-file"></div>
+    <div class="modal-actions">
+      <button class="primary" onclick="addTaskComment('${taskId}')">שלח תגובה</button>
+      <button class="ghost" onclick="closeModal()">סגור</button>
+    </div>
+  `, true);
+}
+
+async function addTaskComment(taskId){
+  const t = state.tasks.find(t=>t.id===taskId);
+  if (!t) return;
+  const text = document.getElementById('cm-text').value.trim();
+  let file = null;
+  try{
+    file = await readFileInputAsAttachment('cm-file');
+  }catch(e){
+    return; // alert already shown by helper
+  }
+  if (!text && !file){ alert('נא להזין תגובה או לצרף קובץ'); return; }
+  if (!t.comments) t.comments = [];
+  t.comments.push({ id: uid('cm'), authorId: state.currentUserId, text, file, createdAt: new Date().toISOString() });
+  await storeSet('tasks', state.tasks);
+  renderTasks();
+  if (currentProfileEmployeeId) openEmployeeProfile(currentProfileEmployeeId);
+  openTaskComments(taskId);
+}
+
+/* ================= MANAGER INFO TAB ================= */
+function bindMgrInfo(){
+  document.getElementById('addInfoBtn').addEventListener('click', openInfoForm);
+  document.getElementById('filterInfoTopic').addEventListener('change', renderMgrInfo);
+  document.getElementById('resetInfoFilters').addEventListener('click', ()=>{
+    document.getElementById('filterInfoTopic').value='';
+    renderMgrInfo();
+  });
+  renderInfoTopicOptions();
+  renderMgrInfo();
+}
+const MGR_INFO_RANKS = ['רע"ן', 'רמ"ד', 'רש"צ'];
+function infoVisibleToCurrentUser(item){
+  const visibleAuthorIds = visibleEmployeeIdsForCurrentUser(); // self + subordinates, reused from Meetings
+  if (visibleAuthorIds.includes(item.authorId)) return true;
+  const me = empById(state.currentUserId);
+  if (me && me.rank && (item.allowedRanks||[]).includes(me.rank)) return true;
+  if ((item.allowedEmployeeIds||[]).includes(state.currentUserId)) return true;
+  return false;
+}
+function renderInfoTopicOptions(){
+  const sel = document.getElementById('filterInfoTopic');
+  const current = sel.value;
+  const visible = state.infoItems.filter(infoVisibleToCurrentUser);
+  const topics = [...new Set(visible.map(i=>i.topic).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'he'));
+  sel.innerHTML = `<option value="">כל הנושאים</option>` + topics.map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
+  sel.value = current;
+}
+function renderMgrInfo(){
+  renderInfoTopicOptions();
+  const list = document.getElementById('infoList');
+  const fTopic = document.getElementById('filterInfoTopic').value;
+  let items = state.infoItems.filter(infoVisibleToCurrentUser);
+  if (fTopic) items = items.filter(i=>i.topic===fTopic);
+  items = items.slice().sort((a,b)=> b.createdAt.localeCompare(a.createdAt));
+
+  if (!items.length){
+    list.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="big">📥</div>אין פריטי מידע להצגה</div>`;
+    return;
+  }
+  list.innerHTML = items.map(i=>{
+    const author = empById(i.authorId);
+    const ranks = i.allowedRanks || [];
+    const extraEmps = (i.allowedEmployeeIds||[]).map(id=>empById(id)).filter(Boolean);
+    return `<div class="posting-card">
+      <div class="ph">
+        <div class="p-title">${escapeHtml(i.title)}</div>
+      </div>
+      <div class="p-tags">
+        <span class="tag">${escapeHtml(i.topic)}</span>
+        ${ranks.map(r=>`<span class="tag">🎖️ ${escapeHtml(r)}</span>`).join('')}
+      </div>
+      ${i.content?`<div class="p-section"><div class="p-desc">${escapeHtml(i.content)}</div></div>`:''}
+      ${extraEmps.length?`<div class="p-section" style="font-size:12px; color:var(--text-dim);">שותפו גם עם: ${extraEmps.map(e=>escapeHtml(e.name)).join(', ')}</div>`:''}
+      ${i.file?`<a class="comment-file" href="${i.file.dataUrl}" download="${escapeHtml(i.file.name)}">📎 ${escapeHtml(i.file.name)}</a>`:''}
+      <div class="p-foot">
+        <span>הועלה ע"י ${author?escapeHtml(author.name):'—'} · ${new Date(i.createdAt).toLocaleDateString('he-IL')}</span>
+        <button class="icon-btn danger-txt" onclick="deleteInfoItem('${i.id}')">🗑️</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function openInfoForm(){
+  const existingTopics = [...new Set(state.infoItems.map(i=>i.topic).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'he'));
+  const rankChecks = MGR_INFO_RANKS.map(r=>
+    `<label class="checkbox-row"><input type="checkbox" class="info-rank-cb" value="${escapeHtml(r)}"> ${escapeHtml(r)}</label>`
+  ).join('');
+  openModal(`
+    <h3>העלאת מידע למנהלים</h3>
+    <div class="field"><label>נושא</label><input type="text" id="info-topic" list="info-topic-list" placeholder="לדוגמה: תקציב, גיוס, בטיחות">
+      <datalist id="info-topic-list">${existingTopics.map(t=>`<option value="${escapeHtml(t)}">`).join('')}</datalist>
+    </div>
+    <div class="field"><label>כותרת</label><input type="text" id="info-title"></div>
+    <div class="field"><label>תוכן</label><textarea id="info-content" placeholder="פרטי המידע..."></textarea></div>
+    <div class="field"><label>קובץ מצורף (אופציונלי, עד כ-4MB)</label><input type="file" id="info-file"></div>
+    <div class="locked-note">🔒 ברירת מחדל: המידע גלוי אליך ולכל מי שבכיר ממך במבנה הארגוני. ניתן להרחיב את החשיפה מטה.</div>
+    <div class="field"><label>שתף גם לפי דרגה (אופציונלי)</label><div class="checkbox-list">${rankChecks}</div></div>
+    <div class="field"><label>שתף גם עם עובדים ספציפיים (אופציונלי)</label>${employeeCheckboxList('info-allowedEmployees', [])}</div>
+    <div class="modal-actions">
+      <button class="primary" onclick="saveInfoItem()">שמור</button>
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+    </div>
+  `);
+}
+async function saveInfoItem(){
+  const title = document.getElementById('info-title').value.trim();
+  const topic = document.getElementById('info-topic').value.trim();
+  if (!title || !topic){ alert('נא להזין נושא וכותרת'); return; }
+  let file = null;
+  try{
+    file = await readFileInputAsAttachment('info-file');
+  }catch(e){
+    return;
+  }
+  const allowedRanks = Array.from(document.querySelectorAll('.info-rank-cb:checked')).map(i=>i.value);
+  const allowedEmployeeIds = readCheckedIds('info-allowedEmployees');
+  state.infoItems.push({
+    id: uid('info'),
+    topic, title,
+    content: document.getElementById('info-content').value.trim(),
+    file,
+    allowedRanks,
+    allowedEmployeeIds,
+    authorId: state.currentUserId,
+    createdAt: new Date().toISOString()
+  });
+  await storeSet('infoItems', state.infoItems);
+  closeModal();
+  renderMgrInfo();
+}
+async function deleteInfoItem(id){
+  if (!confirm('למחוק את פריט המידע?')) return;
+  state.infoItems = state.infoItems.filter(i=>i.id!==id);
+  await storeSet('infoItems', state.infoItems);
+  renderMgrInfo();
+}
+
+/* ================= POSTINGS TAB ================= */
+function bindPostings(){
+  document.getElementById('addPostingBtn').addEventListener('click', ()=>openPostingForm(null));
+  ['filterIndustry','filterMador','filterTeam','filterGrade','filterStatus'].forEach(id=>{
+    document.getElementById(id).addEventListener('change', renderPostings);
+  });
+  document.getElementById('resetPostFilters').addEventListener('click', ()=>{
+    document.getElementById('filterIndustry').value='';
+    document.getElementById('filterMador').value='';
+    document.getElementById('filterTeam').value='';
+    document.getElementById('filterGrade').value='';
+    document.getElementById('filterStatus').value='open';
+    renderPostings();
+  });
+  renderPostingFilterOptions();
+  renderPostings();
+}
+
+function uniqueVals(field){
+  return [...new Set(state.postings.map(p=>p[field]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'he'));
+}
+
+function renderPostingFilterOptions(){
+  const map = { filterIndustry:'industry', filterMador:'mador', filterTeam:'team', filterGrade:'grade' };
+  Object.entries(map).forEach(([selId, field])=>{
+    const sel = document.getElementById(selId);
+    const current = sel.value;
+    const first = sel.querySelector('option');
+    sel.innerHTML = '';
+    sel.appendChild(first);
+    uniqueVals(field).forEach(v=>{
+      const opt = document.createElement('option');
+      opt.value = v; opt.textContent = v;
+      sel.appendChild(opt);
+    });
+    sel.value = current;
+  });
+}
+
+function renderPostings(){
+  const list = document.getElementById('postingsList');
+  const fIndustry = document.getElementById('filterIndustry').value;
+  const fMador = document.getElementById('filterMador').value;
+  const fTeam = document.getElementById('filterTeam').value;
+  const fGrade = document.getElementById('filterGrade').value;
+  const fStatus = document.getElementById('filterStatus').value;
+
+  let items = state.postings.slice();
+  if (fIndustry) items = items.filter(p=>p.industry===fIndustry);
+  if (fMador) items = items.filter(p=>p.mador===fMador);
+  if (fTeam) items = items.filter(p=>p.team===fTeam);
+  if (fGrade) items = items.filter(p=>p.grade===fGrade);
+  if (fStatus) items = items.filter(p=>p.status===fStatus);
+  items.sort((a,b)=> (b.datePosted||'').localeCompare(a.datePosted||''));
+
+  if (!items.length){
+    list.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="big">💼</div>אין משרות תואמות לסינון שנבחר</div>`;
+    return;
+  }
+  list.innerHTML = items.map(p=>{
+    const owner = empById(p.createdBy);
+    return `<div class="posting-card ${p.status==='closed'?'closed':''}">
+      <div class="ph">
+        <div class="p-title">${escapeHtml(p.title)}</div>
+        <span class="status-pill ${p.status}">${p.status==='open'?'פתוחה':'סגורה'}</span>
+      </div>
+      <div class="p-tags">
+        ${p.industry?`<span class="tag">${escapeHtml(p.industry)}</span>`:''}
+        ${p.mador?`<span class="tag">${escapeHtml(p.mador)}</span>`:''}
+        ${p.team?`<span class="tag">${escapeHtml(p.team)}</span>`:''}
+        ${p.grade?`<span class="tag grade">דרגה ${escapeHtml(p.grade)}</span>`:''}
+        <span class="tag">${p.roleType==='existing'?'תפקיד קיים':'תפקיד חדש'}</span>
+      </div>
+      ${p.roleType==='existing' && p.currentIncumbent ? `<div class="p-section"><div class="lbl2">מאייש נוכחי</div><div class="p-desc">${escapeHtml(p.currentIncumbent)}</div></div>` : ''}
+      ${(p.receivingCommander || p.receivingCommanderPhone) ? `<div class="p-section"><div class="lbl2">מפקד קולט</div><div class="p-desc">${escapeHtml(p.receivingCommander||'—')}${p.receivingCommanderPhone?` · 📞 ${escapeHtml(p.receivingCommanderPhone)}`:''}</div></div>` : ''}
+      ${p.requirements?`<div class="p-section"><div class="lbl2">דרישות מקצועיות</div><div class="p-desc">${escapeHtml(p.requirements)}</div></div>`:''}
+      ${p.description?`<div class="p-section"><div class="lbl2">תיאור תפקיד</div><div class="p-desc">${escapeHtml(p.description)}</div></div>`:''}
+      <div class="p-foot">
+        <span>פורסם ${p.datePosted?escapeHtml(p.datePosted):'—'} ע"י ${owner?escapeHtml(owner.name):'—'}</span>
+        <span style="white-space:nowrap;">
+          <button class="icon-btn" onclick="togglePostingStatus('${p.id}')">${p.status==='open'?'🔒':'🔓'}</button>
+          <button class="icon-btn" onclick="openPostingForm('${p.id}')">✏️</button>
+          <button class="icon-btn danger-txt" onclick="deletePosting('${p.id}')">🗑️</button>
+        </span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function postingFormHtml(existing){
+  const p = existing || {title:'', industry:'', mador:'', team:'', grade:'', roleType:'new', currentIncumbent:'', receivingCommander:'', receivingCommanderPhone:'', requirements:'', description:'', status:'open', datePosted: new Date().toISOString().slice(0,10)};
+  const commanderOptions = `<option value="">— בחר/י מהרשימה או הקלד/י ידנית —</option>` +
+    state.employees.map(e=>`<option value="${escapeHtml(e.name)}" data-phone="${escapeHtml(e.phone||'')}" ${e.name===p.receivingCommander?'selected':''}>${escapeHtml(e.name)} — ${escapeHtml(e.role)}</option>`).join('');
+  return `
+    <h3>${existing?'עריכת משרה':'פרסום משרה חדשה'}</h3>
+    <div class="field"><label>שם התפקיד</label><input type="text" id="p-title" value="${escapeHtml(p.title)}" placeholder="לדוגמה: נציג/ת שירות לקוחות בכיר/ה"></div>
+    <div class="grid2">
+      <div class="field"><label>ענף</label><input type="text" id="p-industry" value="${escapeHtml(p.industry)}" placeholder="לדוגמה: שירות לקוחות"></div>
+      <div class="field"><label>מדור</label><input type="text" id="p-mador" value="${escapeHtml(p.mador)}" placeholder="לדוגמה: מוקד טלפוני"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>צוות</label><input type="text" id="p-team" value="${escapeHtml(p.team)}" placeholder="לדוגמה: צוות א'"></div>
+      <div class="field"><label>דרגה</label><input type="text" id="p-grade" value="${escapeHtml(p.grade)}" placeholder="לדוגמה: 7"></div>
+    </div>
+    <div class="field">
+      <label>סוג תפקיד</label>
+      <div style="display:flex; gap:16px; align-items:center; padding:4px 0;">
+        <label style="display:flex; align-items:center; gap:6px; font-size:13.5px; color:var(--text); font-weight:400;">
+          <input type="radio" name="p-roleType" value="new" style="width:auto;" ${p.roleType!=='existing'?'checked':''} onchange="onRoleTypeChange()"> תפקיד חדש
+        </label>
+        <label style="display:flex; align-items:center; gap:6px; font-size:13.5px; color:var(--text); font-weight:400;">
+          <input type="radio" name="p-roleType" value="existing" style="width:auto;" ${p.roleType==='existing'?'checked':''} onchange="onRoleTypeChange()"> תפקיד קיים
+        </label>
+      </div>
+    </div>
+    <div class="field" id="incumbentField" style="display:${p.roleType==='existing'?'block':'none'};">
+      <label>מאייש נוכחי</label><input type="text" id="p-currentIncumbent" value="${escapeHtml(p.currentIncumbent)}" placeholder="שם המאייש/ת הנוכחי/ת בתפקיד">
+    </div>
+    <div class="grid2">
+      <div class="field"><label>מפקד קולט</label>
+        <select id="p-receivingCommander" onchange="onCommanderChange()">${commanderOptions}</select>
+        <input type="text" id="p-receivingCommanderCustom" value="${(!state.employees.some(e=>e.name===p.receivingCommander) && p.receivingCommander) ? escapeHtml(p.receivingCommander) : ''}" placeholder="או הקלד/י שם ידנית" style="margin-top:6px; display:${(!state.employees.some(e=>e.name===p.receivingCommander) && p.receivingCommander) ? 'block':'none'};" oninput="document.getElementById('p-receivingCommander').value='';">
+      </div>
+      <div class="field"><label>מספר טלפון מפקד קולט</label><input type="tel" id="p-receivingCommanderPhone" value="${escapeHtml(p.receivingCommanderPhone)}" placeholder="050-0000000"></div>
+    </div>
+    <div class="field"><label>דרישות מקצועיות</label><textarea id="p-requirements" placeholder="ניסיון, השכלה, כישורים נדרשים...">${escapeHtml(p.requirements)}</textarea></div>
+    <div class="field"><label>תיאור תפקיד</label><textarea id="p-description" placeholder="עיקרי התפקיד ותחומי האחריות...">${escapeHtml(p.description)}</textarea></div>
+    <div class="grid2">
+      <div class="field"><label>תאריך פרסום</label><input type="date" id="p-datePosted" value="${escapeHtml(p.datePosted)}"></div>
+      <div class="field"><label>סטטוס</label>
+        <select id="p-status">
+          <option value="open" ${p.status==='open'?'selected':''}>פתוחה</option>
+          <option value="closed" ${p.status==='closed'?'selected':''}>סגורה</option>
+        </select>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="primary" onclick="savePosting(${existing?`'${existing.id}'`:'null'})">שמור</button>
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+    </div>
+  `;
+}
+function onRoleTypeChange(){
+  const isExisting = document.querySelector('input[name="p-roleType"]:checked').value === 'existing';
+  document.getElementById('incumbentField').style.display = isExisting ? 'block' : 'none';
+}
+function onCommanderChange(){
+  const sel = document.getElementById('p-receivingCommander');
+  const custom = document.getElementById('p-receivingCommanderCustom');
+  const phoneField = document.getElementById('p-receivingCommanderPhone');
+  if (sel.value){
+    custom.style.display = 'none';
+    custom.value = '';
+    const opt = sel.options[sel.selectedIndex];
+    const phone = opt.getAttribute('data-phone');
+    if (phone) phoneField.value = phone;
+  } else {
+    custom.style.display = 'block';
+  }
+}
+function openPostingForm(id){
+  openModal(postingFormHtml(id ? state.postings.find(p=>p.id===id) : null));
+}
+async function savePosting(existingId){
+  const title = document.getElementById('p-title').value.trim();
+  if (!title){ alert('נא להזין שם תפקיד'); return; }
+  const roleType = document.querySelector('input[name="p-roleType"]:checked').value;
+  const commanderSelect = document.getElementById('p-receivingCommander').value;
+  const commanderCustom = document.getElementById('p-receivingCommanderCustom').value.trim();
+  const data = {
+    title,
+    industry: document.getElementById('p-industry').value.trim(),
+    mador: document.getElementById('p-mador').value.trim(),
+    team: document.getElementById('p-team').value.trim(),
+    grade: document.getElementById('p-grade').value.trim(),
+    roleType,
+    currentIncumbent: roleType==='existing' ? document.getElementById('p-currentIncumbent').value.trim() : '',
+    receivingCommander: commanderSelect || commanderCustom,
+    receivingCommanderPhone: document.getElementById('p-receivingCommanderPhone').value.trim(),
+    requirements: document.getElementById('p-requirements').value.trim(),
+    description: document.getElementById('p-description').value.trim(),
+    datePosted: document.getElementById('p-datePosted').value,
+    status: document.getElementById('p-status').value
+  };
+  if (existingId){
+    const idx = state.postings.findIndex(p=>p.id===existingId);
+    state.postings[idx] = {...state.postings[idx], ...data};
+  } else {
+    state.postings.push({id: uid('p'), createdBy: state.currentUserId, ...data});
+  }
+  await storeSet('postings', state.postings);
+  closeModal();
+  renderPostingFilterOptions();
+  renderPostings();
+}
+async function togglePostingStatus(id){
+  const p = state.postings.find(p=>p.id===id);
+  p.status = p.status==='open' ? 'closed' : 'open';
+  await storeSet('postings', state.postings);
+  renderPostings();
+}
+async function deletePosting(id){
+  if (!confirm('למחוק את המשרה?')) return;
+  state.postings = state.postings.filter(p=>p.id!==id);
+  await storeSet('postings', state.postings);
+  renderPostingFilterOptions();
+  renderPostings();
+}
+
+/* ================= POSITIONS TAB ================= */
+function positionVisibleToCurrentUser(position){
+  if (isTopManagerUser(state.currentUserId)) return true;
+  const cur = position.currentAppointment || {};
+  if (cur.linkedEmployeeId === state.currentUserId) return true;
+  const dept = position.registrationUnit;
+  if (!dept) return false;
+  if (getDepartmentHeadIds(dept).includes(state.currentUserId)) return true;
+  if ((state.positionsPermissions[dept]||[]).includes(state.currentUserId)) return true;
+  return false;
+}
+function bindPositions(){
+  document.getElementById('addPositionBtn').addEventListener('click', ()=>openPositionForm(null));
+  ['filterPosUnit','filterPosGrade','filterPosLevel','filterPosStatus','filterPosCounter','filterPosFreeze'].forEach(id=>{
+    document.getElementById(id).addEventListener('change', renderPositions);
+  });
+  document.getElementById('resetPosFilters').addEventListener('click', ()=>{
+    document.getElementById('filterPosUnit').value='';
+    document.getElementById('filterPosGrade').value='';
+    document.getElementById('filterPosLevel').value='';
+    document.getElementById('filterPosStatus').value='';
+    document.getElementById('filterPosCounter').value='';
+    document.getElementById('filterPosFreeze').value='';
+    renderPositions();
+  });
+  renderPositionFilterOptions();
+  renderPositions();
+  updatePosPermissionsButton();
+}
+function updatePosPermissionsButton(){
+  const btn = document.getElementById('posPermissionsBtn');
+  if (btn) btn.style.display = isTopManagerUser(state.currentUserId) ? 'inline-block' : 'none';
+}
+
+function uniquePosVals(field){
+  return [...new Set(state.positions.filter(positionVisibleToCurrentUser).map(p=>p[field]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'he'));
+}
+function renderPositionFilterOptions(){
+  const map = { filterPosUnit:'registrationUnit', filterPosGrade:'grade' };
+  Object.entries(map).forEach(([selId, field])=>{
+    const sel = document.getElementById(selId);
+    const current = sel.value;
+    const first = sel.querySelector('option');
+    sel.innerHTML = '';
+    sel.appendChild(first);
+    uniquePosVals(field).forEach(v=>{
+      const opt = document.createElement('option');
+      opt.value = v; opt.textContent = v;
+      sel.appendChild(opt);
+    });
+    sel.value = current;
+  });
+}
+
+const levelClassMap = { 'בכיר':'senior', 'מובהק':'distinct', 'זוטר':'junior' };
+
+function renderPositions(){
+  const tbody = document.querySelector('#posTable tbody');
+  const fUnit = document.getElementById('filterPosUnit').value;
+  const fGrade = document.getElementById('filterPosGrade').value;
+  const fLevel = document.getElementById('filterPosLevel').value;
+  const fStatus = document.getElementById('filterPosStatus').value;
+  const fCounter = document.getElementById('filterPosCounter').value;
+  const fFreeze = document.getElementById('filterPosFreeze').value;
+
+  let items = state.positions.filter(positionVisibleToCurrentUser);
+  if (fUnit) items = items.filter(p=>p.registrationUnit===fUnit);
+  if (fGrade) items = items.filter(p=>p.grade===fGrade);
+  if (fLevel) items = items.filter(p=>p.seniorityLevel===fLevel);
+  if (fStatus==='occupied') items = items.filter(p=> p.currentAppointment && (p.currentAppointment.fullName || p.currentAppointment.linkedEmployeeId));
+  if (fStatus==='vacant') items = items.filter(p=> !(p.currentAppointment && (p.currentAppointment.fullName || p.currentAppointment.linkedEmployeeId)));
+  if (fCounter) items = items.filter(p=>p.counterStatus===fCounter);
+  if (fFreeze) items = items.filter(p=>p.freezeStatus===fFreeze);
+  items.sort((a,b)=> (a.serialNumber||'').localeCompare(b.serialNumber||'', 'he', {numeric:true}));
+
+  if (!items.length){
+    tbody.innerHTML = `<tr><td colspan="12"><div class="empty-state"><div class="big">🗂️</div>אין תקנים שאתה חשוף אליהם, או שאין תקנים התואמים לסינון שנבחר</div></td></tr>`;
+    updatePosPermissionsButton();
+    return;
+  }
+  tbody.innerHTML = items.map(p=>{
+    const cur = p.currentAppointment || {};
+    const fut = p.futureAppointment || {};
+    const levelClass = levelClassMap[p.seniorityLevel] || 'junior';
+    const linkedEmp = cur.linkedEmployeeId ? empById(cur.linkedEmployeeId) : null;
+    const curDisplayName = linkedEmp ? linkedEmp.name : cur.fullName;
+    const linkedConv = p.linkedConvergenceId ? state.convergence.find(c=>c.id===p.linkedConvergenceId) : null;
+    return `<tr>
+      <td>${escapeHtml(p.serialNumber)}</td>
+      <td>${escapeHtml(p.jobText)}</td>
+      <td>${escapeHtml(p.profession||'—')}</td>
+      <td>${escapeHtml(p.grade||'—')}</td>
+      <td>${p.seniorityLevel?`<span class="level-badge ${levelClass}">${escapeHtml(p.seniorityLevel)}</span>`:'—'}</td>
+      <td>${escapeHtml(p.registrationUnit||'—')}</td>
+      <td>${p.counterStatus?`<span class="counter-badge">${escapeHtml(p.counterStatus)}</span>`:'—'}</td>
+      <td>${p.freezeStatus?`<span class="freeze-badge ${p.freezeStatus==='מופשר'?'active':'frozen'}">${escapeHtml(p.freezeStatus)}</span>`:'—'}</td>
+      <td>${curDisplayName ? `<span class="occupied-txt">${escapeHtml(curDisplayName)}</span>${linkedEmp?' <span class="tag">מקושר לעובד</span>':''}` : `<span class="vacant-txt">פנוי</span>`}</td>
+      <td>${fut.fullName ? escapeHtml(fut.fullName) + (fut.staffingDate?` (${escapeHtml(fut.staffingDate)})`:'') : '—'}</td>
+      <td>${linkedConv ? `${escapeHtml(linkedConv.firstName)} ${escapeHtml(linkedConv.lastName)} — יציאה: ${escapeHtml(linkedConv.exitDate||'—')}` : '—'}</td>
+      <td style="white-space:nowrap;">
+        <button class="icon-btn" onclick="openPositionForm('${p.id}')">✏️</button>
+        <button class="icon-btn danger-txt" onclick="deletePosition('${p.id}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+  updatePosPermissionsButton();
+}
+
+function allPositionsDepartments(){
+  const fromEmployees = state.employees.map(e=>e.department).filter(Boolean);
+  const fromPositions = state.positions.map(p=>p.registrationUnit).filter(Boolean);
+  return [...new Set([...fromEmployees, ...fromPositions])].sort((a,b)=>a.localeCompare(b,'he'));
+}
+function openPositionsPermissionsModal(){
+  if (!isTopManagerUser(state.currentUserId)){ alert('רק העובד הבכיר ביותר בארגון יכול לנהל הרשאות'); return; }
+  const depts = allPositionsDepartments();
+  if (!depts.length){ alert('אין עדיין מחלקות / יחידות רישומת מוגדרות במערכת'); return; }
+  const options = depts.map(d=>`<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
+  openModal(`
+    <h3>ניהול הרשאות תקנים</h3>
+    <div style="font-size:12.5px; color:var(--text-dim); margin-bottom:12px;">בחר מחלקה / יחידת רישומת כדי לתת הרשאת צפייה נוספת בתקנים שלה, מעבר למנהל הבכיר של המחלקה.</div>
+    <div class="field"><label>מחלקה / יחידת רישומת</label><select id="pos-perm-dept-select" onchange="renderPosPermissionsDeptBody()">${options}</select></div>
+    <div id="pos-perm-dept-body"></div>
+    <div class="modal-actions">
+      <button class="primary" onclick="savePositionsPermissions()">שמור הרשאות</button>
+      <button class="ghost" onclick="closeModal()">סגור</button>
+    </div>
+  `, true);
+  renderPosPermissionsDeptBody();
+}
+function renderPosPermissionsDeptBody(){
+  const dept = document.getElementById('pos-perm-dept-select').value;
+  const heads = getDepartmentHeadIds(dept).map(id=>empById(id)).filter(Boolean);
+  const grantedIds = state.positionsPermissions[dept] || [];
+  const selectableEmployees = state.employees.filter(e=>!getDepartmentHeadIds(dept).includes(e.id));
+  const rows = selectableEmployees.map(e=>
+    `<label class="checkbox-row"><input type="checkbox" value="${e.id}" ${grantedIds.includes(e.id)?'checked':''}> ${escapeHtml(e.name)} — ${escapeHtml(e.role||'')}</label>`
+  ).join('');
+  document.getElementById('pos-perm-dept-body').innerHTML = `
+    <div class="field" style="font-size:12.5px; color:var(--text-dim);">מנהלים בכירים של מחלקה זו (חשופים אוטומטית): ${heads.length ? heads.map(h=>escapeHtml(h.name)).join(', ') : 'לא זוהה מנהל מחלקה'}</div>
+    <div class="field"><label>הענק הרשאת צפייה נוספת לעובדים הבאים</label><div class="checkbox-list" id="pos-perm-emp-list" style="max-height:220px;">${rows}</div></div>
+  `;
+}
+async function savePositionsPermissions(){
+  const dept = document.getElementById('pos-perm-dept-select').value;
+  const checked = Array.from(document.querySelectorAll('#pos-perm-emp-list input[type=checkbox]:checked')).map(i=>i.value);
+  state.positionsPermissions[dept] = checked;
+  await storeSet('positionsPermissions', state.positionsPermissions);
+  closeModal();
+  renderPositionFilterOptions();
+  renderPositions();
+  alert(`ההרשאות למחלקת "${dept}" עודכנו`);
+}
+
+function positionFormHtml(existing){
+  const p = existing || {
+    serialNumber:'', jobText:'', occupationText:'', profession:'', grade:'', seniorityLevel:'',
+    registrationUnit:'',
+    currentAppointment:{fullName:'', personalNumber:'', releaseDate:'', linkedEmployeeId:''},
+    futureAppointment:{fullName:'', personalNumber:'', staffingDate:''},
+    linkedConvergenceId:'',
+    regulationNotes:'', generalNotes:''
+  };
+  const cur = p.currentAppointment || {fullName:'', personalNumber:'', releaseDate:'', linkedEmployeeId:''};
+  const fut = p.futureAppointment || {fullName:'', personalNumber:'', staffingDate:''};
+  const empLinkOptions = state.employees.map(e=>`<option value="${e.id}" data-name="${escapeHtml(e.name)}" ${e.id===cur.linkedEmployeeId?'selected':''}>${escapeHtml(e.name)} — ${escapeHtml(e.role)}</option>`).join('');
+  const convOptions = state.convergence.map(c=>`<option value="${c.id}" ${c.id===p.linkedConvergenceId?'selected':''}>${escapeHtml(c.firstName)} ${escapeHtml(c.lastName)}</option>`).join('');
+  const linkedConvNow = p.linkedConvergenceId ? state.convergence.find(c=>c.id===p.linkedConvergenceId) : null;
+  return `
+    <h3 style="margin-bottom:6px;">${existing?'עריכת תקן':'תקן חדש'}</h3>
+
+    <div class="form-section-title">פרטי התקן</div>
+    <div class="grid2">
+      <div class="field"><label>מספר תקן</label><input type="text" id="pos-serialNumber" value="${escapeHtml(p.serialNumber)}"></div>
+      <div class="field"><label>מקצוע</label><input type="text" id="pos-profession" value="${escapeHtml(p.profession)}"></div>
+    </div>
+    <div class="field"><label>מלל משרה</label><input type="text" id="pos-jobText" value="${escapeHtml(p.jobText)}"></div>
+    <div class="field"><label>מלל עיסוק</label><input type="text" id="pos-occupationText" value="${escapeHtml(p.occupationText)}"></div>
+    <div class="grid2">
+      <div class="field"><label>דרגה</label><input type="text" id="pos-grade" value="${escapeHtml(p.grade)}"></div>
+      <div class="field"><label>בכיר/מובהק/זוטר</label>
+        <select id="pos-seniorityLevel">
+          <option value="" ${!p.seniorityLevel?'selected':''}>— לא נבחר —</option>
+          <option value="בכיר" ${p.seniorityLevel==='בכיר'?'selected':''}>בכיר</option>
+          <option value="מובהק" ${p.seniorityLevel==='מובהק'?'selected':''}>מובהק</option>
+          <option value="זוטר" ${p.seniorityLevel==='זוטר'?'selected':''}>זוטר</option>
+        </select>
+      </div>
+    </div>
+    <div class="field"><label>יחידת רישומת</label><input type="text" id="pos-registrationUnit" value="${escapeHtml(p.registrationUnit)}"></div>
+    <div class="grid2">
+      <div class="field"><label>מונה 0/מונה 1</label>
+        <select id="pos-counterStatus">
+          <option value="" ${!p.counterStatus?'selected':''}>— לא נבחר —</option>
+          <option value="מונה 0" ${p.counterStatus==='מונה 0'?'selected':''}>מונה 0</option>
+          <option value="מונה 1" ${p.counterStatus==='מונה 1'?'selected':''}>מונה 1</option>
+        </select>
+      </div>
+      <div class="field"><label>מופשר/מוקפא</label>
+        <select id="pos-freezeStatus">
+          <option value="" ${!p.freezeStatus?'selected':''}>— לא נבחר —</option>
+          <option value="מופשר" ${p.freezeStatus==='מופשר'?'selected':''}>מופשר</option>
+          <option value="מוקפא" ${p.freezeStatus==='מוקפא'?'selected':''}>מוקפא</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-section-title">מינוי נוכחי</div>
+    <div class="field"><label>קישור לעובד קיים (אופציונלי)</label>
+      <select id="pos-cur-linkedEmployeeId" onchange="onPosEmployeeLinkChange()">
+        <option value="">— ללא קישור, שם חופשי בלבד —</option>
+        ${empLinkOptions}
+      </select>
+      <div class="locked-note">🔗 בחירת עובד תעדכן אוטומטית את "תקן נוכחי" בכרטיסיית העובד, ולהפך</div>
+    </div>
+    <div class="field"><label>שם מלא</label><input type="text" id="pos-cur-fullName" value="${escapeHtml(cur.fullName)}"></div>
+    <div class="grid2">
+      <div class="field"><label>מספר אישי</label><input type="text" id="pos-cur-personalNumber" value="${escapeHtml(cur.personalNumber)}"></div>
+      <div class="field"><label>תאריך שחרור</label><input type="date" id="pos-cur-releaseDate" value="${escapeHtml(cur.releaseDate)}"></div>
+    </div>
+
+    <div class="form-section-title">מינוי עתידי למשרה</div>
+    <div class="field"><label>שם מלא</label><input type="text" id="pos-fut-fullName" value="${escapeHtml(fut.fullName)}"></div>
+    <div class="grid2">
+      <div class="field"><label>מספר אישי</label><input type="text" id="pos-fut-personalNumber" value="${escapeHtml(fut.personalNumber)}"></div>
+      <div class="field"><label>תאריך איוש</label><input type="date" id="pos-fut-staffingDate" value="${escapeHtml(fut.staffingDate)}"></div>
+    </div>
+
+    <div class="form-section-title">קישור להתכנסות</div>
+    <div class="field"><label>רשומת התכנסות מקושרת (אופציונלי)</label>
+      <select id="pos-linkedConvergenceId">
+        <option value="">— ללא —</option>
+        ${convOptions}
+      </select>
+      <div class="locked-note">📅 תאריך היציאה מתוך "התכנסות" יוצג אוטומטית כהערת התכנסות בטבלת התקנים${linkedConvNow?` (כרגע: ${escapeHtml(linkedConvNow.exitDate||'—')})`:''}</div>
+    </div>
+
+    <div class="form-section-title">הערות</div>
+    <div class="field"><label>הערות תקינה</label><textarea id="pos-regulationNotes">${escapeHtml(p.regulationNotes)}</textarea></div>
+    <div class="field"><label>מקום להערות</label><textarea id="pos-generalNotes">${escapeHtml(p.generalNotes)}</textarea></div>
+
+    <div class="modal-actions">
+      <button class="primary" onclick="savePosition(${existing?`'${existing.id}'`:'null'})">שמור</button>
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+    </div>
+  `;
+}
+function onPosEmployeeLinkChange(){
+  const sel = document.getElementById('pos-cur-linkedEmployeeId');
+  if (sel.value){
+    const opt = sel.options[sel.selectedIndex];
+    document.getElementById('pos-cur-fullName').value = opt.getAttribute('data-name') || '';
+  }
+}
+function openPositionForm(id){
+  openModal(positionFormHtml(id ? state.positions.find(p=>p.id===id) : null));
+}
+async function savePosition(existingId){
+  const serialNumber = document.getElementById('pos-serialNumber').value.trim();
+  const jobText = document.getElementById('pos-jobText').value.trim();
+  if (!serialNumber || !jobText){ alert('נא להזין לפחות מספר תקן ומלל משרה'); return; }
+  const linkedEmployeeId = document.getElementById('pos-cur-linkedEmployeeId').value || null;
+  const data = {
+    serialNumber,
+    jobText,
+    occupationText: document.getElementById('pos-occupationText').value.trim(),
+    profession: document.getElementById('pos-profession').value.trim(),
+    grade: document.getElementById('pos-grade').value.trim(),
+    seniorityLevel: document.getElementById('pos-seniorityLevel').value,
+    registrationUnit: document.getElementById('pos-registrationUnit').value.trim(),
+    counterStatus: document.getElementById('pos-counterStatus').value,
+    freezeStatus: document.getElementById('pos-freezeStatus').value,
+    currentAppointment: {
+      fullName: document.getElementById('pos-cur-fullName').value.trim(),
+      personalNumber: document.getElementById('pos-cur-personalNumber').value.trim(),
+      releaseDate: document.getElementById('pos-cur-releaseDate').value,
+      linkedEmployeeId
+    },
+    futureAppointment: {
+      fullName: document.getElementById('pos-fut-fullName').value.trim(),
+      personalNumber: document.getElementById('pos-fut-personalNumber').value.trim(),
+      staffingDate: document.getElementById('pos-fut-staffingDate').value
+    },
+    linkedConvergenceId: document.getElementById('pos-linkedConvergenceId').value || null,
+    regulationNotes: document.getElementById('pos-regulationNotes').value.trim(),
+    generalNotes: document.getElementById('pos-generalNotes').value.trim()
+  };
+  let posId = existingId;
+  if (existingId){
+    const idx = state.positions.findIndex(p=>p.id===existingId);
+    state.positions[idx] = {...state.positions[idx], ...data};
+  } else {
+    posId = uid('pos');
+    state.positions.push({id: posId, ...data});
+  }
+  // enforce one position per employee: clear this employee from any other position
+  if (linkedEmployeeId){
+    state.positions.forEach(p=>{
+      if (p.id !== posId && p.currentAppointment && p.currentAppointment.linkedEmployeeId === linkedEmployeeId){
+        p.currentAppointment.linkedEmployeeId = null;
+      }
+    });
+  }
+  await storeSet('positions', state.positions);
+  closeModal();
+  renderPositionFilterOptions();
+  renderPositions();
+  renderEmployees();
+  if (currentProfileEmployeeId) openEmployeeProfile(currentProfileEmployeeId);
+}
+async function deletePosition(id){
+  if (!confirm('למחוק את התקן?')) return;
+  state.positions = state.positions.filter(p=>p.id!==id);
+  await storeSet('positions', state.positions);
+  renderPositionFilterOptions();
+  renderPositions();
+}
+
+/* ================= CONVERGENCE TAB ================= */
+function convergenceVisibleToCurrentUser(record){
+  if (isTopManagerUser(state.currentUserId)) return true;
+  const dept = record.industry;
+  if (!dept) return false;
+  if (getDepartmentHeadIds(dept).includes(state.currentUserId)) return true;
+  if ((state.convergencePermissions[dept]||[]).includes(state.currentUserId)) return true;
+  return false;
+}
+function bindConvergence(){
+  document.getElementById('addConvBtn').addEventListener('click', ()=>openConvForm(null));
+  ['filterConvIndustry','filterConvMador','filterConvLevel','filterConvStarred'].forEach(id=>{
+    document.getElementById(id).addEventListener('change', renderConvergence);
+  });
+  document.getElementById('resetConvFilters').addEventListener('click', ()=>{
+    document.getElementById('filterConvIndustry').value='';
+    document.getElementById('filterConvMador').value='';
+    document.getElementById('filterConvLevel').value='';
+    document.getElementById('filterConvStarred').value='';
+    renderConvergence();
+  });
+  renderConvFilterOptions();
+  renderConvergence();
+  updateConvPermissionsButton();
+}
+function updateConvPermissionsButton(){
+  const btn = document.getElementById('convPermissionsBtn');
+  if (btn) btn.style.display = isTopManagerUser(state.currentUserId) ? 'inline-block' : 'none';
+}
+function uniqueConvVals(field){
+  return [...new Set(state.convergence.filter(convergenceVisibleToCurrentUser).map(c=>c[field]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'he'));
+}
+function renderConvFilterOptions(){
+  const map = { filterConvIndustry:'industry', filterConvMador:'mador' };
+  Object.entries(map).forEach(([selId, field])=>{
+    const sel = document.getElementById(selId);
+    const current = sel.value;
+    const first = sel.querySelector('option');
+    sel.innerHTML = '';
+    sel.appendChild(first);
+    uniqueConvVals(field).forEach(v=>{
+      const opt = document.createElement('option');
+      opt.value = v; opt.textContent = v;
+      sel.appendChild(opt);
+    });
+    sel.value = current;
+  });
+}
+function yearRatio(entryDate, exitDate){
+  if (!entryDate || !exitDate) return null;
+  const d1 = new Date(entryDate), d2 = new Date(exitDate);
+  const diffDays = (d2 - d1) / (1000*60*60*24);
+  if (isNaN(diffDays)) return null;
+  return diffDays / 365;
+}
+function renderConvergence(){
+  const tbody = document.querySelector('#convTable tbody');
+  const fIndustry = document.getElementById('filterConvIndustry').value;
+  const fMador = document.getElementById('filterConvMador').value;
+  const fLevel = document.getElementById('filterConvLevel').value;
+  const fStarred = document.getElementById('filterConvStarred').value;
+
+  let items = state.convergence.filter(convergenceVisibleToCurrentUser);
+  if (fIndustry) items = items.filter(c=>c.industry===fIndustry);
+  if (fMador) items = items.filter(c=>c.mador===fMador);
+  if (fLevel) items = items.filter(c=>c.level===fLevel);
+  if (fStarred==='starred') items = items.filter(c=>c.starred);
+  items.sort((a,b)=> (a.lastName||'').localeCompare(b.lastName||'', 'he'));
+
+  if (!items.length){
+    tbody.innerHTML = `<tr><td colspan="12"><div class="empty-state"><div class="big">📋</div>אין רשומות התכנסות שאתה חשוף אליהן, או שאין רשומות התואמות לסינון שנבחר</div></td></tr>`;
+    updateConvPermissionsButton();
+    return;
+  }
+  tbody.innerHTML = items.map(c=>{
+    const ratio = yearRatio(c.entryDate, c.exitDate);
+    return `<tr>
+      <td>${escapeHtml(c.firstName)}</td>
+      <td>${escapeHtml(c.lastName)}</td>
+      <td>${escapeHtml(c.role||'—')}</td>
+      <td>${c.level?`<span class="level-badge ${c.level==='מובהק'?'distinct':'junior'}">${escapeHtml(c.level)}</span>`:'—'}</td>
+      <td>${escapeHtml(c.industry||'—')}</td>
+      <td>${escapeHtml(c.mador||'—')}</td>
+      <td>${escapeHtml(c.releaseDate||'—')}</td>
+      <td>${escapeHtml(c.entryDate||'—')}</td>
+      <td>${escapeHtml(c.exitDate||'—')}</td>
+      <td>${ratio!==null ? `<span class="ratio-val">${ratio.toFixed(2)}</span>` : '—'}</td>
+      <td><button class="star-toggle ${c.starred?'on':''}" onclick="toggleConvStar('${c.id}')">${c.starred?'★':'☆'}</button></td>
+      <td style="white-space:nowrap;">
+        <button class="icon-btn" onclick="openConvForm('${c.id}')">✏️</button>
+        <button class="icon-btn danger-txt" onclick="deleteConv('${c.id}')">🗑️</button>
+      </td>
+    </tr>`;
+  }).join('');
+  updateConvPermissionsButton();
+}
+
+function allConvergenceDepartments(){
+  const fromEmployees = state.employees.map(e=>e.department).filter(Boolean);
+  const fromConvergence = state.convergence.map(c=>c.industry).filter(Boolean);
+  return [...new Set([...fromEmployees, ...fromConvergence])].sort((a,b)=>a.localeCompare(b,'he'));
+}
+function openConvergencePermissionsModal(){
+  if (!isTopManagerUser(state.currentUserId)){ alert('רק העובד הבכיר ביותר בארגון יכול לנהל הרשאות'); return; }
+  const depts = allConvergenceDepartments();
+  if (!depts.length){ alert('אין עדיין מחלקות מוגדרות במערכת'); return; }
+  const options = depts.map(d=>`<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
+  openModal(`
+    <h3>ניהול הרשאות התכנסות</h3>
+    <div style="font-size:12.5px; color:var(--text-dim); margin-bottom:12px;">בחר מחלקה כדי לתת הרשאת צפייה נוספת ברשומות ההתכנסות שלה, מעבר למנהל הבכיר של המחלקה.</div>
+    <div class="field"><label>מחלקה</label><select id="perm-dept-select" onchange="renderPermissionsDeptBody()">${options}</select></div>
+    <div id="perm-dept-body"></div>
+    <div class="modal-actions">
+      <button class="primary" onclick="saveConvergencePermissions()">שמור הרשאות</button>
+      <button class="ghost" onclick="closeModal()">סגור</button>
+    </div>
+  `, true);
+  renderPermissionsDeptBody();
+}
+function renderPermissionsDeptBody(){
+  const dept = document.getElementById('perm-dept-select').value;
+  const heads = getDepartmentHeadIds(dept).map(id=>empById(id)).filter(Boolean);
+  const grantedIds = state.convergencePermissions[dept] || [];
+  const selectableEmployees = state.employees.filter(e=>!getDepartmentHeadIds(dept).includes(e.id));
+  const rows = selectableEmployees.map(e=>
+    `<label class="checkbox-row"><input type="checkbox" value="${e.id}" ${grantedIds.includes(e.id)?'checked':''}> ${escapeHtml(e.name)} — ${escapeHtml(e.role||'')}</label>`
+  ).join('');
+  document.getElementById('perm-dept-body').innerHTML = `
+    <div class="field" style="font-size:12.5px; color:var(--text-dim);">מנהלים בכירים של מחלקה זו (חשופים אוטומטית): ${heads.length ? heads.map(h=>escapeHtml(h.name)).join(', ') : 'לא זוהה מנהל מחלקה'}</div>
+    <div class="field"><label>הענק הרשאת צפייה נוספת לעובדים הבאים</label><div class="checkbox-list" id="perm-emp-list" style="max-height:220px;">${rows}</div></div>
+  `;
+}
+async function saveConvergencePermissions(){
+  const dept = document.getElementById('perm-dept-select').value;
+  const checked = Array.from(document.querySelectorAll('#perm-emp-list input[type=checkbox]:checked')).map(i=>i.value);
+  state.convergencePermissions[dept] = checked;
+  await storeSet('convergencePermissions', state.convergencePermissions);
+  closeModal();
+  renderConvFilterOptions();
+  renderConvergence();
+  alert(`ההרשאות למחלקת "${dept}" עודכנו`);
+}
+function convFormHtml(existing){
+  const c = existing || {firstName:'', lastName:'', role:'', level:'', industry:'', mador:'', releaseDate:'', entryDate:'', exitDate:'', starred:false};
+  const isEditing = !!(existing && existing.id);
+  return `
+    <h3>${isEditing?'עריכת רשומה':'רשומת התכנסות חדשה'}</h3>
+    <div class="grid2">
+      <div class="field"><label>שם פרטי</label><input type="text" id="c-firstName" value="${escapeHtml(c.firstName)}"></div>
+      <div class="field"><label>שם משפחה</label><input type="text" id="c-lastName" value="${escapeHtml(c.lastName)}"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>תפקיד</label><input type="text" id="c-role" value="${escapeHtml(c.role)}"></div>
+      <div class="field"><label>זוטר/מובהק</label>
+        <select id="c-level">
+          <option value="" ${!c.level?'selected':''}>— לא נבחר —</option>
+          <option value="זוטר" ${c.level==='זוטר'?'selected':''}>זוטר</option>
+          <option value="מובהק" ${c.level==='מובהק'?'selected':''}>מובהק</option>
+        </select>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>ענף</label><input type="text" id="c-industry" value="${escapeHtml(c.industry)}"></div>
+      <div class="field"><label>מדור</label><input type="text" id="c-mador" value="${escapeHtml(c.mador)}"></div>
+    </div>
+    <div class="field"><label>תאריך שחרור</label><input type="date" id="c-releaseDate" value="${escapeHtml(c.releaseDate)}"></div>
+    <div class="grid2">
+      <div class="field"><label>תאריך כניסה לאותה שנה</label><input type="date" id="c-entryDate" value="${escapeHtml(c.entryDate)}"></div>
+      <div class="field"><label>תאריך יציאה לאותה שנה</label><input type="date" id="c-exitDate" value="${escapeHtml(c.exitDate)}"></div>
+    </div>
+    <div class="field" style="font-size:13px; color:var(--text-dim);">
+      יחס שנתי מחושב אוטומטית: (תאריך יציאה − תאריך כניסה) ÷ 365
+    </div>
+    <div class="field">
+      <label style="display:flex; align-items:center; gap:8px; font-weight:400; color:var(--text);">
+        <input type="checkbox" id="c-starred" style="width:auto;" ${c.starred?'checked':''}> סמן ברידוד ★
+      </label>
+    </div>
+    <div class="modal-actions">
+      <button class="primary" onclick="saveConv(${isEditing?`'${existing.id}'`:'null'})">שמור</button>
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+    </div>
+  `;
+}
+function openConvForm(id){
+  openModal(convFormHtml(id ? state.convergence.find(c=>c.id===id) : null));
+}
+async function saveConv(existingId){
+  const firstName = document.getElementById('c-firstName').value.trim();
+  const lastName = document.getElementById('c-lastName').value.trim();
+  if (!firstName || !lastName){ alert('נא להזין שם פרטי ושם משפחה'); return; }
+  const data = {
+    firstName, lastName,
+    role: document.getElementById('c-role').value.trim(),
+    level: document.getElementById('c-level').value,
+    industry: document.getElementById('c-industry').value.trim(),
+    mador: document.getElementById('c-mador').value.trim(),
+    releaseDate: document.getElementById('c-releaseDate').value,
+    entryDate: document.getElementById('c-entryDate').value,
+    exitDate: document.getElementById('c-exitDate').value,
+    starred: document.getElementById('c-starred').checked
+  };
+  if (existingId){
+    const idx = state.convergence.findIndex(c=>c.id===existingId);
+    state.convergence[idx] = {...state.convergence[idx], ...data};
+  } else {
+    state.convergence.push({id: uid('conv'), ...data});
+  }
+  await storeSet('convergence', state.convergence);
+  closeModal();
+  renderConvFilterOptions();
+  renderConvergence();
+}
+async function toggleConvStar(id){
+  const c = state.convergence.find(c=>c.id===id);
+  c.starred = !c.starred;
+  await storeSet('convergence', state.convergence);
+  renderConvergence();
+}
+async function deleteConv(id){
+  if (!confirm('למחוק את הרשומה?')) return;
+  state.convergence = state.convergence.filter(c=>c.id!==id);
+  await storeSet('convergence', state.convergence);
+  renderConvFilterOptions();
+  renderConvergence();
+}
+
+/* ================= ATTENDANCE TAB ================= */
+const ATT_STATUSES = [
+  {key:'unit', label:'נוכח ביחידה'},
+  {key:'annual_leave', label:'בחופשה שנתית'},
+  {key:'sick', label:'במחלה'},
+  {key:'abroad', label:'בחו"ל'},
+  {key:'outside_unit', label:'מחוץ ליחידה בתפקיד'}
+];
+const attStatusLabel = key => (ATT_STATUSES.find(s=>s.key===key)||{}).label || '';
+
+function bindAttendance(){
+  const dateInput = document.getElementById('attDate');
+  dateInput.value = new Date().toISOString().slice(0,10);
+  dateInput.addEventListener('change', renderAttendance);
+  document.getElementById('attTodayBtn').addEventListener('click', ()=>{
+    dateInput.value = new Date().toISOString().slice(0,10);
+    renderAttendance();
+  });
+  document.getElementById('attDeptFilter').addEventListener('change', renderAttendance);
+  document.getElementById('addAttRequestBtn').addEventListener('click', openAttendanceRequestForm);
+  renderAttendance();
+}
+
+function visibleEmployeesForAttendance(){
+  // top-most manager (no managerId) sees everyone; every other manager sees self + subordinates
+  const isTopManager = state.employees.some(e=>e.id===state.currentUserId && !e.managerId);
+  if (isTopManager) return state.employees.slice();
+  const ids = visibleEmployeeIdsForCurrentUser(); // self + subordinates, already defined for meetings
+  return state.employees.filter(e=>ids.includes(e.id));
+}
+
+function renderAttDeptOptions(){
+  const sel = document.getElementById('attDeptFilter');
+  const current = sel.value;
+  const visible = visibleEmployeesForAttendance();
+  const depts = [...new Set(visible.map(e=>e.department).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'he'));
+  sel.innerHTML = `<option value="">כל המחלקות</option>` + depts.map(d=>`<option value="${escapeHtml(d)}">${escapeHtml(d)}</option>`).join('');
+  sel.value = current;
+}
+
+function getAttRecord(employeeId, date){
+  return state.attendance.find(a=>a.employeeId===employeeId && a.date===date);
+}
+async function setAttendance(employeeId, date, status){
+  const existing = getAttRecord(employeeId, date);
+  if (existing){
+    if (status) existing.status = status;
+    else state.attendance = state.attendance.filter(a=>a!==existing);
+  } else if (status){
+    state.attendance.push({id: uid('att'), employeeId, date, status});
+  }
+  await storeSet('attendance', state.attendance);
+  renderAttendance();
+}
+
+function renderAttendance(){
+  renderAttDeptOptions();
+  const date = document.getElementById('attDate').value || new Date().toISOString().slice(0,10);
+  const deptFilter = document.getElementById('attDeptFilter').value;
+
+  let visible = visibleEmployeesForAttendance();
+  if (deptFilter) visible = visible.filter(e=>e.department===deptFilter);
+  visible = visible.slice().sort((a,b)=>a.name.localeCompare(b.name,'he'));
+
+  // stat cards
+  const counts = {};
+  ATT_STATUSES.forEach(s=>counts[s.key]=0);
+  let unmarked = 0;
+  visible.forEach(e=>{
+    const rec = getAttRecord(e.id, date);
+    if (rec && counts[rec.status]!==undefined) counts[rec.status]++;
+    else unmarked++;
+  });
+  const statCardsEl = document.getElementById('attStatCards');
+  statCardsEl.innerHTML = `
+    <div class="stat-card"><div class="val">${visible.length}</div><div class="lbl">סה"כ עובדים בתצוגה</div></div>
+    ${ATT_STATUSES.map(s=>`<div class="stat-card st-${s.key}"><div class="val">${counts[s.key]}</div><div class="lbl">${escapeHtml(s.label)}</div></div>`).join('')}
+    <div class="stat-card"><div class="val">${unmarked}</div><div class="lbl">ללא סימון</div></div>
+  `;
+
+  // table
+  const tbody = document.querySelector('#attTable tbody');
+  if (!visible.length){
+    tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state"><div class="big">📅</div>אין עובדים להצגה עבור הסינון הנוכחי</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = visible.map(e=>{
+    const rec = getAttRecord(e.id, date);
+    const status = rec ? rec.status : '';
+    const options = `<option value="">— ללא סימון —</option>` + ATT_STATUSES.map(s=>`<option value="${s.key}" ${status===s.key?'selected':''}>${escapeHtml(s.label)}</option>`).join('');
+    return `<tr>
+      <td>${escapeHtml(e.name)}</td>
+      <td>${escapeHtml(e.role||'—')}</td>
+      <td><span class="badge dept">${escapeHtml(e.department||'—')}</span></td>
+      <td><select class="att-select st-${status}" onchange="setAttendance('${e.id}','${date}', this.value); this.className='att-select st-'+this.value;">${options}</select></td>
+    </tr>`;
+  }).join('');
+
+  renderMyAttendance();
+  renderAttendanceRequests();
+}
+
+function renderMyAttendance(){
+  const tbody = document.querySelector('#myAttTable tbody');
+  if (!tbody) return;
+  const myRecords = state.attendance.filter(a=>a.employeeId===state.currentUserId)
+    .slice().sort((a,b)=> b.date.localeCompare(a.date));
+  if (!myRecords.length){
+    tbody.innerHTML = `<tr><td colspan="2"><div class="empty-state" style="padding:20px;">אין עדיין נוכחות רשומה עבורך</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = myRecords.map(r=>`<tr>
+    <td>${escapeHtml(r.date)}</td>
+    <td><span class="tag">${escapeHtml(attStatusLabel(r.status))}</span></td>
+  </tr>`).join('');
+}
+
+function openAttendanceRequestForm(){
+  const options = ATT_STATUSES.map(s=>`<option value="${s.key}">${escapeHtml(s.label)}</option>`).join('');
+  openModal(`
+    <h3>הגשת בקשת שינוי נוכחות</h3>
+    <div class="field"><label>תאריך</label><input type="date" id="req-date" value="${new Date().toISOString().slice(0,10)}"></div>
+    <div class="field"><label>סטטוס מבוקש</label><select id="req-status">${options}</select></div>
+    <div class="field"><label>הערה / הסבר</label><textarea id="req-note" placeholder="לדוגמה: אישור מחלה מצורף..."></textarea></div>
+    <div class="field"><label>קובץ מצורף (אופציונלי, עד כ-4MB)</label><input type="file" id="req-file"></div>
+    <div class="locked-note">📤 הבקשה תישלח למי שבכיר ממך במבנה הארגוני לאישור</div>
+    <div class="modal-actions">
+      <button class="primary" onclick="submitAttendanceRequest()">שלח בקשה</button>
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+    </div>
+  `);
+}
+async function submitAttendanceRequest(){
+  const date = document.getElementById('req-date').value;
+  const requestedStatus = document.getElementById('req-status').value;
+  if (!date || !requestedStatus){ alert('נא לבחור תאריך וסטטוס'); return; }
+  let file = null;
+  try{
+    file = await readFileInputAsAttachment('req-file');
+  }catch(e){
+    return;
+  }
+  state.attendanceRequests.push({
+    id: uid('req'),
+    employeeId: state.currentUserId,
+    date,
+    requestedStatus,
+    note: document.getElementById('req-note').value.trim(),
+    file,
+    status: 'pending',
+    createdAt: new Date().toISOString(),
+    resolvedAt: null,
+    resolvedBy: null
+  });
+  await storeSet('attendanceRequests', state.attendanceRequests);
+  closeModal();
+  renderAttendanceRequests();
+  alert('הבקשה נשלחה לאישור');
+}
+
+function renderAttendanceRequests(){
+  const list = document.getElementById('attRequestsList');
+  if (!list) return;
+  const subordinateIds = getSubordinateIds(state.currentUserId);
+  const items = state.attendanceRequests
+    .filter(r=>subordinateIds.includes(r.employeeId))
+    .slice()
+    .sort((a,b)=> (a.status==='pending'?0:1) - (b.status==='pending'?0:1) || b.createdAt.localeCompare(a.createdAt));
+
+  if (!items.length){
+    list.innerHTML = `<div class="empty-state"><div class="big">📨</div>אין בקשות שינוי נוכחות מהעובדים הכפופים לך</div>`;
+    return;
+  }
+  const statusLabelHe = {pending:'ממתינה', approved:'אושרה', rejected:'נדחתה'};
+  list.innerHTML = items.map(r=>{
+    const emp = empById(r.employeeId);
+    return `<div class="request-item">
+      <div class="rh">
+        <div>
+          <div class="r-title">${emp?escapeHtml(emp.name):'—'} — בקשה לתאריך ${escapeHtml(r.date)}</div>
+          <div class="r-meta">
+            <span>סטטוס מבוקש: ${escapeHtml(attStatusLabel(r.requestedStatus))}</span>
+            <span>הוגש ב-${new Date(r.createdAt).toLocaleDateString('he-IL')}</span>
+          </div>
+        </div>
+        <span class="req-status ${r.status}">${statusLabelHe[r.status]}</span>
+      </div>
+      ${r.note?`<div class="r-note">${escapeHtml(r.note)}</div>`:''}
+      ${r.file?`<a class="comment-file" href="${r.file.dataUrl}" download="${escapeHtml(r.file.name)}">📎 ${escapeHtml(r.file.name)}</a>`:''}
+      ${r.status==='pending' ? `<div class="r-actions">
+        <button class="ghost" onclick="resolveAttendanceRequest('${r.id}', 'approved')">✔ אשר</button>
+        <button class="ghost danger-txt" onclick="resolveAttendanceRequest('${r.id}', 'rejected')">✕ דחה</button>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+async function resolveAttendanceRequest(id, decision){
+  const req = state.attendanceRequests.find(r=>r.id===id);
+  if (!req) return;
+  req.status = decision;
+  req.resolvedAt = new Date().toISOString();
+  req.resolvedBy = state.currentUserId;
+  await storeSet('attendanceRequests', state.attendanceRequests);
+  if (decision==='approved'){
+    await setAttendance(req.employeeId, req.date, req.requestedStatus);
+  } else {
+    renderAttendanceRequests();
+  }
+}
+
+/* ================= EXCEL IMPORT (generic, used by several tabs) ================= */
+let pendingImport = null;
+let pendingImportBatch = null;
+
+const IMPORT_CONFIGS = {
+  employees: {
+    title: 'ייבוא עובדים מאקסל',
+    recordLabel: r => r.name,
+    fields: [
+      {key:'name', label:'שם מלא', required:true},
+      {key:'role', label:'תפקיד'},
+      {key:'department', label:'מחלקה'},
+      {key:'industry', label:'ענף'},
+      {key:'team', label:'צוות'},
+      {key:'managerName', label:'שם המנהל הישיר (יקושר אוטומטית לפי שם)'},
+      {key:'ramad', label:'רמ"ד'},
+      {key:'rank', label:'דרגה ניהולית (רע"ן/רמ"ד/רש"צ)'},
+      {key:'email', label:'אימייל'},
+      {key:'phone', label:'טלפון'},
+      {key:'startDate', label:'תאריך התחלה'},
+      {key:'professionNumber', label:'מספר מקצוע'},
+      {key:'professionText', label:'מלל מקצוע'},
+      {key:'education', label:'השכלה (תיכונית/אקדמאית)'},
+      {key:'studies', label:'לימודים'},
+      {key:'city', label:'עיר מגורים'},
+      {key:'street', label:'רחוב'},
+      {key:'notes', label:'הערות'}
+    ],
+    matchExisting: row => state.employees.find(e=>e.name===row.name) || null,
+    getExisting: (existing, key) => {
+      if (key==='managerName') return existing.managerId ? (empById(existing.managerId)||{}).name || '' : '';
+      return existing[key] || '';
+    },
+    beginImport: () => ({ pendingManagerNames: {} }),
+    createRecord: (ctx, row) => {
+      const emp = {
+        id: uid('e'), name:row.name, role:row.role, department:row.department, managerId:null,
+        email:row.email, phone:row.phone, startDate:row.startDate,
+        industry:row.industry, team:row.team, ramad:row.ramad, rank:row.rank,
+        professionNumber:row.professionNumber, professionText:row.professionText,
+        isVolunteer:false, isCadet:false, education:row.education, flexA:false, flexB:false,
+        studies:row.studies, city:row.city, street:row.street, notes:row.notes
+      };
+      state.employees.push(emp);
+      if (row.managerName) ctx.pendingManagerNames[emp.id] = row.managerName;
+      return emp;
+    },
+    mergeRecord: (ctx, existing, row) => {
+      if (row.role) existing.role = row.role;
+      if (row.department) existing.department = row.department;
+      if (row.industry) existing.industry = row.industry;
+      if (row.team) existing.team = row.team;
+      if (row.ramad) existing.ramad = row.ramad;
+      if (row.rank) existing.rank = row.rank;
+      if (row.email) existing.email = row.email;
+      if (row.phone) existing.phone = row.phone;
+      if (row.startDate) existing.startDate = row.startDate;
+      if (row.professionNumber) existing.professionNumber = row.professionNumber;
+      if (row.professionText) existing.professionText = row.professionText;
+      if (row.education) existing.education = row.education;
+      if (row.studies) existing.studies = row.studies;
+      if (row.city) existing.city = row.city;
+      if (row.street) existing.street = row.street;
+      if (row.notes) existing.notes = row.notes;
+      if (row.managerName) ctx.pendingManagerNames[existing.id] = row.managerName;
+      return existing;
+    },
+    finalizeImport: async (ctx, counts) => {
+      Object.entries(ctx.pendingManagerNames).forEach(([empId, mgrName])=>{
+        const mgr = state.employees.find(m=>m.name===mgrName && m.id!==empId);
+        if (mgr) state.employees.find(e=>e.id===empId).managerId = mgr.id;
+      });
+      await storeSet('employees', state.employees);
+      closeModal();
+      renderEmployees(); renderOrgChart(); renderWhoAmI(); renderMeetingFilter(); renderMeetingsList(); renderTasks(); renderAttendance(); renderMgrInfo();
+      alert(`ייבוא הושלם: ${counts.created} נוספו, ${counts.updated} עודכנו, ${counts.kept} נותרו ללא שינוי, ${counts.both} נשמרו כרשומות כפולות`);
+    }
+  },
+  positions: {
+    title: 'ייבוא תקנים מאקסל',
+    recordLabel: r => r.serialNumber,
+    fields: [
+      {key:'serialNumber', label:'מספר תקן', required:true},
+      {key:'jobText', label:'מלל משרה', required:true},
+      {key:'occupationText', label:'מלל עיסוק'},
+      {key:'profession', label:'מקצוע'},
+      {key:'grade', label:'דרגה'},
+      {key:'seniorityLevel', label:'בכיר/מובהק/זוטר'},
+      {key:'registrationUnit', label:'יחידת רישומת'},
+      {key:'counterStatus', label:'מונה 0/מונה 1'},
+      {key:'freezeStatus', label:'מופשר/מוקפא'},
+      {key:'curFullName', label:'מינוי נוכחי - שם מלא'},
+      {key:'curPersonalNumber', label:'מינוי נוכחי - מספר אישי'},
+      {key:'curReleaseDate', label:'מינוי נוכחי - תאריך שחרור'},
+      {key:'futFullName', label:'מינוי עתידי - שם מלא'},
+      {key:'futPersonalNumber', label:'מינוי עתידי - מספר אישי'},
+      {key:'futStaffingDate', label:'מינוי עתידי - תאריך איוש'},
+      {key:'regulationNotes', label:'הערות תקינה'},
+      {key:'generalNotes', label:'מקום להערות'}
+    ],
+    matchExisting: row => state.positions.find(p=>p.serialNumber===row.serialNumber) || null,
+    getExisting: (existing, key) => {
+      const cur = existing.currentAppointment || {}, fut = existing.futureAppointment || {};
+      const map = { curFullName:cur.fullName, curPersonalNumber:cur.personalNumber, curReleaseDate:cur.releaseDate,
+        futFullName:fut.fullName, futPersonalNumber:fut.personalNumber, futStaffingDate:fut.staffingDate };
+      return (key in map) ? (map[key]||'') : (existing[key]||'');
+    },
+    beginImport: () => ({}),
+    createRecord: (ctx, row) => {
+      const pos = {
+        id: uid('pos'), serialNumber:row.serialNumber, jobText:row.jobText, occupationText:row.occupationText,
+        profession:row.profession, grade:row.grade, seniorityLevel:row.seniorityLevel, registrationUnit:row.registrationUnit,
+        counterStatus:row.counterStatus, freezeStatus:row.freezeStatus,
+        currentAppointment: {fullName:row.curFullName, personalNumber:row.curPersonalNumber, releaseDate:row.curReleaseDate, linkedEmployeeId:null},
+        futureAppointment: {fullName:row.futFullName, personalNumber:row.futPersonalNumber, staffingDate:row.futStaffingDate},
+        linkedConvergenceId:null, regulationNotes:row.regulationNotes, generalNotes:row.generalNotes
+      };
+      state.positions.push(pos);
+      return pos;
+    },
+    mergeRecord: (ctx, existing, row) => {
+      Object.assign(existing, {
+        jobText:row.jobText||existing.jobText, occupationText:row.occupationText||existing.occupationText,
+        profession:row.profession||existing.profession, grade:row.grade||existing.grade,
+        seniorityLevel:row.seniorityLevel||existing.seniorityLevel, registrationUnit:row.registrationUnit||existing.registrationUnit,
+        counterStatus:row.counterStatus||existing.counterStatus, freezeStatus:row.freezeStatus||existing.freezeStatus,
+        currentAppointment: {
+          fullName: row.curFullName||(existing.currentAppointment||{}).fullName,
+          personalNumber: row.curPersonalNumber||(existing.currentAppointment||{}).personalNumber,
+          releaseDate: row.curReleaseDate||(existing.currentAppointment||{}).releaseDate,
+          linkedEmployeeId: (existing.currentAppointment||{}).linkedEmployeeId || null
+        },
+        futureAppointment: {
+          fullName: row.futFullName||(existing.futureAppointment||{}).fullName,
+          personalNumber: row.futPersonalNumber||(existing.futureAppointment||{}).personalNumber,
+          staffingDate: row.futStaffingDate||(existing.futureAppointment||{}).staffingDate
+        },
+        regulationNotes: row.regulationNotes||existing.regulationNotes, generalNotes: row.generalNotes||existing.generalNotes
+      });
+      return existing;
+    },
+    finalizeImport: async (ctx, counts) => {
+      await storeSet('positions', state.positions);
+      closeModal();
+      renderPositionFilterOptions(); renderPositions(); renderEmployees();
+      alert(`ייבוא הושלם: ${counts.created} נוספו, ${counts.updated} עודכנו, ${counts.kept} נותרו ללא שינוי, ${counts.both} נשמרו כרשומות כפולות`);
+    }
+  },
+  convergence: {
+    title: 'ייבוא רשומות התכנסות מאקסל',
+    recordLabel: r => `${r.firstName} ${r.lastName}`,
+    fields: [
+      {key:'firstName', label:'שם פרטי', required:true},
+      {key:'lastName', label:'שם משפחה', required:true},
+      {key:'role', label:'תפקיד'},
+      {key:'level', label:'זוטר/מובהק'},
+      {key:'industry', label:'ענף'},
+      {key:'mador', label:'מדור'},
+      {key:'releaseDate', label:'תאריך שחרור'},
+      {key:'entryDate', label:'תאריך כניסה לאותה שנה'},
+      {key:'exitDate', label:'תאריך יציאה לאותה שנה'}
+    ],
+    matchExisting: row => state.convergence.find(c=>c.firstName===row.firstName && c.lastName===row.lastName) || null,
+    getExisting: (existing, key) => existing[key] || '',
+    beginImport: () => ({}),
+    createRecord: (ctx, row) => {
+      const c = {id: uid('conv'), firstName:row.firstName, lastName:row.lastName, role:row.role, level:row.level, industry:row.industry, mador:row.mador, releaseDate:row.releaseDate, entryDate:row.entryDate, exitDate:row.exitDate, starred:false};
+      state.convergence.push(c);
+      return c;
+    },
+    mergeRecord: (ctx, existing, row) => {
+      Object.assign(existing, {
+        role: row.role||existing.role, level: row.level||existing.level, industry: row.industry||existing.industry,
+        mador: row.mador||existing.mador, releaseDate: row.releaseDate||existing.releaseDate,
+        entryDate: row.entryDate||existing.entryDate, exitDate: row.exitDate||existing.exitDate
+      });
+      return existing;
+    },
+    finalizeImport: async (ctx, counts) => {
+      await storeSet('convergence', state.convergence);
+      closeModal();
+      renderConvFilterOptions(); renderConvergence();
+      alert(`ייבוא הושלם: ${counts.created} נוספו, ${counts.updated} עודכנו, ${counts.kept} נותרו ללא שינוי, ${counts.both} נשמרו כרשומות כפולות`);
+    }
+  }
+};
+
+function triggerExcelImport(configKey){
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.xlsx,.xls,.csv';
+  input.onchange = (e)=>{ if (e.target.files.length) handleExcelImportFile(e.target.files[0], configKey); };
+  input.click();
+}
+function handleExcelImportFile(file, configKey){
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    try{
+      const data = new Uint8Array(e.target.result);
+      const wb = XLSX.read(data, {type:'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
+      if (!rows.length){ alert('הקובץ ריק או שלא נמצאו נתונים לייבוא'); return; }
+      const columns = Object.keys(rows[0]);
+      openImportMappingModal(configKey, rows, columns);
+    }catch(err){
+      alert('שגיאה בקריאת הקובץ: ' + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+function guessColumn(columns, label, key){
+  return columns.find(c => c===label || c.trim()===label || c.toLowerCase()===key.toLowerCase()) || '';
+}
+function openImportMappingModal(configKey, rows, columns){
+  const cfg = IMPORT_CONFIGS[configKey];
+  pendingImport = { rows, columns, configKey };
+  const fieldsHtml = cfg.fields.map(f=>{
+    const guess = guessColumn(columns, f.label, f.key);
+    const options = `<option value="">— לא לייבא —</option>` + columns.map(c=>`<option value="${escapeHtml(c)}" ${c===guess?'selected':''}>${escapeHtml(c)}</option>`).join('');
+    return `<div class="field"><label>${escapeHtml(f.label)}${f.required?' *':''}</label><select id="map-${f.key}">${options}</select></div>`;
+  }).join('');
+  openModal(`
+    <h3>${escapeHtml(cfg.title)}</h3>
+    <div style="font-size:12.5px; color:var(--text-dim); margin-bottom:12px;">זוהו ${rows.length} שורות ו-${columns.length} עמודות בקובץ. התאם כל שדה במערכת לעמודה המתאימה מהקובץ (שדות עם * הם שדות חובה).</div>
+    ${fieldsHtml}
+    <div class="locked-note">🔁 אם רשומה בקובץ תואמת רשומה קיימת (למשל שם עובד, מספר תקן, או שם פרטי+משפחה) ויש הבדלים בנתונים — תוצג לך השוואה ותוכל לבחור מה לעשות עם כל כפילות.</div>
+    <div class="modal-actions">
+      <button class="primary" onclick="analyzeExcelImport()">המשך — ${rows.length} שורות</button>
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+    </div>
+  `, true);
+}
+function analyzeExcelImport(){
+  if (!pendingImport) return;
+  const cfg = IMPORT_CONFIGS[pendingImport.configKey];
+  const mapping = {};
+  cfg.fields.forEach(f=>{ mapping[f.key] = document.getElementById('map-'+f.key).value; });
+  for (const f of cfg.fields){
+    if (f.required && !mapping[f.key]){ alert(`נא למפות את שדה החובה: ${f.label}`); return; }
+  }
+  const mappedRows = pendingImport.rows.map(r=>{
+    const obj = {};
+    cfg.fields.forEach(f=>{ obj[f.key] = mapping[f.key] ? String(r[mapping[f.key]] ?? '').trim() : ''; });
+    return obj;
+  });
+
+  const autoRows = [];   // {row, existing, decision:'create'|'merge'}
+  const conflicts = [];  // {row, existing, diffs:[{label,oldVal,newVal}]}
+  mappedRows.forEach(row=>{
+    const existing = cfg.matchExisting(row);
+    if (!existing){ autoRows.push({row, existing:null, decision:'create'}); return; }
+    const diffs = cfg.fields
+      .filter(f => row[f.key] && cfg.getExisting(existing, f.key) !== row[f.key])
+      .map(f => ({label:f.label, oldVal:cfg.getExisting(existing, f.key), newVal:row[f.key]}));
+    if (diffs.length){ conflicts.push({row, existing, diffs}); }
+    else { autoRows.push({row, existing, decision:'merge'}); }
+  });
+
+  pendingImportBatch = { configKey: pendingImport.configKey, autoRows, conflicts };
+  pendingImport = null;
+
+  if (!conflicts.length){
+    applyImportBatch();
+  } else {
+    openImportConflictsModal();
+  }
+}
+function openImportConflictsModal(){
+  const cfg = IMPORT_CONFIGS[pendingImportBatch.configKey];
+  const { conflicts, autoRows } = pendingImportBatch;
+  const cardsHtml = conflicts.map((c,i)=>{
+    const diffRows = c.diffs.map(d=>`<tr><td>${escapeHtml(d.label)}</td><td>${escapeHtml(d.oldVal)||'—'}</td><td>${escapeHtml(d.newVal)||'—'}</td></tr>`).join('');
+    return `<div class="card" style="padding:14px; margin-bottom:10px;">
+      <div style="font-weight:700; font-size:14px; margin-bottom:8px;">🔁 ${escapeHtml(cfg.recordLabel(c.row))}</div>
+      <table style="font-size:12.5px;"><thead><tr><th>שדה</th><th>קיים במערכת</th><th>חדש מהקובץ</th></tr></thead><tbody>${diffRows}</tbody></table>
+      <div class="field" style="margin-top:10px; margin-bottom:0;">
+        <select id="conflict-decision-${i}">
+          <option value="merge" selected>עדכן לפי הנתונים החדשים</option>
+          <option value="skip">השאר את הנתונים הקיימים</option>
+          <option value="both">שמור את שניהם כרשומות נפרדות</option>
+        </select>
+      </div>
+    </div>`;
+  }).join('');
+  openModal(`
+    <h3 style="margin-bottom:4px;">נמצאו כפילויות</h3>
+    <div style="font-size:12.5px; color:var(--text-dim); margin-bottom:14px;">${autoRows.length} שורות ייובאו ללא בעיה. עבור ${conflicts.length} השורות הבאות נמצאה התאמה לרשומה קיימת עם נתונים שונים — בחר לכל אחת מה לעשות.</div>
+    ${cardsHtml}
+    <div class="modal-actions">
+      <button class="primary" onclick="applyImportBatch()">אשר וייבא</button>
+      <button class="ghost" onclick="pendingImportBatch=null; closeModal();">ביטול</button>
+    </div>
+  `, true);
+}
+async function applyImportBatch(){
+  if (!pendingImportBatch) return;
+  const cfg = IMPORT_CONFIGS[pendingImportBatch.configKey];
+  const { autoRows, conflicts } = pendingImportBatch;
+  const ctx = cfg.beginImport();
+  const counts = {created:0, updated:0, kept:0, both:0};
+
+  autoRows.forEach(entry=>{
+    if (entry.decision==='create'){ cfg.createRecord(ctx, entry.row); counts.created++; }
+    else { cfg.mergeRecord(ctx, entry.existing, entry.row); counts.updated++; }
+  });
+  conflicts.forEach((c,i)=>{
+    const sel = document.getElementById(`conflict-decision-${i}`);
+    const decision = sel ? sel.value : 'merge';
+    if (decision==='skip'){ counts.kept++; }
+    else if (decision==='both'){ cfg.createRecord(ctx, c.row); counts.both++; }
+    else { cfg.mergeRecord(ctx, c.existing, c.row); counts.updated++; }
+  });
+
+  await cfg.finalizeImport(ctx, counts);
+  pendingImportBatch = null;
+}
+
+/* ================= EXCEL EXPORT (generic, used by several tabs) ================= */
+function exportToExcel(filename, rows){
+  if (!rows || !rows.length){ alert('אין נתונים לייצוא'); return; }
+  const ws = XLSX.utils.json_to_sheet(rows);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+  XLSX.writeFile(wb, filename.endsWith('.xlsx') ? filename : filename+'.xlsx');
+}
+
+function exportEmployees(){
+  const rows = state.employees.map(e=>{
+    const mgr = e.managerId ? empById(e.managerId) : null;
+    const pos = getPositionByEmployeeId(e.id);
+    return {
+      'שם': e.name, 'תפקיד': e.role, 'מחלקה': e.department, 'ענף': e.industry, 'צוות': e.team,
+      'מנהל ישיר': mgr ? mgr.name : '', 'רמ"ד': e.ramad, 'דרגה ניהולית': e.rank,
+      'תקן נוכחי': pos ? `${pos.serialNumber} — ${pos.jobText}` : '',
+      'אימייל': e.email, 'טלפון': e.phone, 'תאריך התחלה': e.startDate,
+      'מספר מקצוע': e.professionNumber, 'מלל מקצוע': e.professionText,
+      'מתנדב': e.isVolunteer ? 'כן' : 'לא', 'עתודאי': e.isCadet ? 'כן' : 'לא',
+      'השכלה': e.education, "גמוש א'": e.flexA ? 'כן' : 'לא', "גמוש ב'": e.flexB ? 'כן' : 'לא',
+      'לימודים': e.studies, 'עיר מגורים': e.city, 'רחוב': e.street, 'הערות': e.notes
+    };
+  });
+  exportToExcel('עובדים', rows);
+}
+function exportPositions(){
+  const rows = state.positions.filter(positionVisibleToCurrentUser).map(p=>{
+    const cur = p.currentAppointment || {}, fut = p.futureAppointment || {};
+    const linkedEmp = cur.linkedEmployeeId ? empById(cur.linkedEmployeeId) : null;
+    const linkedConv = p.linkedConvergenceId ? state.convergence.find(c=>c.id===p.linkedConvergenceId) : null;
+    return {
+      'מספר תקן': p.serialNumber, 'מלל משרה': p.jobText, 'מלל עיסוק': p.occupationText, 'מקצוע': p.profession,
+      'דרגה': p.grade, 'בכיר/מובהק/זוטר': p.seniorityLevel, 'יחידת רישומת': p.registrationUnit,
+      'מונה 0/1': p.counterStatus, 'מופשר/מוקפא': p.freezeStatus,
+      'מינוי נוכחי - שם': linkedEmp ? linkedEmp.name : cur.fullName, 'מינוי נוכחי - מספר אישי': cur.personalNumber, 'מינוי נוכחי - תאריך שחרור': cur.releaseDate,
+      'מינוי עתידי - שם': fut.fullName, 'מינוי עתידי - מספר אישי': fut.personalNumber, 'מינוי עתידי - תאריך איוש': fut.staffingDate,
+      'הערת התכנסות': linkedConv ? `${linkedConv.firstName} ${linkedConv.lastName} — יציאה ${linkedConv.exitDate||''}` : '',
+      'הערות תקינה': p.regulationNotes, 'הערות': p.generalNotes
+    };
+  });
+  exportToExcel('ניהול_תקנים', rows);
+}
+function exportConvergence(){
+  const rows = state.convergence.filter(convergenceVisibleToCurrentUser).map(c=>{
+    const ratio = yearRatio(c.entryDate, c.exitDate);
+    return {
+      'שם פרטי': c.firstName, 'שם משפחה': c.lastName, 'תפקיד': c.role, 'זוטר/מובהק': c.level,
+      'ענף': c.industry, 'מדור': c.mador, 'תאריך שחרור': c.releaseDate, 'תאריך כניסה': c.entryDate, 'תאריך יציאה': c.exitDate,
+      'יחס שנתי': ratio!==null ? ratio.toFixed(2) : '', 'רידוד': c.starred ? 'כן' : 'לא'
+    };
+  });
+  exportToExcel('התכנסות', rows);
+}
+function exportAttendance(){
+  const date = document.getElementById('attDate').value || new Date().toISOString().slice(0,10);
+  const deptFilter = document.getElementById('attDeptFilter').value;
+  let visible = visibleEmployeesForAttendance();
+  if (deptFilter) visible = visible.filter(e=>e.department===deptFilter);
+  const rows = visible.map(e=>{
+    const rec = getAttRecord(e.id, date);
+    return { 'שם': e.name, 'תפקיד': e.role, 'מחלקה': e.department, 'תאריך': date, 'סטטוס נוכחות': rec ? attStatusLabel(rec.status) : '' };
+  });
+  exportToExcel(`נוכחות_${date}`, rows);
+}
+function exportPostings(){
+  const rows = state.postings.map(p=>{
+    const owner = empById(p.createdBy);
+    return {
+      'שם תפקיד': p.title, 'ענף': p.industry, 'מדור': p.mador, 'צוות': p.team, 'דרגה': p.grade,
+      'סוג תפקיד': p.roleType==='existing' ? 'תפקיד קיים' : 'תפקיד חדש', 'מאייש נוכחי': p.currentIncumbent,
+      'מפקד קולט': p.receivingCommander, 'טלפון מפקד קולט': p.receivingCommanderPhone,
+      'דרישות מקצועיות': p.requirements, 'תיאור תפקיד': p.description,
+      'תאריך פרסום': p.datePosted, 'סטטוס': p.status==='open' ? 'פתוחה' : 'סגורה', 'פורסם ע"י': owner?owner.name:''
+    };
+  });
+  exportToExcel('שיבוצים', rows);
+}
+function exportTasks(){
+  const rows = state.tasks.filter(taskVisibleToCurrentUser).map(t=>{
+    const assignees = (t.assignedTo||[]).map(id=>empById(id)).filter(Boolean);
+    const assigner = empById(t.assignedBy);
+    const about = (t.aboutEmployeeIds||[]).map(id=>empById(id)).filter(Boolean);
+    const prioLabel = {low:'נמוכה', med:'בינונית', high:'גבוהה'};
+    return {
+      'כותרת': t.title, 'תיאור': t.description, 'הוקצה ל': assignees.map(a=>a.name).join(', '), 'הוקצה ע"י': assigner?assigner.name:'',
+      'עדיפות': prioLabel[t.priority]||'', 'תאריך יעד': t.dueDate, 'סטטוס': TASK_STATUS_LABELS[t.status||'none'],
+      'בנוגע לעובדים': about.map(a=>a.name).join(', '), 'מספר תגובות': t.comments?t.comments.length:0
+    };
+  });
+  exportToExcel('משימות', rows);
+}
+function exportMeetings(){
+  const visibleIds = visibleEmployeeIdsForCurrentUser();
+  const rows = state.meetings.filter(m=>visibleIds.includes(m.employeeId)).map(m=>{
+    const emp = empById(m.employeeId), by = empById(m.createdBy);
+    return { 'עובד': emp?emp.name:'', 'כותרת': m.title, 'תאריך': m.date, 'סיכום': m.summary, 'נרשם ע"י': by?by.name:'' };
+  });
+  exportToExcel('סיכומי_פגישות', rows);
+}
+function exportMgrInfo(){
+  const rows = state.infoItems.filter(infoVisibleToCurrentUser).map(i=>{
+    const author = empById(i.authorId);
+    const extraEmps = (i.allowedEmployeeIds||[]).map(id=>empById(id)).filter(Boolean);
+    return {
+      'נושא': i.topic, 'כותרת': i.title, 'תוכן': i.content, 'הועלה ע"י': author?author.name:'',
+      'שותף גם לדרגות': (i.allowedRanks||[]).join(', '), 'שותף גם עם עובדים': extraEmps.map(e=>e.name).join(', '),
+      'תאריך': new Date(i.createdAt).toLocaleDateString('he-IL')
+    };
+  });
+  exportToExcel('מידע_למנהלים', rows);
+}
+function exportDashboardSheet(){
+  if (!state.dashboard){ alert('אין נתונים בלוח הבקרה לייצוא'); return; }
+  const activeName = state.dashboard.activeSheet;
+  const rows = state.dashboard.sheets[activeName] || [];
+  exportToExcel(activeName || 'לוח_בקרה', rows);
+}
+
+/* ================= DASHBOARD TAB ================= */
+/* ================= DASHBOARD WIDGETS (personalized, per-user, hierarchy-scoped) ================= */
+const WIDGET_DEFS = {
+  myOpenTasks: {
+    label: 'המשימות הפתוחות שלי',
+    render: () => {
+      const mine = state.tasks.filter(t => taskVisibleToCurrentUser(t) && (t.assignedTo||[]).includes(state.currentUserId) && (t.status||'none')!=='done');
+      const rows = mine.slice(0,5).map(t=>`<div class="widget-row"><span>${escapeHtml(t.title)}</span><span>${escapeHtml(TASK_STATUS_LABELS[t.status||'none'])}</span></div>`).join('');
+      return `<div class="widget-big">${mine.length}</div>${rows || '<div class="widget-empty">אין משימות פתוחות</div>'}`;
+    }
+  },
+  teamAttendanceToday: {
+    label: 'נוכחות היום בצוות שלי',
+    render: () => {
+      const today = new Date().toISOString().slice(0,10);
+      const visible = visibleEmployeesForAttendance();
+      const counts = {}; ATT_STATUSES.forEach(s=>counts[s.key]=0);
+      let unmarked = 0;
+      visible.forEach(e=>{
+        const rec = getAttRecord(e.id, today);
+        if (rec && counts[rec.status]!==undefined) counts[rec.status]++; else unmarked++;
+      });
+      const rows = ATT_STATUSES.map(s=>`<div class="widget-row"><span>${escapeHtml(s.label)}</span><span>${counts[s.key]}</span></div>`).join('')
+        + `<div class="widget-row"><span>ללא סימון</span><span>${unmarked}</span></div>`;
+      return `<div class="widget-big">${visible.length}</div>${rows}`;
+    }
+  },
+  recentMeetings: {
+    label: 'סיכומי פגישות אחרונים',
+    render: () => {
+      const visibleIds = visibleEmployeeIdsForCurrentUser();
+      const items = state.meetings.filter(m=>visibleIds.includes(m.employeeId)).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,5);
+      if (!items.length) return `<div class="widget-empty">אין סיכומי פגישות</div>`;
+      return items.map(m=>{
+        const emp = empById(m.employeeId);
+        return `<div class="widget-row"><span>${escapeHtml(m.title)} — ${emp?escapeHtml(emp.name):''}</span><span>${escapeHtml(m.date||'')}</span></div>`;
+      }).join('');
+    }
+  },
+  pendingAttendanceRequests: {
+    label: 'בקשות נוכחות ממתינות',
+    render: () => {
+      const subIds = getSubordinateIds(state.currentUserId);
+      const pending = state.attendanceRequests.filter(r=>subIds.includes(r.employeeId) && r.status==='pending');
+      const rows = pending.slice(0,5).map(r=>{
+        const emp = empById(r.employeeId);
+        return `<div class="widget-row"><span>${emp?escapeHtml(emp.name):''} — ${escapeHtml(r.date)}</span><span>${escapeHtml(attStatusLabel(r.requestedStatus))}</span></div>`;
+      }).join('');
+      return `<div class="widget-big">${pending.length}</div>${rows || '<div class="widget-empty">אין בקשות ממתינות</div>'}`;
+    }
+  },
+  openPostings: {
+    label: 'משרות פתוחות בארגון',
+    render: () => {
+      const open = state.postings.filter(p=>p.status==='open');
+      const rows = open.slice(0,5).map(p=>`<div class="widget-row"><span>${escapeHtml(p.title)}</span><span>${escapeHtml(p.mador||p.industry||'')}</span></div>`).join('');
+      return `<div class="widget-big">${open.length}</div>${rows || '<div class="widget-empty">אין משרות פתוחות</div>'}`;
+    }
+  },
+  vacantPositions: {
+    label: 'תקנים פנויים',
+    render: () => {
+      const vacant = state.positions.filter(p=> !(p.currentAppointment && (p.currentAppointment.fullName || p.currentAppointment.linkedEmployeeId)));
+      const rows = vacant.slice(0,5).map(p=>`<div class="widget-row"><span>${escapeHtml(p.serialNumber)} — ${escapeHtml(p.jobText)}</span><span>${escapeHtml(p.registrationUnit||'')}</span></div>`).join('');
+      return `<div class="widget-big">${vacant.length}</div>${rows || '<div class="widget-empty">אין תקנים פנויים</div>'}`;
+    }
+  },
+  recentMgrInfo: {
+    label: 'מידע למנהלים אחרון',
+    render: () => {
+      const items = state.infoItems.filter(infoVisibleToCurrentUser).slice().sort((a,b)=>b.createdAt.localeCompare(a.createdAt)).slice(0,5);
+      if (!items.length) return `<div class="widget-empty">אין פריטי מידע</div>`;
+      return items.map(i=>`<div class="widget-row"><span>${escapeHtml(i.title)}</span><span>${escapeHtml(i.topic)}</span></div>`).join('');
+    }
+  },
+  myTeamSize: {
+    label: 'גודל הצוות שלי',
+    render: () => {
+      const count = getSubordinateIds(state.currentUserId).length;
+      return `<div class="widget-big">${count}</div><div class="widget-empty">עובדים כפופים (בכל העומק)</div>`;
+    }
+  }
+};
+const DEFAULT_DASHBOARD_WIDGETS = ['myOpenTasks','teamAttendanceToday','recentMeetings','pendingAttendanceRequests','myTeamSize'];
+
+function getMyDashboardWidgetKeys(){
+  const saved = state.dashboardPrefs[state.currentUserId];
+  return saved && saved.length ? saved : DEFAULT_DASHBOARD_WIDGETS;
+}
+function renderDashboardWidgets(){
+  const grid = document.getElementById('dashWidgetGrid');
+  if (!grid) return;
+  const keys = getMyDashboardWidgetKeys().filter(k=>WIDGET_DEFS[k]);
+  if (!keys.length){
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">לא נבחרו רכיבים ללוח הבקרה. לחץ על "התאם אישית" כדי לבחור.</div>`;
+    return;
+  }
+  grid.innerHTML = keys.map(k=>{
+    const w = WIDGET_DEFS[k];
+    return `<div class="card widget-card"><div class="widget-title">${escapeHtml(w.label)}</div>${w.render()}</div>`;
+  }).join('');
+}
+function openDashboardWidgetPicker(){
+  const current = getMyDashboardWidgetKeys();
+  const rows = Object.entries(WIDGET_DEFS).map(([key, w])=>
+    `<label class="checkbox-row"><input type="checkbox" value="${key}" ${current.includes(key)?'checked':''}> ${escapeHtml(w.label)}</label>`
+  ).join('');
+  openModal(`
+    <h3>התאמת לוח הבקרה שלי</h3>
+    <div style="font-size:12.5px; color:var(--text-dim); margin-bottom:12px;">בחר אילו רכיבים יוצגו בלוח הבקרה שלך. כל הנתונים מוצגים בהתאם למה שגלוי לך — עצמך והכפופים לך בלבד.</div>
+    <div class="checkbox-list" id="widget-picker-list" style="max-height:260px;">${rows}</div>
+    <div class="modal-actions">
+      <button class="primary" onclick="saveDashboardWidgetPrefs()">שמור</button>
+      <button class="ghost" onclick="closeModal()">ביטול</button>
+    </div>
+  `);
+}
+async function saveDashboardWidgetPrefs(){
+  const checked = Array.from(document.querySelectorAll('#widget-picker-list input[type=checkbox]:checked')).map(i=>i.value);
+  state.dashboardPrefs[state.currentUserId] = checked;
+  await storeSet('dashboardPrefs', state.dashboardPrefs);
+  closeModal();
+  renderDashboardWidgets();
+}
+
+let dashCharts = [];
+function bindDashboard(){
+  const zone = document.getElementById('uploadZone');
+  const input = document.getElementById('fileInput');
+  zone.addEventListener('click', ()=>input.click());
+  zone.addEventListener('dragover', e=>{ e.preventDefault(); zone.style.borderColor='var(--accent)'; });
+  zone.addEventListener('dragleave', ()=>{ zone.style.borderColor='var(--border)'; });
+  zone.addEventListener('drop', e=>{
+    e.preventDefault(); zone.style.borderColor='var(--border)';
+    if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+  });
+  input.addEventListener('change', ()=>{ if (input.files.length) handleFile(input.files[0]); });
+  document.getElementById('clearDashBtn').addEventListener('click', async ()=>{
+    if (!confirm('לנקות את כל נתוני לוח הבקרה?')) return;
+    state.dashboard = null;
+    await storeSet('dashboard', null);
+    renderDashboard();
+  });
+}
+function handleFile(file){
+  const reader = new FileReader();
+  reader.onload = async (e)=>{
+    try{
+      const data = new Uint8Array(e.target.result);
+      const wb = XLSX.read(data, {type:'array'});
+      const sheets = {};
+      wb.SheetNames.forEach(name=>{
+        const ws = wb.Sheets[name];
+        const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
+        sheets[name] = rows;
+      });
+      state.dashboard = { fileName: file.name, uploadedAt: new Date().toISOString(), sheets, activeSheet: wb.SheetNames[0] };
+      await storeSet('dashboard', state.dashboard);
+      renderDashboard();
+    }catch(err){
+      alert('שגיאה בקריאת הקובץ: ' + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+function renderDashboard(){
+  const container = document.getElementById('dashContent');
+  dashCharts.forEach(c=>c.destroy());
+  dashCharts = [];
+  if (!state.dashboard){
+    container.innerHTML = '';
+    return;
+  }
+  const d = state.dashboard;
+  const sheetNames = Object.keys(d.sheets);
+  const activeName = d.activeSheet && sheetNames.includes(d.activeSheet) ? d.activeSheet : sheetNames[0];
+  const rows = d.sheets[activeName] || [];
+  const cols = rows.length ? Object.keys(rows[0]) : [];
+  const numericCols = cols.filter(c => rows.some(r => typeof r[c]==='number'));
+  const labelCol = cols.find(c => !numericCols.includes(c)) || cols[0];
+
+  let html = `<div class="card">
+    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+      <div style="font-size:13px; color:var(--text-dim);">קובץ: <strong style="color:var(--text)">${escapeHtml(d.fileName)}</strong> · עודכן ${new Date(d.uploadedAt).toLocaleString('he-IL')}</div>
+    </div>
+    <div class="sheet-tabs">${sheetNames.map(n=>`<button class="ghost ${n===activeName?'active':''}" onclick="setActiveSheet('${escapeHtml(n).replace(/'/g,"\\'")}')">${escapeHtml(n)}</button>`).join('')}</div>
+  `;
+
+  html += `<div class="stat-cards">
+    <div class="stat-card"><div class="val">${rows.length}</div><div class="lbl">שורות נתונים</div></div>
+    <div class="stat-card"><div class="val">${cols.length}</div><div class="lbl">עמודות</div></div>
+    ${numericCols.slice(0,2).map(c=>{
+      const sum = rows.reduce((a,r)=>a + (typeof r[c]==='number'?r[c]:0), 0);
+      return `<div class="stat-card"><div class="val">${sum.toLocaleString('he-IL', {maximumFractionDigits:1})}</div><div class="lbl">סה"כ ${escapeHtml(c)}</div></div>`;
+    }).join('')}
+  </div>`;
+
+  html += `<div class="table-scroll"><table><thead><tr>${cols.map(c=>`<th>${escapeHtml(c)}</th>`).join('')}</tr></thead><tbody>
+    ${rows.slice(0,200).map(r=>`<tr>${cols.map(c=>`<td>${escapeHtml(r[c])}</td>`).join('')}</tr>`).join('')}
+  </tbody></table></div>`;
+
+  html += `</div>`;
+
+  if (numericCols.length && rows.length){
+    html += `<div class="chart-grid">`;
+    numericCols.slice(0,4).forEach((c,i)=>{
+      html += `<div class="chart-box"><h4>${escapeHtml(c)} לפי ${escapeHtml(labelCol)}</h4><canvas id="chart-${i}" height="200"></canvas></div>`;
+    });
+    html += `</div>`;
+  }
+
+  container.innerHTML = html;
+
+  if (numericCols.length && rows.length){
+    numericCols.slice(0,4).forEach((c,i)=>{
+      const ctx = document.getElementById(`chart-${i}`);
+      const limited = rows.slice(0,25);
+      const chart = new Chart(ctx, {
+        type:'bar',
+        data:{
+          labels: limited.map(r=>String(r[labelCol]).slice(0,14)),
+          datasets:[{ label:c, data: limited.map(r=> typeof r[c]==='number'?r[c]:0), backgroundColor:'#2FD5C0', borderRadius:4 }]
+        },
+        options:{
+          responsive:true,
+          plugins:{ legend:{display:false} },
+          scales:{
+            x:{ ticks:{ color:'#8FA0B3', font:{size:10} }, grid:{ color:'#263444' } },
+            y:{ ticks:{ color:'#8FA0B3' }, grid:{ color:'#263444' } }
+          }
+        }
+      });
+      dashCharts.push(chart);
+    });
+  }
+}
+async function setActiveSheet(name){
+  state.dashboard.activeSheet = name;
+  await storeSet('dashboard', state.dashboard);
+  renderDashboard();
+}
+
+/* ---------------- boot ---------------- */
+init();
+</script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/v4513226cdae34746b4dedf0b4dfa099e1781791509496" integrity="sha512-ZE9pZaUXND66v380QUtch/5sE9tPFh2zg45pR2PB0CVkCtOREv2AJKkSidISWkysEuQ0EH8faUU5du78bx87UQ==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79"}' crossorigin="anonymous"></script>
+</body>
+</html>
